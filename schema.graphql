@@ -51,7 +51,7 @@ type Mutation {
 }
 
 type Query {
-  ok: Boolean!
+  aliases(alias: String, groupId: Int, id: Int): [Alias!]!
 }
 
 """A collection typically containing several similarly-themed cards"""
