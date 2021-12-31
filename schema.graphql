@@ -2,6 +2,11 @@
 ### Do not make changes to this file directly
 
 
+type Alias {
+  alias: String!
+  groupId: Int!
+}
+
 """An individual character."""
 type Character {
   birthday: DateTime
@@ -22,7 +27,7 @@ enum Gender {
 
 """Broad collections of cards typically encompassing many subgroups"""
 type Group {
-  aliases: [String!]!
+  aliases: [Alias!]!
   creation: DateTime
   id: Int!
   name: String!
@@ -30,8 +35,11 @@ type Group {
 
 type Mutation {
   createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
+  createGroup(creation: DateTime, name: String!): Group!
   deleteCharacter(id: Int!): Int!
+  deleteGroup(id: Int!): Int!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
+  updateGroup(creation: DateTime, id: Int!, name: String): Group!
 }
 
 type Query {

@@ -45,6 +45,10 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Alias: { // root type
+    alias: string; // String!
+    groupId: number; // Int!
+  }
   Character: { // root type
     birthday?: NexusGenScalars['DateTime'] | null; // DateTime
     gender?: NexusGenEnums['Gender'] | null; // Gender
@@ -52,7 +56,6 @@ export interface NexusGenObjects {
     name: string; // String!
   }
   Group: { // root type
-    aliases: string[]; // [String!]!
     creation?: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
     name: string; // String!
@@ -77,6 +80,10 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Alias: { // field return type
+    alias: string; // String!
+    groupId: number; // Int!
+  }
   Character: { // field return type
     birthday: NexusGenScalars['DateTime'] | null; // DateTime
     gender: NexusGenEnums['Gender'] | null; // Gender
@@ -84,15 +91,18 @@ export interface NexusGenFieldTypes {
     name: string; // String!
   }
   Group: { // field return type
-    aliases: string[]; // [String!]!
+    aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
     creation: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
     name: string; // String!
   }
   Mutation: { // field return type
     createCharacter: NexusGenRootTypes['Character']; // Character!
+    createGroup: NexusGenRootTypes['Group']; // Group!
     deleteCharacter: number; // Int!
+    deleteGroup: number; // Int!
     updateCharacter: NexusGenRootTypes['Character']; // Character!
+    updateGroup: NexusGenRootTypes['Group']; // Group!
   }
   Query: { // field return type
     ok: boolean; // Boolean!
@@ -105,6 +115,10 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Alias: { // field return type name
+    alias: 'String'
+    groupId: 'Int'
+  }
   Character: { // field return type name
     birthday: 'DateTime'
     gender: 'Gender'
@@ -112,15 +126,18 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
   }
   Group: { // field return type name
-    aliases: 'String'
+    aliases: 'Alias'
     creation: 'DateTime'
     id: 'Int'
     name: 'String'
   }
   Mutation: { // field return type name
     createCharacter: 'Character'
+    createGroup: 'Group'
     deleteCharacter: 'Int'
+    deleteGroup: 'Int'
     updateCharacter: 'Character'
+    updateGroup: 'Group'
   }
   Query: { // field return type name
     ok: 'Boolean'
@@ -139,12 +156,24 @@ export interface NexusGenArgTypes {
       gender?: NexusGenEnums['Gender'] | null; // Gender
       name: string; // String!
     }
+    createGroup: { // args
+      creation?: NexusGenScalars['DateTime'] | null; // DateTime
+      name: string; // String!
+    }
     deleteCharacter: { // args
+      id: number; // Int!
+    }
+    deleteGroup: { // args
       id: number; // Int!
     }
     updateCharacter: { // args
       birthday?: NexusGenScalars['DateTime'] | null; // DateTime
       gender?: NexusGenEnums['Gender'] | null; // Gender
+      id: number; // Int!
+      name?: string | null; // String
+    }
+    updateGroup: { // args
+      creation?: NexusGenScalars['DateTime'] | null; // DateTime
       id: number; // Int!
       name?: string | null; // String
     }
