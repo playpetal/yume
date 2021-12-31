@@ -115,6 +115,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
+    characters: NexusGenRootTypes['Character'][]; // [Character!]!
   }
   Subgroup: { // field return type
     creation: NexusGenScalars['DateTime'] | null; // DateTime
@@ -158,6 +159,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     aliases: 'Alias'
+    characters: 'Character'
   }
   Subgroup: { // field return type name
     creation: 'DateTime'
@@ -224,6 +226,12 @@ export interface NexusGenArgTypes {
       alias?: string | null; // String
       groupId?: number | null; // Int
       id?: number | null; // Int
+    }
+    characters: { // args
+      birthday?: NexusGenScalars['DateTime'] | null; // DateTime
+      gender?: NexusGenEnums['Gender'] | null; // Gender
+      id?: number | null; // Int
+      name?: string | null; // String
     }
   }
 }
