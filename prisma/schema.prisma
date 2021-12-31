@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nexusPrisma {
+  provider = "nexus-prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Broad collections of cards typically encompassing many subgroups
+model Group {
+  id       Int       @id @default(autoincrement())
+  name     String
+  creation DateTime? @db.Date
+  aliases  String[]
+}
+
+/// A collection typically containing several similarly-themed cards
+model Subgroup {
+  id       Int       @id @default(autoincrement())
+  name     String
+  creation DateTime? @db.Date
+}
+
+/// An individual character.
+model Character {
+  id       Int       @id @default(autoincrement())
+  name     String
+  birthday DateTime? @db.Date
+  gender   Gender?
+}
+
+/// Character gender.
+enum Gender {
+  MALE
+  FEMALE
+  NONBINARY
+}
