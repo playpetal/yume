@@ -53,6 +53,7 @@ type Mutation {
 type Query {
   aliases(alias: String, groupId: Int, id: Int): [Alias!]!
   characters(birthday: DateTime, gender: Gender, id: Int, name: String): [Character!]!
+  groups(alias: String, creation: DateTime, id: Int, name: String): [Group!]!
 }
 
 """A collection typically containing several similarly-themed cards"""
