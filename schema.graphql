@@ -28,6 +28,12 @@ type Group {
   name: String!
 }
 
+type Mutation {
+  createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
+  deleteCharacter(id: Int!): Int!
+  updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
+}
+
 type Query {
   ok: Boolean!
 }

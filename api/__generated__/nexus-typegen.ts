@@ -57,6 +57,7 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   }
+  Mutation: {};
   Query: {};
   Subgroup: { // root type
     creation?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -88,6 +89,11 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     name: string; // String!
   }
+  Mutation: { // field return type
+    createCharacter: NexusGenRootTypes['Character']; // Character!
+    deleteCharacter: number; // Int!
+    updateCharacter: NexusGenRootTypes['Character']; // Character!
+  }
   Query: { // field return type
     ok: boolean; // Boolean!
   }
@@ -111,6 +117,11 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     name: 'String'
   }
+  Mutation: { // field return type name
+    createCharacter: 'Character'
+    deleteCharacter: 'Int'
+    updateCharacter: 'Character'
+  }
   Query: { // field return type name
     ok: 'Boolean'
   }
@@ -122,6 +133,22 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
+  Mutation: {
+    createCharacter: { // args
+      birthday?: NexusGenScalars['DateTime'] | null; // DateTime
+      gender?: NexusGenEnums['Gender'] | null; // Gender
+      name: string; // String!
+    }
+    deleteCharacter: { // args
+      id: number; // Int!
+    }
+    updateCharacter: { // args
+      birthday?: NexusGenScalars['DateTime'] | null; // DateTime
+      gender?: NexusGenEnums['Gender'] | null; // Gender
+      id: number; // Int!
+      name?: string | null; // String
+    }
+  }
 }
 
 export interface NexusGenAbstractTypeMembers {
