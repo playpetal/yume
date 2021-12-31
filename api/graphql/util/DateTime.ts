@@ -12,7 +12,7 @@ export const DateTime = scalarType({
     return value.getTime();
   },
   parseLiteral(ast) {
-    if (ast.kind === Kind.INT) {
+    if (ast.kind === Kind.INT || ast.kind === Kind.STRING) {
       return new Date(ast.value);
     }
     return null;
