@@ -1,4 +1,4 @@
-import { extendType, nonNull, objectType } from "nexus";
+import { extendType, list, nonNull, objectType } from "nexus";
 import { Subgroup } from "nexus-prisma";
 
 export const SubgroupObject = objectType({
@@ -49,6 +49,25 @@ export const UpdateSubgroupMutation = extendType({
         return ctx.db.subgroup.update({
           where: { id: args.id },
           data: { name: args.name ?? undefined, creation: args.creation },
+        });
+      },
+    });
+  },
+});
+
+export const SubgroupsQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("subgroups", {
+      type: nonNull(list(nonNull("Subgroup"))),
+      args: { id: "Int", name: "String", creation: "DateTime" },
+      async resolve(_, args, ctx) {
+        return ctx.db.subgroup.findMany({
+          where: {
+            id: args.id ?? undefined,
+            name: args.name ?? undefined,
+            creation: args.creation ?? undefined,
+          },
         });
       },
     });

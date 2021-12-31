@@ -1,4 +1,4 @@
-import { extendType, nonNull, objectType } from "nexus";
+import { extendType, list, nonNull, objectType } from "nexus";
 import { Alias } from "nexus-prisma";
 
 export const AliasObject = objectType({
@@ -62,6 +62,25 @@ export const UpdateAliasMutation = extendType({
           data: {
             groupId: args.groupId || undefined,
             alias: args.alias || undefined,
+          },
+        });
+      },
+    });
+  },
+});
+
+export const AliasesQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("aliases", {
+      type: nonNull(list(nonNull("Alias"))),
+      args: { id: "Int", groupId: "Int", alias: "String" },
+      async resolve(_, args, ctx) {
+        return ctx.db.alias.findMany({
+          where: {
+            id: args.id ?? undefined,
+            groupId: args.groupId ?? undefined,
+            alias: args.alias ?? undefined,
           },
         });
       },

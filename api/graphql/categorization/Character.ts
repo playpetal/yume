@@ -1,4 +1,4 @@
-import { extendType, nonNull, objectType } from "nexus";
+import { extendType, list, nonNull, objectType } from "nexus";
 import { Character } from "nexus-prisma";
 
 export const CharacterObject = objectType({
@@ -63,6 +63,31 @@ export const UpdateCharacterMutation = extendType({
           data: {
             name: args.name || undefined,
             birthday: args.birthday,
+            gender: args.gender,
+          },
+        });
+      },
+    });
+  },
+});
+
+export const CharactersQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("characters", {
+      type: nonNull(list(nonNull("Character"))),
+      args: {
+        id: "Int",
+        name: "String",
+        birthday: "DateTime",
+        gender: "Gender",
+      },
+      async resolve(_, args, ctx) {
+        return ctx.db.character.findMany({
+          where: {
+            id: args.id ?? undefined,
+            name: args.name ?? undefined,
+            birthday: args.birthday ?? undefined,
             gender: args.gender,
           },
         });

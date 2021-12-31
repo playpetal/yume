@@ -114,7 +114,10 @@ export interface NexusGenFieldTypes {
     updateSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
   }
   Query: { // field return type
-    ok: boolean; // Boolean!
+    aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
+    characters: NexusGenRootTypes['Character'][]; // [Character!]!
+    groups: NexusGenRootTypes['Group'][]; // [Group!]!
+    subgroups: NexusGenRootTypes['Subgroup'][]; // [Subgroup!]!
   }
   Subgroup: { // field return type
     creation: NexusGenScalars['DateTime'] | null; // DateTime
@@ -157,7 +160,10 @@ export interface NexusGenFieldTypeNames {
     updateSubgroup: 'Subgroup'
   }
   Query: { // field return type name
-    ok: 'Boolean'
+    aliases: 'Alias'
+    characters: 'Character'
+    groups: 'Group'
+    subgroups: 'Subgroup'
   }
   Subgroup: { // field return type name
     creation: 'DateTime'
@@ -216,6 +222,30 @@ export interface NexusGenArgTypes {
     updateSubgroup: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
       id: number; // Int!
+      name?: string | null; // String
+    }
+  }
+  Query: {
+    aliases: { // args
+      alias?: string | null; // String
+      groupId?: number | null; // Int
+      id?: number | null; // Int
+    }
+    characters: { // args
+      birthday?: NexusGenScalars['DateTime'] | null; // DateTime
+      gender?: NexusGenEnums['Gender'] | null; // Gender
+      id?: number | null; // Int
+      name?: string | null; // String
+    }
+    groups: { // args
+      alias?: string | null; // String
+      creation?: NexusGenScalars['DateTime'] | null; // DateTime
+      id?: number | null; // Int
+      name?: string | null; // String
+    }
+    subgroups: { // args
+      creation?: NexusGenScalars['DateTime'] | null; // DateTime
+      id?: number | null; // Int
       name?: string | null; // String
     }
   }
