@@ -83,6 +83,7 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnu
 export interface NexusGenFieldTypes {
   Alias: { // field return type
     alias: string; // String!
+    group: NexusGenRootTypes['Group']; // Group!
     groupId: number; // Int!
     id: number; // Int!
   }
@@ -122,6 +123,7 @@ export interface NexusGenFieldTypes {
 export interface NexusGenFieldTypeNames {
   Alias: { // field return type name
     alias: 'String'
+    group: 'Group'
     groupId: 'Int'
     id: 'Int'
   }

@@ -4,6 +4,7 @@
 
 type Alias {
   alias: String!
+  group: Group!
   groupId: Int!
   id: Int!
 }

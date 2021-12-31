@@ -7,6 +7,14 @@ export const AliasObject = objectType({
   definition(t) {
     t.field(Alias.id);
     t.field(Alias.groupId);
+    t.field("group", {
+      type: nonNull("Group"),
+      async resolve(alias, _, ctx) {
+        return (await ctx.db.group.findFirst({
+          where: { id: alias.groupId },
+        }))!;
+      },
+    });
     t.field(Alias.alias);
   },
 });
