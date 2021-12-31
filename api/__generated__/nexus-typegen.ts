@@ -117,6 +117,7 @@ export interface NexusGenFieldTypes {
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
     characters: NexusGenRootTypes['Character'][]; // [Character!]!
     groups: NexusGenRootTypes['Group'][]; // [Group!]!
+    subgroups: NexusGenRootTypes['Subgroup'][]; // [Subgroup!]!
   }
   Subgroup: { // field return type
     creation: NexusGenScalars['DateTime'] | null; // DateTime
@@ -162,6 +163,7 @@ export interface NexusGenFieldTypeNames {
     aliases: 'Alias'
     characters: 'Character'
     groups: 'Group'
+    subgroups: 'Subgroup'
   }
   Subgroup: { // field return type name
     creation: 'DateTime'
@@ -237,6 +239,11 @@ export interface NexusGenArgTypes {
     }
     groups: { // args
       alias?: string | null; // String
+      creation?: NexusGenScalars['DateTime'] | null; // DateTime
+      id?: number | null; // Int
+      name?: string | null; // String
+    }
+    subgroups: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
       id?: number | null; // Int
       name?: string | null; // String
