@@ -19,7 +19,15 @@ model Group {
   id       Int       @id @default(autoincrement())
   name     String
   creation DateTime? @db.Date
-  aliases  String[]
+  aliases  Alias[]
+}
+
+model Alias {
+  group   Group  @relation(fields: [groupId], references: [id])
+  groupId Int
+  alias   String
+
+  @@unique([groupId, alias])
 }
 
 /// A collection typically containing several similarly-themed cards
