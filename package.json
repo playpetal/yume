@@ -34,7 +34,6 @@
   "scripts": {
     "dev": "yarn ts-node-dev --transpile-only --no-notify api/index.ts",
     "pgen": "yarn prisma generate --watch",
-    "codegen": "graphql-codegen --config codegen.yml --watch",
     "build": "yarn tsc",
     "generate": "ts-node --transpile-only api/schema",
     "test": "yarn generate && jest"
