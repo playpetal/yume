@@ -39,12 +39,15 @@ type Mutation {
   createAlias(alias: String!, groupId: Int!): Alias!
   createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
   createGroup(creation: DateTime, name: String!): Group!
+  createSubgroup(creation: DateTime, name: String!): Subgroup!
   deleteAlias(id: Int!): Int!
   deleteCharacter(id: Int!): Int!
   deleteGroup(id: Int!): Int!
+  deleteSubgroup(id: Int!): Int!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
   updateGroup(creation: DateTime, id: Int!, name: String): Group!
+  updateSubgroup(creation: DateTime, id: Int!, name: String): Subgroup!
 }
 
 type Query {

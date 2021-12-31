@@ -103,12 +103,15 @@ export interface NexusGenFieldTypes {
     createAlias: NexusGenRootTypes['Alias']; // Alias!
     createCharacter: NexusGenRootTypes['Character']; // Character!
     createGroup: NexusGenRootTypes['Group']; // Group!
+    createSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
     deleteAlias: number; // Int!
     deleteCharacter: number; // Int!
     deleteGroup: number; // Int!
+    deleteSubgroup: number; // Int!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
     updateCharacter: NexusGenRootTypes['Character']; // Character!
     updateGroup: NexusGenRootTypes['Group']; // Group!
+    updateSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
   }
   Query: { // field return type
     ok: boolean; // Boolean!
@@ -143,12 +146,15 @@ export interface NexusGenFieldTypeNames {
     createAlias: 'Alias'
     createCharacter: 'Character'
     createGroup: 'Group'
+    createSubgroup: 'Subgroup'
     deleteAlias: 'Int'
     deleteCharacter: 'Int'
     deleteGroup: 'Int'
+    deleteSubgroup: 'Int'
     updateAlias: 'Alias'
     updateCharacter: 'Character'
     updateGroup: 'Group'
+    updateSubgroup: 'Subgroup'
   }
   Query: { // field return type name
     ok: 'Boolean'
@@ -175,6 +181,10 @@ export interface NexusGenArgTypes {
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
       name: string; // String!
     }
+    createSubgroup: { // args
+      creation?: NexusGenScalars['DateTime'] | null; // DateTime
+      name: string; // String!
+    }
     deleteAlias: { // args
       id: number; // Int!
     }
@@ -182,6 +192,9 @@ export interface NexusGenArgTypes {
       id: number; // Int!
     }
     deleteGroup: { // args
+      id: number; // Int!
+    }
+    deleteSubgroup: { // args
       id: number; // Int!
     }
     updateAlias: { // args
@@ -196,6 +209,11 @@ export interface NexusGenArgTypes {
       name?: string | null; // String
     }
     updateGroup: { // args
+      creation?: NexusGenScalars['DateTime'] | null; // DateTime
+      id: number; // Int!
+      name?: string | null; // String
+    }
+    updateSubgroup: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
       id: number; // Int!
       name?: string | null; // String
