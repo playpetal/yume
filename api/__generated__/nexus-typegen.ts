@@ -148,6 +148,7 @@ export interface NexusGenFieldTypes {
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
     characters: NexusGenRootTypes['Character'][]; // [Character!]!
     groups: NexusGenRootTypes['Group'][]; // [Group!]!
+    me: NexusGenRootTypes['Account'] | null; // Account
     subgroups: NexusGenRootTypes['Subgroup'][]; // [Subgroup!]!
   }
   Subgroup: { // field return type
@@ -210,6 +211,7 @@ export interface NexusGenFieldTypeNames {
     aliases: 'Alias'
     characters: 'Character'
     groups: 'Group'
+    me: 'Account'
     subgroups: 'Subgroup'
   }
   Subgroup: { // field return type name

@@ -14,6 +14,38 @@ export const AccountObject = objectType({
   },
 });
 
+export const GetMeQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("me", {
+      type: "Account",
+      async resolve(_, __, ctx) {
+        if (!ctx.req.headers.authorization)
+          throw new AuthenticationError(
+            "Authorization is required to use this query."
+          );
+
+        try {
+          const user = await discordOAuth2.getUser(
+            ctx.req.headers.authorization
+          );
+
+          return await ctx.db.account.findFirst({
+            where: { discordId: user.id },
+          });
+        } catch (e) {
+          if (e instanceof UserInputError) throw e;
+
+          console.log(`Error while attempting to retrieve self: ${e}`);
+          throw new AuthenticationError(
+            "An error occurred while retrieving your account."
+          );
+        }
+      },
+    });
+  },
+});
+
 export const CreateAccountMutation = extendType({
   type: "Mutation",
   definition(t) {
