@@ -86,6 +86,7 @@ export const GroupsQuery = extendType({
         name: "String",
         creation: "DateTime",
         alias: "String",
+        after: "Int",
       },
       async resolve(_, args, ctx) {
         return ctx.db.group.findMany({
@@ -93,8 +94,10 @@ export const GroupsQuery = extendType({
             id: args.id ?? undefined,
             name: args.name ?? undefined,
             creation: args.creation ?? undefined,
-            aliases: { some: { alias: args.alias ?? undefined } },
+            aliases: args.alias ? { some: { alias: args.alias } } : undefined,
           },
+          cursor: args.after ? { id: args.after + 1 } : undefined,
+          take: 25,
         });
       },
     });

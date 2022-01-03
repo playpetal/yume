@@ -290,6 +290,7 @@ export interface NexusGenArgTypes {
       name?: string | null; // String
     }
     groups: { // args
+      after?: number | null; // Int
       alias?: string | null; // String
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
       id?: number | null; // Int
