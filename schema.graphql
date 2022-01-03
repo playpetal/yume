@@ -2,6 +2,13 @@
 ### Do not make changes to this file directly
 
 
+type Account {
+  createdAt: DateTime!
+  discordId: String!
+  id: Int!
+  username: String!
+}
+
 type Alias {
   alias: String!
   group: Group!
@@ -47,6 +54,7 @@ type Group {
 }
 
 type Mutation {
+  createAccount(username: String!): Account!
   createAlias(alias: String!, groupId: Int!): Alias!
   createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
   createGroup(creation: DateTime, name: String!): Group!

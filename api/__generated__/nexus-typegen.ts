@@ -45,6 +45,12 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Account: { // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    discordId: string; // String!
+    id: number; // Int!
+    username: string; // String!
+  }
   Alias: { // root type
     alias: string; // String!
     groupId: number; // Int!
@@ -90,6 +96,12 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Account: { // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    discordId: string; // String!
+    id: number; // Int!
+    username: string; // String!
+  }
   Alias: { // field return type
     alias: string; // String!
     group: NexusGenRootTypes['Group']; // Group!
@@ -118,6 +130,7 @@ export interface NexusGenFieldTypes {
     name: string; // String!
   }
   Mutation: { // field return type
+    createAccount: NexusGenRootTypes['Account']; // Account!
     createAlias: NexusGenRootTypes['Alias']; // Alias!
     createCharacter: NexusGenRootTypes['Character']; // Character!
     createGroup: NexusGenRootTypes['Group']; // Group!
@@ -145,6 +158,12 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Account: { // field return type name
+    createdAt: 'DateTime'
+    discordId: 'String'
+    id: 'Int'
+    username: 'String'
+  }
   Alias: { // field return type name
     alias: 'String'
     group: 'Group'
@@ -173,6 +192,7 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
   }
   Mutation: { // field return type name
+    createAccount: 'Account'
     createAlias: 'Alias'
     createCharacter: 'Character'
     createGroup: 'Group'
@@ -201,6 +221,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createAccount: { // args
+      username: string; // String!
+    }
     createAlias: { // args
       alias: string; // String!
       groupId: number; // Int!
