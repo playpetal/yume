@@ -20,6 +20,17 @@ type Character {
 """The `DateTime` custom scalar type represents a point in time."""
 scalar DateTime
 
+"""A discord user"""
+type DiscordUser {
+  avatar: String
+  discriminator: String!
+  flags: Int
+  id: String!
+  locale: String
+  mfa_enabled: Boolean
+  username: String!
+}
+
 """Character gender"""
 enum Gender {
   FEMALE
@@ -53,7 +64,7 @@ type Mutation {
 type Query {
   aliases(alias: String, groupId: Int, id: Int): [Alias!]!
   characters(birthday: DateTime, gender: Gender, id: Int, name: String): [Character!]!
-  groups(alias: String, creation: DateTime, id: Int, name: String): [Group!]!
+  groups(after: Int, alias: String, creation: DateTime, id: Int, name: String): [Group!]!
   subgroups(creation: DateTime, id: Int, name: String): [Subgroup!]!
 }
 

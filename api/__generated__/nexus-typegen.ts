@@ -56,6 +56,15 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   }
+  DiscordUser: { // root type
+    avatar?: string | null; // String
+    discriminator: string; // String!
+    flags?: number | null; // Int
+    id: string; // String!
+    locale?: string | null; // String
+    mfa_enabled?: boolean | null; // Boolean
+    username: string; // String!
+  }
   Group: { // root type
     creation?: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
@@ -92,6 +101,15 @@ export interface NexusGenFieldTypes {
     gender: NexusGenEnums['Gender'] | null; // Gender
     id: number; // Int!
     name: string; // String!
+  }
+  DiscordUser: { // field return type
+    avatar: string | null; // String
+    discriminator: string; // String!
+    flags: number | null; // Int
+    id: string; // String!
+    locale: string | null; // String
+    mfa_enabled: boolean | null; // Boolean
+    username: string; // String!
   }
   Group: { // field return type
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
@@ -138,6 +156,15 @@ export interface NexusGenFieldTypeNames {
     gender: 'Gender'
     id: 'Int'
     name: 'String'
+  }
+  DiscordUser: { // field return type name
+    avatar: 'String'
+    discriminator: 'String'
+    flags: 'Int'
+    id: 'String'
+    locale: 'String'
+    mfa_enabled: 'Boolean'
+    username: 'String'
   }
   Group: { // field return type name
     aliases: 'Alias'
