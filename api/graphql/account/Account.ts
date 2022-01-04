@@ -60,6 +60,14 @@ export const CreateAccountMutation = extendType({
             "Authorization is required to use this mutation."
           );
 
+        const usernameIsInvalid = RegExp(/[^A-Za-z0-9 _-]+/gm).exec(
+          args.username
+        );
+        if (usernameIsInvalid)
+          throw new UserInputError(
+            "Username cannot contain non-alphanumeric characters except for space, _, and -."
+          );
+
         try {
           const user = await discordOAuth2.getUser(
             ctx.req.headers.authorization
