@@ -68,6 +68,9 @@ export const CreateAccountMutation = extendType({
             "Username cannot contain non-alphanumeric characters except for space, _, and -."
           );
 
+        if (args.username.length > 20)
+          throw new UserInputError("Username cannot exceed 20 characters.");
+
         try {
           const user = await discordOAuth2.getUser(
             ctx.req.headers.authorization
