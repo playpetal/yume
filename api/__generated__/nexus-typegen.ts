@@ -83,6 +83,11 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   }
+  Title: { // root type
+    description?: string | null; // String
+    id: number; // Int!
+    title: string; // String!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -150,12 +155,18 @@ export interface NexusGenFieldTypes {
     groups: NexusGenRootTypes['Group'][]; // [Group!]!
     me: NexusGenRootTypes['Account'] | null; // Account
     subgroups: NexusGenRootTypes['Subgroup'][]; // [Subgroup!]!
+    titles: NexusGenRootTypes['Title'][]; // [Title!]!
     user: NexusGenRootTypes['Account'] | null; // Account
   }
   Subgroup: { // field return type
     creation: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
     name: string; // String!
+  }
+  Title: { // field return type
+    description: string | null; // String
+    id: number; // Int!
+    title: string; // String!
   }
 }
 
@@ -214,12 +225,18 @@ export interface NexusGenFieldTypeNames {
     groups: 'Group'
     me: 'Account'
     subgroups: 'Subgroup'
+    titles: 'Title'
     user: 'Account'
   }
   Subgroup: { // field return type name
     creation: 'DateTime'
     id: 'Int'
     name: 'String'
+  }
+  Title: { // field return type name
+    description: 'String'
+    id: 'Int'
+    title: 'String'
   }
 }
 
@@ -300,6 +317,10 @@ export interface NexusGenArgTypes {
     }
     subgroups: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
+      id?: number | null; // Int
+      name?: string | null; // String
+    }
+    titles: { // args
       id?: number | null; // Int
       name?: string | null; // String
     }

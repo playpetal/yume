@@ -19,6 +19,12 @@ model Account {
   discordId String   @unique
   username  String   @unique
   createdAt DateTime @default(now())
+
+  activeTitle   TitleInventory? @relation(fields: [activeTitleId], references: [id])
+  activeTitleId Int?            @unique
+
+  createdTitles TitleInventory[] @relation("InventoryCreatedByAccount")
+  titles        TitleInventory[] @relation("InventoryAccount")
 }
 
 /// Broad collections of cards typically encompassing many subgroups
@@ -58,4 +64,29 @@ enum Gender {
   MALE
   FEMALE
   NONBINARY
+}
+
+model Title {
+  id Int @id @default(autoincrement())
+
+  title       String  @unique @db.VarChar(100)
+  description String? @db.VarChar(1000)
+
+  accountTitles TitleInventory[]
+}
+
+model TitleInventory {
+  id Int @id @default(autoincrement())
+
+  title   Title @relation(fields: [titleId], references: [id])
+  titleId Int
+
+  account       Account  @relation(fields: [accountId], references: [id], name: "InventoryAccount")
+  accountId     Int
+  activeAccount Account?
+
+  createdAt   DateTime @default(now())
+  createdBy   Account? @relation(fields: [createdById], references: [id], name: "InventoryCreatedByAccount")
+  createdById Int?
+
 }
