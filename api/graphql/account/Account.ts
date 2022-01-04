@@ -92,3 +92,26 @@ export const CreateAccountMutation = extendType({
     });
   },
 });
+
+export const GetUserQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("user", {
+      type: "Account",
+      args: { username: "String", id: "Int" },
+      async resolve(_, args, ctx) {
+        /*if (!ctx.req.headers.authorization)
+          throw new AuthenticationError(
+            "Authorization is reuqired to use this query."
+          );*/
+
+        return ctx.db.account.findFirst({
+          where: {
+            username: args.username ?? undefined,
+            id: args.id ?? undefined,
+          },
+        });
+      },
+    });
+  },
+});

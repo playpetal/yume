@@ -75,6 +75,7 @@ type Query {
   groups(after: Int, alias: String, creation: DateTime, id: Int, name: String): [Group!]!
   me: Account
   subgroups(creation: DateTime, id: Int, name: String): [Subgroup!]!
+  user(id: Int, username: String): Account
 }
 
 """A collection typically containing several similarly-themed cards"""

@@ -150,6 +150,7 @@ export interface NexusGenFieldTypes {
     groups: NexusGenRootTypes['Group'][]; // [Group!]!
     me: NexusGenRootTypes['Account'] | null; // Account
     subgroups: NexusGenRootTypes['Subgroup'][]; // [Subgroup!]!
+    user: NexusGenRootTypes['Account'] | null; // Account
   }
   Subgroup: { // field return type
     creation: NexusGenScalars['DateTime'] | null; // DateTime
@@ -213,6 +214,7 @@ export interface NexusGenFieldTypeNames {
     groups: 'Group'
     me: 'Account'
     subgroups: 'Subgroup'
+    user: 'Account'
   }
   Subgroup: { // field return type name
     creation: 'DateTime'
@@ -300,6 +302,10 @@ export interface NexusGenArgTypes {
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
       id?: number | null; // Int
       name?: string | null; // String
+    }
+    user: { // args
+      id?: number | null; // Int
+      username?: string | null; // String
     }
   }
 }
