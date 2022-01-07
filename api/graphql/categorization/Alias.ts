@@ -1,5 +1,7 @@
 import { extendType, list, nonNull, objectType } from "nexus";
 import { Alias } from "nexus-prisma";
+import { checkAuth } from "../../lib/Auth";
+import { userInGroup } from "../../lib/Permissions";
 
 export const AliasObject = objectType({
   name: Alias.$name,
@@ -29,6 +31,12 @@ export const CreateAliasMutation = extendType({
         alias: nonNull("String"),
       },
       async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, [
+          "Developer",
+          "Release Manager",
+        ]);
+
         return ctx.db.alias.create({ data: args });
       },
     });
@@ -42,6 +50,12 @@ export const DeleteAliasMutation = extendType({
       type: nonNull("Int"),
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, [
+          "Developer",
+          "Release Manager",
+        ]);
+
         await ctx.db.alias.delete({ where: args });
 
         return args.id;
@@ -57,6 +71,12 @@ export const UpdateAliasMutation = extendType({
       type: nonNull("Alias"),
       args: { id: nonNull("Int"), groupId: "Int", alias: "String" },
       async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, [
+          "Developer",
+          "Release Manager",
+        ]);
+
         return ctx.db.alias.update({
           where: { id: args.id },
           data: {

@@ -1,5 +1,7 @@
 import { extendType, list, nonNull, objectType } from "nexus";
 import { Group } from "nexus-prisma";
+import { checkAuth } from "../../lib/Auth";
+import { userInGroup } from "../../lib/Permissions";
 
 export const GroupObject = objectType({
   name: Group.$name,
@@ -27,6 +29,12 @@ export const CreateGroupMutation = extendType({
         creation: "DateTime",
       },
       async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, [
+          "Developer",
+          "Release Manager",
+        ]);
+
         return ctx.db.group.create({
           data: {
             name: args.name,
@@ -45,6 +53,12 @@ export const DeleteGroupMutation = extendType({
       type: nonNull("Int"),
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, [
+          "Developer",
+          "Release Manager",
+        ]);
+
         await ctx.db.group.delete({ where: { id: args.id } });
 
         return args.id;
@@ -64,6 +78,12 @@ export const UpdateGroupMutation = extendType({
         creation: "DateTime",
       },
       async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, [
+          "Developer",
+          "Release Manager",
+        ]);
+
         return ctx.db.group.update({
           where: { id: args.id },
           data: {

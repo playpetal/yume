@@ -1,4 +1,5 @@
 import { Context } from "../context";
+import { NoPermissionError } from "./error";
 
 type UserGroupString = "Developer" | "Release Manager";
 
@@ -19,7 +20,7 @@ export async function userInGroup(
     req.includes(g.name as UserGroupString)
   );
 
-  console.log(groups, isInRequiredGroup);
+  if (!isInRequiredGroup) throw NoPermissionError;
 
   return isInRequiredGroup;
 }

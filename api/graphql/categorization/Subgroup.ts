@@ -1,5 +1,7 @@
 import { extendType, list, nonNull, objectType } from "nexus";
 import { Subgroup } from "nexus-prisma";
+import { checkAuth } from "../../lib/Auth";
+import { userInGroup } from "../../lib/Permissions";
 
 export const SubgroupObject = objectType({
   name: Subgroup.$name,
@@ -18,6 +20,12 @@ export const CreateSubgroupMutation = extendType({
       type: nonNull("Subgroup"),
       args: { name: nonNull("String"), creation: "DateTime" },
       async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, [
+          "Developer",
+          "Release Manager",
+        ]);
+
         return ctx.db.subgroup.create({ data: args });
       },
     });
@@ -31,6 +39,12 @@ export const DeleteSubgroupMutation = extendType({
       type: nonNull("Int"),
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, [
+          "Developer",
+          "Release Manager",
+        ]);
+
         await ctx.db.subgroup.delete({ where: args });
 
         return args.id;
@@ -46,6 +60,12 @@ export const UpdateSubgroupMutation = extendType({
       type: nonNull("Subgroup"),
       args: { id: nonNull("Int"), name: "String", creation: "DateTime" },
       async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, [
+          "Developer",
+          "Release Manager",
+        ]);
+
         return ctx.db.subgroup.update({
           where: { id: args.id },
           data: { name: args.name ?? undefined, creation: args.creation },

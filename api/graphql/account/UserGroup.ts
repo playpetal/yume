@@ -1,8 +1,8 @@
-import { AuthenticationError, UserInputError } from "apollo-server";
+import { UserInputError } from "apollo-server";
 import { extendType, list, nonNull, objectType } from "nexus";
 import { AccountUserGroup, UserGroup } from "nexus-prisma";
+import { checkAuth } from "../../lib/Auth";
 import { userInGroup } from "../../lib/Permissions";
-import { discordOAuth2 } from "../util/auth/DiscordOAuth";
 
 export const UserGroupObject = objectType({
   name: UserGroup.$name,
@@ -52,24 +52,8 @@ export const CreateUserGroupMutation = extendType({
         name: nonNull("String"),
       },
       async resolve(_, args, ctx) {
-        const auth = ctx.req.headers.authorization;
-        if (!auth)
-          throw new AuthenticationError(
-            "Authorization is required to use this mutation."
-          );
-
-        const user = await discordOAuth2.getUser(auth);
-        if (!user)
-          throw new AuthenticationError(
-            "Authorization is required to use this mutation."
-          );
-
-        const canUseQuery = await userInGroup(ctx, user.id, ["Developer"]);
-
-        if (!canUseQuery)
-          throw new AuthenticationError(
-            "You don't have permission to use this mutation."
-          );
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, ["Developer"]);
 
         const groupExists = await ctx.db.userGroup.findFirst({
           where: { name: args.name },

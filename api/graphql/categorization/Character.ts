@@ -1,5 +1,7 @@
 import { extendType, list, nonNull, objectType } from "nexus";
 import { Character } from "nexus-prisma";
+import { checkAuth } from "../../lib/Auth";
+import { userInGroup } from "../../lib/Permissions";
 
 export const CharacterObject = objectType({
   name: Character.$name,
@@ -18,7 +20,13 @@ export const CreateCharacterMutation = extendType({
     t.field("createCharacter", {
       type: nonNull("Character"),
       args: { name: nonNull("String"), birthday: "DateTime", gender: "Gender" },
-      resolve(_, args, ctx) {
+      async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, [
+          "Developer",
+          "Release Manager",
+        ]);
+
         return ctx.db.character.create({
           data: {
             name: args.name,
@@ -38,6 +46,12 @@ export const DeleteCharacterMutation = extendType({
       type: nonNull("Int"),
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, [
+          "Developer",
+          "Release Manager",
+        ]);
+
         await ctx.db.character.delete({ where: { id: args.id } });
 
         return args.id;
@@ -58,6 +72,12 @@ export const UpdateCharacterMutation = extendType({
         gender: "Gender",
       },
       async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, [
+          "Developer",
+          "Release Manager",
+        ]);
+
         return ctx.db.character.update({
           where: { id: args.id },
           data: {
