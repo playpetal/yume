@@ -9,6 +9,14 @@ type Account {
   username: String!
 }
 
+type AccountUserGroup {
+  account: Account
+  accountId: Int!
+  group: UserGroup
+  groupId: Int!
+  id: Int!
+}
+
 type Alias {
   alias: String!
   group: Group!
@@ -59,6 +67,7 @@ type Mutation {
   createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
   createGroup(creation: DateTime, name: String!): Group!
   createSubgroup(creation: DateTime, name: String!): Subgroup!
+  createUserGroup(name: String!): UserGroup!
   deleteAlias(id: Int!): Int!
   deleteCharacter(id: Int!): Int!
   deleteGroup(id: Int!): Int!
@@ -90,4 +99,10 @@ type Title {
   description: String
   id: Int!
   title: String!
+}
+
+type UserGroup {
+  id: Int!
+  members: [AccountUserGroup!]!
+  name: String!
 }

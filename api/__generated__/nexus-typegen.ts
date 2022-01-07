@@ -51,6 +51,11 @@ export interface NexusGenObjects {
     id: number; // Int!
     username: string; // String!
   }
+  AccountUserGroup: { // root type
+    accountId: number; // Int!
+    groupId: number; // Int!
+    id: number; // Int!
+  }
   Alias: { // root type
     alias: string; // String!
     groupId: number; // Int!
@@ -88,6 +93,10 @@ export interface NexusGenObjects {
     id: number; // Int!
     title: string; // String!
   }
+  UserGroup: { // root type
+    id: number; // Int!
+    name: string; // String!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -106,6 +115,13 @@ export interface NexusGenFieldTypes {
     discordId: string; // String!
     id: number; // Int!
     username: string; // String!
+  }
+  AccountUserGroup: { // field return type
+    account: NexusGenRootTypes['Account'] | null; // Account
+    accountId: number; // Int!
+    group: NexusGenRootTypes['UserGroup'] | null; // UserGroup
+    groupId: number; // Int!
+    id: number; // Int!
   }
   Alias: { // field return type
     alias: string; // String!
@@ -140,6 +156,7 @@ export interface NexusGenFieldTypes {
     createCharacter: NexusGenRootTypes['Character']; // Character!
     createGroup: NexusGenRootTypes['Group']; // Group!
     createSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
+    createUserGroup: NexusGenRootTypes['UserGroup']; // UserGroup!
     deleteAlias: number; // Int!
     deleteCharacter: number; // Int!
     deleteGroup: number; // Int!
@@ -168,6 +185,11 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     title: string; // String!
   }
+  UserGroup: { // field return type
+    id: number; // Int!
+    members: NexusGenRootTypes['AccountUserGroup'][]; // [AccountUserGroup!]!
+    name: string; // String!
+  }
 }
 
 export interface NexusGenFieldTypeNames {
@@ -176,6 +198,13 @@ export interface NexusGenFieldTypeNames {
     discordId: 'String'
     id: 'Int'
     username: 'String'
+  }
+  AccountUserGroup: { // field return type name
+    account: 'Account'
+    accountId: 'Int'
+    group: 'UserGroup'
+    groupId: 'Int'
+    id: 'Int'
   }
   Alias: { // field return type name
     alias: 'String'
@@ -210,6 +239,7 @@ export interface NexusGenFieldTypeNames {
     createCharacter: 'Character'
     createGroup: 'Group'
     createSubgroup: 'Subgroup'
+    createUserGroup: 'UserGroup'
     deleteAlias: 'Int'
     deleteCharacter: 'Int'
     deleteGroup: 'Int'
@@ -238,6 +268,11 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     title: 'String'
   }
+  UserGroup: { // field return type name
+    id: 'Int'
+    members: 'AccountUserGroup'
+    name: 'String'
+  }
 }
 
 export interface NexusGenArgTypes {
@@ -260,6 +295,9 @@ export interface NexusGenArgTypes {
     }
     createSubgroup: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
+      name: string; // String!
+    }
+    createUserGroup: { // args
       name: string; // String!
     }
     deleteAlias: { // args
