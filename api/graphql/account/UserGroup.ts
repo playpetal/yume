@@ -1,6 +1,7 @@
-import { AuthenticationError } from "apollo-server";
+import { AuthenticationError, UserInputError } from "apollo-server";
 import { extendType, list, nonNull, objectType } from "nexus";
 import { AccountUserGroup, UserGroup } from "nexus-prisma";
+import { userInGroup } from "../../lib/Permissions";
 import { discordOAuth2 } from "../util/auth/DiscordOAuth";
 
 export const UserGroupObject = objectType({
@@ -54,29 +55,28 @@ export const CreateUserGroupMutation = extendType({
         const auth = ctx.req.headers.authorization;
         if (!auth)
           throw new AuthenticationError(
-            "Authorization is required to use this query."
+            "Authorization is required to use this mutation."
           );
 
         const user = await discordOAuth2.getUser(auth);
         if (!user)
           throw new AuthenticationError(
-            "Authorization is required to use this query."
+            "Authorization is required to use this mutation."
           );
 
-        const account = await ctx.db.account.findFirst({
-          where: { discordId: user.id },
-          include: { userGroups: { include: { group: true } } },
-        });
-        if (!account)
-          throw new AuthenticationError("Please create an account.");
+        const canUseQuery = await userInGroup(ctx, user.id, ["Developer"]);
 
-        const isDeveloper = !!account.userGroups.find(
-          (a) => a.group.name === "Developer"
-        );
-        if (!isDeveloper)
+        if (!canUseQuery)
           throw new AuthenticationError(
-            "You don't have permission to use this query."
+            "You don't have permission to use this mutation."
           );
+
+        const groupExists = await ctx.db.userGroup.findFirst({
+          where: { name: args.name },
+        });
+
+        if (groupExists)
+          throw new UserInputError("That user group already exists.");
 
         return ctx.db.userGroup.create({ data: { name: args.name } });
       },
