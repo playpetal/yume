@@ -151,6 +151,7 @@ export interface NexusGenFieldTypes {
     name: string; // String!
   }
   Mutation: { // field return type
+    assignGroup: NexusGenRootTypes['AccountUserGroup']; // AccountUserGroup!
     createAccount: NexusGenRootTypes['Account']; // Account!
     createAlias: NexusGenRootTypes['Alias']; // Alias!
     createCharacter: NexusGenRootTypes['Character']; // Character!
@@ -161,6 +162,7 @@ export interface NexusGenFieldTypes {
     deleteCharacter: number; // Int!
     deleteGroup: number; // Int!
     deleteSubgroup: number; // Int!
+    unassignGroup: number; // Int!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
     updateCharacter: NexusGenRootTypes['Character']; // Character!
     updateGroup: NexusGenRootTypes['Group']; // Group!
@@ -234,6 +236,7 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
   }
   Mutation: { // field return type name
+    assignGroup: 'AccountUserGroup'
     createAccount: 'Account'
     createAlias: 'Alias'
     createCharacter: 'Character'
@@ -244,6 +247,7 @@ export interface NexusGenFieldTypeNames {
     deleteCharacter: 'Int'
     deleteGroup: 'Int'
     deleteSubgroup: 'Int'
+    unassignGroup: 'Int'
     updateAlias: 'Alias'
     updateCharacter: 'Character'
     updateGroup: 'Group'
@@ -277,6 +281,10 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    assignGroup: { // args
+      accountId: number; // Int!
+      groupId: number; // Int!
+    }
     createAccount: { // args
       username: string; // String!
     }
@@ -311,6 +319,10 @@ export interface NexusGenArgTypes {
     }
     deleteSubgroup: { // args
       id: number; // Int!
+    }
+    unassignGroup: { // args
+      accountId: number; // Int!
+      groupId: number; // Int!
     }
     updateAlias: { // args
       alias?: string | null; // String

@@ -62,6 +62,7 @@ type Group {
 }
 
 type Mutation {
+  assignGroup(accountId: Int!, groupId: Int!): AccountUserGroup!
   createAccount(username: String!): Account!
   createAlias(alias: String!, groupId: Int!): Alias!
   createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
@@ -72,6 +73,7 @@ type Mutation {
   deleteCharacter(id: Int!): Int!
   deleteGroup(id: Int!): Int!
   deleteSubgroup(id: Int!): Int!
+  unassignGroup(accountId: Int!, groupId: Int!): Int!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
   updateGroup(creation: DateTime, id: Int!, name: String): Group!

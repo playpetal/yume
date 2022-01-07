@@ -67,3 +67,87 @@ export const CreateUserGroupMutation = extendType({
     });
   },
 });
+
+export const AssignGroupMutation = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("assignGroup", {
+      type: nonNull("AccountUserGroup"),
+      args: {
+        accountId: nonNull("Int"),
+        groupId: nonNull("Int"),
+      },
+      async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, ["Developer"]);
+
+        const targetAccount = await ctx.db.account.findFirst({
+          where: { id: args.accountId },
+        });
+        if (!targetAccount)
+          throw new UserInputError("There is no user by that ID.");
+
+        const targetGroup = await ctx.db.userGroup.findFirst({
+          where: { id: args.groupId },
+        });
+        if (!targetGroup)
+          throw new UserInputError("There is no user group by that ID.");
+
+        const assignmentExists = await ctx.db.accountUserGroup.findFirst({
+          where: { accountId: targetAccount.id, groupId: targetGroup.id },
+        });
+
+        if (assignmentExists)
+          throw new UserInputError(
+            "That user is already assigned to that group."
+          );
+
+        return ctx.db.accountUserGroup.create({
+          data: { accountId: targetAccount.id, groupId: targetGroup.id },
+        });
+      },
+    });
+  },
+});
+
+export const UnassignGroupMutation = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("unassignGroup", {
+      type: nonNull("Int"),
+      args: {
+        accountId: nonNull("Int"),
+        groupId: nonNull("Int"),
+      },
+      async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, ["Developer"]);
+
+        const targetAccount = await ctx.db.account.findFirst({
+          where: { id: args.accountId },
+        });
+        if (!targetAccount)
+          throw new UserInputError("There is no user by that ID.");
+
+        const targetGroup = await ctx.db.userGroup.findFirst({
+          where: { id: args.groupId },
+        });
+        if (!targetGroup)
+          throw new UserInputError("There is no user group by that ID.");
+
+        const assignment = await ctx.db.accountUserGroup.findFirst({
+          where: { accountId: targetAccount.id, groupId: targetGroup.id },
+        });
+
+        if (!assignment)
+          throw new UserInputError("That user is not assigned to that group.");
+
+        await ctx.db.accountUserGroup.delete({
+          where: { id: assignment.id },
+        });
+
+        return assignment.id;
+      },
+    });
+  },
+});
