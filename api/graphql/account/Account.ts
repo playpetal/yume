@@ -11,6 +11,17 @@ export const AccountObject = objectType({
     t.field(Account.discordId);
     t.field(Account.username);
     t.field(Account.createdAt);
+    t.field(Account.activeTitleId);
+    t.field(Account.bio);
+    t.field("title", {
+      type: "TitleInventory",
+      resolve(root, _, ctx) {
+        if (!root.activeTitleId) return null;
+        return ctx.db.titleInventory.findFirst({
+          where: { id: root.activeTitleId },
+        });
+      },
+    });
   },
 });
 
