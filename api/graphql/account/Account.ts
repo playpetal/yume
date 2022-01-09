@@ -120,7 +120,7 @@ export const GetUserQuery = extendType({
   definition(t) {
     t.field("user", {
       type: "Account",
-      args: { username: "String", id: "Int" },
+      args: { username: "String", id: "Int", discordId: "String" },
       async resolve(_, args, ctx) {
         /*if (!ctx.req.headers.authorization)
           throw new AuthenticationError(
@@ -131,6 +131,7 @@ export const GetUserQuery = extendType({
           where: {
             username: args.username ?? undefined,
             id: args.id ?? undefined,
+            discordId: args.discordId ?? undefined,
           },
         });
       },
