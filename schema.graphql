@@ -3,9 +3,12 @@
 
 
 type Account {
+  activeTitleId: Int
+  bio: String
   createdAt: DateTime!
   discordId: String!
   id: Int!
+  title: TitleInventory
   username: String!
 }
 
@@ -88,7 +91,8 @@ type Query {
   me: Account
   subgroups(creation: DateTime, id: Int, name: String): [Subgroup!]!
   titles(id: Int, name: String): [Title!]!
-  user(id: Int, username: String): Account
+  user(discordId: String, id: Int, username: String): Account
+  userTitles(discordId: String!): [TitleInventory!]!
 }
 
 """A collection typically containing several similarly-themed cards"""
@@ -101,7 +105,16 @@ type Subgroup {
 type Title {
   description: String
   id: Int!
+  inventory: [TitleInventory!]!
   title: String!
+}
+
+type TitleInventory {
+  account: Account!
+  accountId: Int!
+  id: Int!
+  title: Title!
+  titleId: Int!
 }
 
 type UserGroup {

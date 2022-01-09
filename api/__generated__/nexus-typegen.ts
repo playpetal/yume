@@ -187,6 +187,7 @@ export interface NexusGenFieldTypes {
     subgroups: NexusGenRootTypes['Subgroup'][]; // [Subgroup!]!
     titles: NexusGenRootTypes['Title'][]; // [Title!]!
     user: NexusGenRootTypes['Account'] | null; // Account
+    userTitles: NexusGenRootTypes['TitleInventory'][]; // [TitleInventory!]!
   }
   Subgroup: { // field return type
     creation: NexusGenScalars['DateTime'] | null; // DateTime
@@ -284,6 +285,7 @@ export interface NexusGenFieldTypeNames {
     subgroups: 'Subgroup'
     titles: 'Title'
     user: 'Account'
+    userTitles: 'TitleInventory'
   }
   Subgroup: { // field return type name
     creation: 'DateTime'
@@ -412,6 +414,9 @@ export interface NexusGenArgTypes {
       discordId?: string | null; // String
       id?: number | null; // Int
       username?: string | null; // String
+    }
+    userTitles: { // args
+      discordId: string; // String!
     }
   }
 }
