@@ -13,12 +13,14 @@
     "discord-oauth2": "^2.9.0",
     "graphql": "15.8",
     "graphql-scalars": "^1.14.1",
+    "jsonwebtoken": "^8.5.1",
     "nanoid": "^3.1.30",
     "nexus": "^1.1.0",
     "nexus-prisma": "^0.35.0"
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
+    "@types/jsonwebtoken": "^8.5.6",
     "@types/node": "^17.0.5",
     "@types/pg": "^8.6.3",
     "concurrently": "^6.5.1",

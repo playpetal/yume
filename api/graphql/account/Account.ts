@@ -2,6 +2,7 @@ import { extendType, nonNull, objectType } from "nexus";
 import { Account } from "nexus-prisma";
 import { discordOAuth2 } from "../util/auth/DiscordOAuth";
 import { UserInputError, AuthenticationError } from "apollo-server";
+import jwt from "jsonwebtoken";
 
 export const AccountObject = objectType({
   name: Account.$name,
@@ -134,6 +135,37 @@ export const GetUserQuery = extendType({
             discordId: args.discordId ?? undefined,
           },
         });
+      },
+    });
+  },
+});
+
+export const SetBioMutation = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("setBio", {
+      type: nonNull("Account"),
+      args: { bio: "String" },
+      async resolve(_, args, ctx) {
+        const auth = ctx.req.headers.authorization;
+        if (!auth)
+          throw new AuthenticationError(
+            "Authorization is required to use this mutation."
+          );
+
+        try {
+          const { id } = jwt.verify(auth, process.env.SHARED_SECRET!) as {
+            id: string;
+          };
+
+          return ctx.db.account.update({
+            where: { discordId: id },
+            data: { bio: args.bio },
+          });
+        } catch (e) {
+          console.log(e);
+          throw new Error("An unexpected error occurred.");
+        }
       },
     });
   },

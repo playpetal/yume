@@ -73,6 +73,7 @@ type Mutation {
   deleteCharacter(id: Int!): Int!
   deleteGroup(id: Int!): Int!
   deleteSubgroup(id: Int!): Int!
+  setBio(bio: String): Account!
   unassignGroup(accountId: Int!, groupId: Int!): Int!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!

@@ -172,6 +172,7 @@ export interface NexusGenFieldTypes {
     deleteCharacter: number; // Int!
     deleteGroup: number; // Int!
     deleteSubgroup: number; // Int!
+    setBio: NexusGenRootTypes['Account']; // Account!
     unassignGroup: number; // Int!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
     updateCharacter: NexusGenRootTypes['Character']; // Character!
@@ -268,6 +269,7 @@ export interface NexusGenFieldTypeNames {
     deleteCharacter: 'Int'
     deleteGroup: 'Int'
     deleteSubgroup: 'Int'
+    setBio: 'Account'
     unassignGroup: 'Int'
     updateAlias: 'Alias'
     updateCharacter: 'Character'
@@ -349,6 +351,9 @@ export interface NexusGenArgTypes {
     deleteSubgroup: { // args
       id: number; // Int!
     }
+    setBio: { // args
+      bio?: string | null; // String
+    }
     unassignGroup: { // args
       accountId: number; // Int!
       groupId: number; // Int!
@@ -404,6 +409,7 @@ export interface NexusGenArgTypes {
       name?: string | null; // String
     }
     user: { // args
+      discordId?: string | null; // String
       id?: number | null; // Int
       username?: string | null; // String
     }
