@@ -46,6 +46,8 @@ export interface NexusGenScalars {
 
 export interface NexusGenObjects {
   Account: { // root type
+    activeTitleId?: number | null; // Int
+    bio?: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     discordId: string; // String!
     id: number; // Int!
@@ -93,6 +95,11 @@ export interface NexusGenObjects {
     id: number; // Int!
     title: string; // String!
   }
+  TitleInventory: { // root type
+    accountId: number; // Int!
+    id: number; // Int!
+    titleId: number; // Int!
+  }
   UserGroup: { // root type
     id: number; // Int!
     name: string; // String!
@@ -111,9 +118,12 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnu
 
 export interface NexusGenFieldTypes {
   Account: { // field return type
+    activeTitleId: number | null; // Int
+    bio: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     discordId: string; // String!
     id: number; // Int!
+    title: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
     username: string; // String!
   }
   AccountUserGroup: { // field return type
@@ -185,7 +195,15 @@ export interface NexusGenFieldTypes {
   Title: { // field return type
     description: string | null; // String
     id: number; // Int!
+    inventory: NexusGenRootTypes['TitleInventory'][]; // [TitleInventory!]!
     title: string; // String!
+  }
+  TitleInventory: { // field return type
+    account: NexusGenRootTypes['Account']; // Account!
+    accountId: number; // Int!
+    id: number; // Int!
+    title: NexusGenRootTypes['Title']; // Title!
+    titleId: number; // Int!
   }
   UserGroup: { // field return type
     id: number; // Int!
@@ -196,9 +214,12 @@ export interface NexusGenFieldTypes {
 
 export interface NexusGenFieldTypeNames {
   Account: { // field return type name
+    activeTitleId: 'Int'
+    bio: 'String'
     createdAt: 'DateTime'
     discordId: 'String'
     id: 'Int'
+    title: 'TitleInventory'
     username: 'String'
   }
   AccountUserGroup: { // field return type name
@@ -270,7 +291,15 @@ export interface NexusGenFieldTypeNames {
   Title: { // field return type name
     description: 'String'
     id: 'Int'
+    inventory: 'TitleInventory'
     title: 'String'
+  }
+  TitleInventory: { // field return type name
+    account: 'Account'
+    accountId: 'Int'
+    id: 'Int'
+    title: 'Title'
+    titleId: 'Int'
   }
   UserGroup: { // field return type name
     id: 'Int'

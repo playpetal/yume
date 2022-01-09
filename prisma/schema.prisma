@@ -20,6 +20,8 @@ model Account {
   username  String   @unique
   createdAt DateTime @default(now())
 
+  bio String? @db.VarChar(500)
+
   activeTitle   TitleInventory? @relation(fields: [activeTitleId], references: [id])
   activeTitleId Int?            @unique
 
