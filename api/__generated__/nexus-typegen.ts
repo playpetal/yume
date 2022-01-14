@@ -129,6 +129,7 @@ export interface NexusGenFieldTypes {
     bio: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     discordId: string; // String!
+    groups: NexusGenRootTypes['AccountUserGroup'][]; // [AccountUserGroup!]!
     id: number; // Int!
     title: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
     username: string; // String!
@@ -235,6 +236,7 @@ export interface NexusGenFieldTypeNames {
     bio: 'String'
     createdAt: 'DateTime'
     discordId: 'String'
+    groups: 'AccountUserGroup'
     id: 'Int'
     title: 'TitleInventory'
     username: 'String'
