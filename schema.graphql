@@ -123,6 +123,7 @@ type Title {
   description: String
   id: Int!
   inventory: [TitleInventory!]!
+  ownedCount: Int!
   title: String!
 }
 

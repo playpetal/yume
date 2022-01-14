@@ -215,6 +215,7 @@ export interface NexusGenFieldTypes {
     description: string | null; // String
     id: number; // Int!
     inventory: NexusGenRootTypes['TitleInventory'][]; // [TitleInventory!]!
+    ownedCount: number; // Int!
     title: string; // String!
   }
   TitleInventory: { // field return type
@@ -323,6 +324,7 @@ export interface NexusGenFieldTypeNames {
     description: 'String'
     id: 'Int'
     inventory: 'TitleInventory'
+    ownedCount: 'Int'
     title: 'String'
   }
   TitleInventory: { // field return type name

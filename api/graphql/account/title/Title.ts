@@ -14,6 +14,12 @@ export const TitleObject = objectType({
         return ctx.db.titleInventory.findMany({ where: { titleId: root.id } });
       },
     });
+    t.field("ownedCount", {
+      type: nonNull("Int"),
+      resolve(root, _, ctx) {
+        return ctx.db.titleInventory.count({ where: { titleId: root.id } });
+      },
+    });
   },
 });
 
