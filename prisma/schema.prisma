@@ -160,8 +160,8 @@ model CardPrefab {
 model Card {
   id Int @id @default(autoincrement())
 
-  card   CardPrefab @relation(fields: [cardId], references: [id])
-  cardId Int
+  prefab   CardPrefab @relation(fields: [prefabId], references: [id])
+  prefabId Int
 
   owner   Account? @relation(fields: [ownerId], references: [id])
   ownerId Int?

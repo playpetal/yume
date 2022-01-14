@@ -34,6 +34,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   Gender: "FEMALE" | "MALE" | "NONBINARY"
   GroupGender: "COED" | "FEMALE" | "MALE"
+  Quality: "BLOOM" | "BUD" | "FLOWER" | "SEED" | "SPROUT"
 }
 
 export interface NexusGenScalars {
@@ -63,6 +64,13 @@ export interface NexusGenObjects {
     alias: string; // String!
     groupId: number; // Int!
     id: number; // Int!
+  }
+  Card: { // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+    issue?: number | null; // Int
+    quality: NexusGenEnums['Quality']; // Quality!
+    tint: number; // Int!
   }
   CardPrefab: { // root type
     id: number; // Int!
@@ -151,6 +159,15 @@ export interface NexusGenFieldTypes {
     group: NexusGenRootTypes['Group']; // Group!
     groupId: number; // Int!
     id: number; // Int!
+  }
+  Card: { // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+    issue: number | null; // Int
+    owner: NexusGenRootTypes['Account'] | null; // Account
+    prefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
+    quality: NexusGenEnums['Quality']; // Quality!
+    tint: number; // Int!
   }
   CardPrefab: { // field return type
     character: NexusGenRootTypes['Character']; // Character!
@@ -272,6 +289,15 @@ export interface NexusGenFieldTypeNames {
     group: 'Group'
     groupId: 'Int'
     id: 'Int'
+  }
+  Card: { // field return type name
+    createdAt: 'DateTime'
+    id: 'Int'
+    issue: 'Int'
+    owner: 'Account'
+    prefab: 'CardPrefab'
+    quality: 'Quality'
+    tint: 'Int'
   }
   CardPrefab: { // field return type name
     character: 'Character'

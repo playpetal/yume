@@ -28,6 +28,16 @@ type Alias {
   id: Int!
 }
 
+type Card {
+  createdAt: DateTime!
+  id: Int!
+  issue: Int
+  owner: Account
+  prefab: CardPrefab!
+  quality: Quality!
+  tint: Int!
+}
+
 """Cards"""
 type CardPrefab {
   character: Character!
@@ -101,6 +111,14 @@ type Mutation {
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
   updateGroup(creation: DateTime, id: Int!, name: String): Group!
   updateSubgroup(creation: DateTime, id: Int!, name: String): Subgroup!
+}
+
+enum Quality {
+  BLOOM
+  BUD
+  FLOWER
+  SEED
+  SPROUT
 }
 
 type Query {
