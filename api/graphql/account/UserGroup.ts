@@ -151,3 +151,25 @@ export const UnassignGroupMutation = extendType({
     });
   },
 });
+
+export const UserGroupsQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("userGroups", {
+      type: nonNull(list(nonNull("UserGroup"))),
+      args: { search: "String", exact: "String" },
+      resolve(_, args, ctx) {
+        if (args.exact) {
+          return ctx.db.userGroup.findMany({
+            where: { name: { equals: args.exact, mode: "insensitive" } },
+          });
+        } else
+          return ctx.db.userGroup.findMany({
+            where: args.search
+              ? { name: { contains: args.search, mode: "insensitive" } }
+              : {},
+          });
+      },
+    });
+  },
+});

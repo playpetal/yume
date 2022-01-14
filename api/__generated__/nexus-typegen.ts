@@ -197,6 +197,7 @@ export interface NexusGenFieldTypes {
     subgroups: NexusGenRootTypes['Subgroup'][]; // [Subgroup!]!
     titles: NexusGenRootTypes['Title'][]; // [Title!]!
     user: NexusGenRootTypes['Account'] | null; // Account
+    userGroups: NexusGenRootTypes['UserGroup'][]; // [UserGroup!]!
     userTitles: NexusGenRootTypes['TitleInventory'][]; // [TitleInventory!]!
   }
   Song: { // field return type
@@ -304,6 +305,7 @@ export interface NexusGenFieldTypeNames {
     subgroups: 'Subgroup'
     titles: 'Title'
     user: 'Account'
+    userGroups: 'UserGroup'
     userTitles: 'TitleInventory'
   }
   Song: { // field return type name
@@ -443,6 +445,10 @@ export interface NexusGenArgTypes {
       discordId?: string | null; // String
       id?: number | null; // Int
       username?: string | null; // String
+    }
+    userGroups: { // args
+      exact?: string | null; // String
+      search?: string | null; // String
     }
     userTitles: { // args
       discordId: string; // String!

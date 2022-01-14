@@ -102,6 +102,7 @@ type Query {
   subgroups(creation: DateTime, id: Int, name: String): [Subgroup!]!
   titles(id: Int, name: String): [Title!]!
   user(discordId: String, id: Int, username: String): Account
+  userGroups(exact: String, search: String): [UserGroup!]!
 }
 
 type Song {
