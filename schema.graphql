@@ -95,12 +95,19 @@ type Mutation {
 type Query {
   aliases(alias: String, groupId: Int, id: Int): [Alias!]!
   characters(birthday: DateTime, gender: Gender, id: Int, name: String): [Character!]!
+  getRandomSong(gender: GroupGender): Song
   groups(after: Int, alias: String, creation: DateTime, id: Int, name: String): [Group!]!
   me: Account
   subgroups(creation: DateTime, id: Int, name: String): [Subgroup!]!
   titles(id: Int, name: String): [Title!]!
   user(discordId: String, id: Int, username: String): Account
-  userTitles(discordId: String!): [TitleInventory!]!
+}
+
+type Song {
+  group: Group
+  groupId: Int!
+  id: Int!
+  title: String!
 }
 
 """A collection typically containing several similarly-themed cards"""

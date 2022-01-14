@@ -87,6 +87,11 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Query: {};
+  Song: { // root type
+    groupId: number; // Int!
+    id: number; // Int!
+    title: string; // String!
+  }
   Subgroup: { // root type
     creation?: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
@@ -185,12 +190,19 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
     characters: NexusGenRootTypes['Character'][]; // [Character!]!
+    getRandomSong: NexusGenRootTypes['Song'] | null; // Song
     groups: NexusGenRootTypes['Group'][]; // [Group!]!
     me: NexusGenRootTypes['Account'] | null; // Account
     subgroups: NexusGenRootTypes['Subgroup'][]; // [Subgroup!]!
     titles: NexusGenRootTypes['Title'][]; // [Title!]!
     user: NexusGenRootTypes['Account'] | null; // Account
     userTitles: NexusGenRootTypes['TitleInventory'][]; // [TitleInventory!]!
+  }
+  Song: { // field return type
+    group: NexusGenRootTypes['Group'] | null; // Group
+    groupId: number; // Int!
+    id: number; // Int!
+    title: string; // String!
   }
   Subgroup: { // field return type
     creation: NexusGenScalars['DateTime'] | null; // DateTime
@@ -284,12 +296,19 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     aliases: 'Alias'
     characters: 'Character'
+    getRandomSong: 'Song'
     groups: 'Group'
     me: 'Account'
     subgroups: 'Subgroup'
     titles: 'Title'
     user: 'Account'
     userTitles: 'TitleInventory'
+  }
+  Song: { // field return type name
+    group: 'Group'
+    groupId: 'Int'
+    id: 'Int'
+    title: 'String'
   }
   Subgroup: { // field return type name
     creation: 'DateTime'
@@ -398,6 +417,9 @@ export interface NexusGenArgTypes {
       gender?: NexusGenEnums['Gender'] | null; // Gender
       id?: number | null; // Int
       name?: string | null; // String
+    }
+    getRandomSong: { // args
+      gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
     }
     groups: { // args
       after?: number | null; // Int
