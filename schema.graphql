@@ -28,6 +28,16 @@ type Alias {
   id: Int!
 }
 
+"""Cards"""
+type CardPrefab {
+  character: Character!
+  group: Group
+  id: Int!
+  maxCards: Int!
+  rarity: Int!
+  subgroup: Subgroup
+}
+
 """An individual character."""
 type Character {
   birthday: DateTime
