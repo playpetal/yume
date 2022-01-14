@@ -51,10 +51,19 @@ model AccountUserGroup {
 
 /// Broad collections of cards typically encompassing many subgroups
 model Group {
-  id       Int       @id @default(autoincrement())
+  id       Int          @id @default(autoincrement())
   name     String
-  creation DateTime? @db.Date
+  creation DateTime?    @db.Date
+  gender   GroupGender?
   aliases  Alias[]
+
+  songs Song[]
+}
+
+enum GroupGender {
+  MALE
+  FEMALE
+  COED
 }
 
 model Alias {
