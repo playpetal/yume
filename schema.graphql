@@ -103,6 +103,7 @@ type Query {
   titles(id: Int, name: String): [Title!]!
   user(discordId: String, id: Int, username: String): Account
   userGroups(exact: String, search: String): [UserGroup!]!
+  userTitles(id: Int!): [TitleInventory!]!
 }
 
 type Song {

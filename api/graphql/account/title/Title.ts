@@ -72,10 +72,10 @@ export const UserTitlesQuery = extendType({
   definition(t) {
     t.field("userTitles", {
       type: nonNull(list(nonNull("TitleInventory"))),
-      args: { discordId: nonNull("String") },
+      args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
         return ctx.db.titleInventory.findMany({
-          where: { account: { discordId: args.discordId } },
+          where: { accountId: args.id },
         });
       },
     });

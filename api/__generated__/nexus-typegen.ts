@@ -453,7 +453,7 @@ export interface NexusGenArgTypes {
       search?: string | null; // String
     }
     userTitles: { // args
-      discordId: string; // String!
+      id: number; // Int!
     }
   }
 }
