@@ -115,3 +115,21 @@ export const CharactersQuery = extendType({
     });
   },
 });
+
+export const SearchCharactersQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("searchCharacters", {
+      type: nonNull(list(nonNull("Character"))),
+      args: {
+        search: nonNull("String"),
+      },
+      async resolve(_, args, ctx) {
+        return ctx.db.character.findMany({
+          where: { name: { contains: args.search, mode: "insensitive" } },
+          take: 25,
+        });
+      },
+    });
+  },
+});
