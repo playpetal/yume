@@ -1,4 +1,4 @@
-import { extendType, nonNull, objectType } from "nexus";
+import { extendType, list, nonNull, objectType } from "nexus";
 import { Account } from "nexus-prisma";
 import { discordOAuth2 } from "../util/auth/DiscordOAuth";
 import { UserInputError, AuthenticationError } from "apollo-server";
@@ -20,6 +20,14 @@ export const AccountObject = objectType({
         if (!root.activeTitleId) return null;
         return ctx.db.titleInventory.findFirst({
           where: { id: root.activeTitleId },
+        });
+      },
+    });
+    t.field("groups", {
+      type: nonNull(list(nonNull("AccountUserGroup"))),
+      resolve(root, __, ctx) {
+        return ctx.db.accountUserGroup.findMany({
+          where: { accountId: root.id },
         });
       },
     });
