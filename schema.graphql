@@ -99,6 +99,7 @@ type Query {
   getRandomSong(gender: GroupGender): Song
   groups(after: Int, alias: String, creation: DateTime, id: Int, name: String): [Group!]!
   me: Account
+  searchTitles(search: String!): [Title!]!
   subgroups(creation: DateTime, id: Int, name: String): [Subgroup!]!
   titles(id: Int, name: String): [Title!]!
   user(discordId: String, id: Int, username: String): Account

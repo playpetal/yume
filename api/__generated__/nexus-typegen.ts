@@ -194,6 +194,7 @@ export interface NexusGenFieldTypes {
     getRandomSong: NexusGenRootTypes['Song'] | null; // Song
     groups: NexusGenRootTypes['Group'][]; // [Group!]!
     me: NexusGenRootTypes['Account'] | null; // Account
+    searchTitles: NexusGenRootTypes['Title'][]; // [Title!]!
     subgroups: NexusGenRootTypes['Subgroup'][]; // [Subgroup!]!
     titles: NexusGenRootTypes['Title'][]; // [Title!]!
     user: NexusGenRootTypes['Account'] | null; // Account
@@ -303,6 +304,7 @@ export interface NexusGenFieldTypeNames {
     getRandomSong: 'Song'
     groups: 'Group'
     me: 'Account'
+    searchTitles: 'Title'
     subgroups: 'Subgroup'
     titles: 'Title'
     user: 'Account'
@@ -433,6 +435,9 @@ export interface NexusGenArgTypes {
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
       id?: number | null; // Int
       name?: string | null; // String
+    }
+    searchTitles: { // args
+      search: string; // String!
     }
     subgroups: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
