@@ -10,6 +10,7 @@ export const GroupObject = objectType({
     t.field(Group.id);
     t.field(Group.name);
     t.field(Group.creation);
+    t.field(Group.gender);
     t.field("aliases", {
       type: nonNull(list(nonNull("Alias"))),
       async resolve(group, __, ctx) {
@@ -27,6 +28,7 @@ export const CreateGroupMutation = extendType({
       args: {
         name: nonNull("String"),
         creation: "DateTime",
+        gender: "GroupGender",
       },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
@@ -39,6 +41,7 @@ export const CreateGroupMutation = extendType({
           data: {
             name: args.name,
             creation: args.creation,
+            gender: args.gender,
           },
         });
       },

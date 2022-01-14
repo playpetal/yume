@@ -60,8 +60,16 @@ enum Gender {
 type Group {
   aliases: [Alias!]!
   creation: DateTime
+  gender: GroupGender
   id: Int!
   name: String!
+}
+
+"""Group gender"""
+enum GroupGender {
+  COED
+  FEMALE
+  MALE
 }
 
 type Mutation {
@@ -69,7 +77,7 @@ type Mutation {
   createAccount(username: String!): Account!
   createAlias(alias: String!, groupId: Int!): Alias!
   createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
-  createGroup(creation: DateTime, name: String!): Group!
+  createGroup(creation: DateTime, gender: GroupGender, name: String!): Group!
   createSubgroup(creation: DateTime, name: String!): Subgroup!
   createUserGroup(name: String!): UserGroup!
   deleteAlias(id: Int!): Int!

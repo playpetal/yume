@@ -33,6 +33,7 @@ export interface NexusGenInputs {
 
 export interface NexusGenEnums {
   Gender: "FEMALE" | "MALE" | "NONBINARY"
+  GroupGender: "COED" | "FEMALE" | "MALE"
 }
 
 export interface NexusGenScalars {
@@ -80,6 +81,7 @@ export interface NexusGenObjects {
   }
   Group: { // root type
     creation?: NexusGenScalars['DateTime'] | null; // DateTime
+    gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
     id: number; // Int!
     name: string; // String!
   }
@@ -157,6 +159,7 @@ export interface NexusGenFieldTypes {
   Group: { // field return type
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
     creation: NexusGenScalars['DateTime'] | null; // DateTime
+    gender: NexusGenEnums['GroupGender'] | null; // GroupGender
     id: number; // Int!
     name: string; // String!
   }
@@ -255,6 +258,7 @@ export interface NexusGenFieldTypeNames {
   Group: { // field return type name
     aliases: 'Alias'
     creation: 'DateTime'
+    gender: 'GroupGender'
     id: 'Int'
     name: 'String'
   }
@@ -332,6 +336,7 @@ export interface NexusGenArgTypes {
     }
     createGroup: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
+      gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
       name: string; // String!
     }
     createSubgroup: { // args
