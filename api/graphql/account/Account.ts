@@ -75,10 +75,13 @@ export const CreateAccountMutation = extendType({
         username: nonNull("String"),
       },
       async resolve(_, args, ctx) {
-        if (!ctx.req.headers.authorization)
+        const auth = ctx.req.headers.authorization;
+        if (!auth)
           throw new AuthenticationError(
             "Authorization is required to use this mutation."
           );
+
+        let discordId: string | undefined;
 
         const usernameIsInvalid = RegExp(/[^A-Za-z0-9 _-]+/gm).exec(
           args.username
@@ -92,33 +95,33 @@ export const CreateAccountMutation = extendType({
           throw new UserInputError("Username cannot exceed 20 characters.");
 
         try {
-          const user = await discordOAuth2.getUser(
-            ctx.req.headers.authorization
-          );
+          const { id } = jwt.verify(auth, process.env.SHARED_SECRET!) as {
+            id: string;
+          };
 
-          const accountExists = await ctx.db.account.findFirst({
-            where: { discordId: user.id },
-          });
-          if (accountExists)
-            throw new UserInputError("You already have an account.");
-
-          const usernameExists = await ctx.db.account.findFirst({
-            where: { username: args.username },
-          });
-          if (usernameExists)
-            throw new UserInputError("That username is already taken.");
-
-          return await ctx.db.account.create({
-            data: { discordId: user.id, username: args.username },
-          });
+          discordId = id;
         } catch (e) {
-          if (e instanceof UserInputError) throw e;
-
-          console.log(`Error while attempting authentication: ${e}`);
-          throw new AuthenticationError(
-            "An error occurred while authorizing with Discord."
-          );
+          console.error(e);
+          throw new AuthenticationError("Invalid JWT");
         }
+
+        const accountExists = await ctx.db.account.findFirst({
+          where: { discordId },
+        });
+
+        if (accountExists)
+          throw new UserInputError("You already have an account.");
+
+        const usernameExists = await ctx.db.account.findFirst({
+          where: { username: args.username },
+        });
+
+        if (usernameExists)
+          throw new UserInputError("That username is already taken.");
+
+        return await ctx.db.account.create({
+          data: { discordId, username: args.username },
+        });
       },
     });
   },
