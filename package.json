@@ -8,7 +8,7 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@prisma/client": "^3.7.0",
+    "@prisma/client": "^3.8.0",
     "apollo-server": "^3.6.0",
     "discord-oauth2": "^2.9.0",
     "graphql": "15.8",
@@ -28,7 +28,7 @@
     "graphql-request": "^3.7.0",
     "jest": "^27.4.5",
     "pg": "^8.7.1",
-    "prisma": "^3.7.0",
+    "prisma": "^3.8.0",
     "ts-jest": "^27.1.2",
     "ts-node": "^10.4.0",
     "ts-node-dev": "^1.1.8",
