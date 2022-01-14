@@ -29,6 +29,8 @@ model Account {
   titles        TitleInventory[] @relation("InventoryAccount")
 
   userGroups AccountUserGroup[]
+
+  cards Card[]
 }
 
 model UserGroup {
@@ -58,6 +60,8 @@ model Group {
   aliases  Alias[]
 
   songs Song[]
+
+  cards CardPrefab[]
 }
 
 enum GroupGender {
@@ -80,6 +84,8 @@ model Subgroup {
   id       Int       @id @default(autoincrement())
   name     String
   creation DateTime? @db.Date
+
+  prefabs CardPrefab[]
 }
 
 /// An individual character.
@@ -88,6 +94,8 @@ model Character {
   name     String
   birthday DateTime? @db.Date
   gender   Gender?
+
+  prefabs CardPrefab[]
 }
 
 /// Character gender.
@@ -128,4 +136,47 @@ model Song {
   title   String
   group   Group  @relation(fields: [groupId], references: [id])
   groupId Int
+}
+
+/// Cards
+model CardPrefab {
+  id Int @id @default(autoincrement())
+
+  character   Character @relation(fields: [characterId], references: [id])
+  characterId Int
+
+  subgroup   Subgroup? @relation(fields: [subgroupId], references: [id])
+  subgroupId Int?
+
+  group   Group? @relation(fields: [groupId], references: [id])
+  groupId Int?
+
+  maxCards Int @default(0)
+  rarity   Int @default(100)
+
+  cards Card[]
+}
+
+model Card {
+  id Int @id @default(autoincrement())
+
+  card   CardPrefab @relation(fields: [cardId], references: [id])
+  cardId Int
+
+  owner   Account? @relation(fields: [ownerId], references: [id])
+  ownerId Int?
+
+  tint    Int     @default(16755404)
+  issue   Int?
+  quality Quality
+
+  createdAt DateTime @default(now())
+}
+
+enum Quality {
+  SEED
+  SPROUT
+  BUD
+  FLOWER
+  BLOOM
 }
