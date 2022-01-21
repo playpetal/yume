@@ -13,3 +13,22 @@ export const CardPrefabObject = objectType({
     t.field(CardPrefab.rarity);
   },
 });
+
+export const CreatePrefabMutation = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("createPrefab", {
+      type: nonNull("CardPrefab"),
+      args: {
+        characterId: nonNull("Int"),
+        subgroupId: "Int",
+        groupId: "Int",
+        maxCards: "Int",
+        rarity: "Int",
+      },
+      async resolve(_, args, ctx) {
+        return ctx.db.cardPrefab.create({ data: args });
+      },
+    });
+  },
+});
