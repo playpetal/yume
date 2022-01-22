@@ -69,6 +69,7 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
     issue?: number | null; // Int
+    prefabId: number; // Int!
     quality: NexusGenEnums['Quality']; // Quality!
     tint: number; // Int!
   }
@@ -166,6 +167,7 @@ export interface NexusGenFieldTypes {
     issue: number | null; // Int
     owner: NexusGenRootTypes['Account'] | null; // Account
     prefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
+    prefabId: number; // Int!
     quality: NexusGenEnums['Quality']; // Quality!
     tint: number; // Int!
   }
@@ -205,12 +207,14 @@ export interface NexusGenFieldTypes {
     createAlias: NexusGenRootTypes['Alias']; // Alias!
     createCharacter: NexusGenRootTypes['Character']; // Character!
     createGroup: NexusGenRootTypes['Group']; // Group!
+    createPrefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
     createSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
     createUserGroup: NexusGenRootTypes['UserGroup']; // UserGroup!
     deleteAlias: number; // Int!
     deleteCharacter: number; // Int!
     deleteGroup: number; // Int!
     deleteSubgroup: number; // Int!
+    rollCard: NexusGenRootTypes['Card']; // Card!
     setBio: NexusGenRootTypes['Account']; // Account!
     unassignGroup: number; // Int!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
@@ -296,6 +300,7 @@ export interface NexusGenFieldTypeNames {
     issue: 'Int'
     owner: 'Account'
     prefab: 'CardPrefab'
+    prefabId: 'Int'
     quality: 'Quality'
     tint: 'Int'
   }
@@ -335,12 +340,14 @@ export interface NexusGenFieldTypeNames {
     createAlias: 'Alias'
     createCharacter: 'Character'
     createGroup: 'Group'
+    createPrefab: 'CardPrefab'
     createSubgroup: 'Subgroup'
     createUserGroup: 'UserGroup'
     deleteAlias: 'Int'
     deleteCharacter: 'Int'
     deleteGroup: 'Int'
     deleteSubgroup: 'Int'
+    rollCard: 'Card'
     setBio: 'Account'
     unassignGroup: 'Int'
     updateAlias: 'Alias'
@@ -419,6 +426,13 @@ export interface NexusGenArgTypes {
       gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
       name: string; // String!
     }
+    createPrefab: { // args
+      characterId: number; // Int!
+      groupId?: number | null; // Int
+      maxCards?: number | null; // Int
+      rarity?: number | null; // Int
+      subgroupId?: number | null; // Int
+    }
     createSubgroup: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
       name: string; // String!
@@ -437,6 +451,9 @@ export interface NexusGenArgTypes {
     }
     deleteSubgroup: { // args
       id: number; // Int!
+    }
+    rollCard: { // args
+      gender?: NexusGenEnums['Gender'] | null; // Gender
     }
     setBio: { // args
       bio?: string | null; // String

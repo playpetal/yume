@@ -34,6 +34,7 @@ type Card {
   issue: Int
   owner: Account
   prefab: CardPrefab!
+  prefabId: Int!
   quality: Quality!
   tint: Int!
 }
@@ -99,12 +100,14 @@ type Mutation {
   createAlias(alias: String!, groupId: Int!): Alias!
   createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
   createGroup(creation: DateTime, gender: GroupGender, name: String!): Group!
+  createPrefab(characterId: Int!, groupId: Int, maxCards: Int, rarity: Int, subgroupId: Int): CardPrefab!
   createSubgroup(creation: DateTime, name: String!): Subgroup!
   createUserGroup(name: String!): UserGroup!
   deleteAlias(id: Int!): Int!
   deleteCharacter(id: Int!): Int!
   deleteGroup(id: Int!): Int!
   deleteSubgroup(id: Int!): Int!
+  rollCard(gender: Gender): Card!
   setBio(bio: String): Account!
   unassignGroup(accountId: Int!, groupId: Int!): Int!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
