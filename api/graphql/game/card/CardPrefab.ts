@@ -1,4 +1,4 @@
-import { objectType } from "nexus";
+import { extendType, nonNull, objectType } from "nexus";
 import { CardPrefab } from "nexus-prisma";
 
 export const CardPrefabObject = objectType({
