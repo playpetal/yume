@@ -27,7 +27,13 @@ export const CreatePrefabMutation = extendType({
         rarity: "Int",
       },
       async resolve(_, args, ctx) {
-        return ctx.db.cardPrefab.create({ data: args });
+        return ctx.db.cardPrefab.create({
+          data: {
+            ...args,
+            maxCards: args.maxCards ?? undefined,
+            rarity: args.rarity ?? undefined,
+          },
+        });
       },
     });
   },
