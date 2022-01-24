@@ -6,9 +6,31 @@ export const CardPrefabObject = objectType({
   description: CardPrefab.$description,
   definition(t) {
     t.field(CardPrefab.id);
-    t.field(CardPrefab.group);
-    t.field(CardPrefab.subgroup);
-    t.field(CardPrefab.character);
+    t.field(CardPrefab.groupId);
+    t.field("group", {
+      type: "Group",
+      async resolve(source, _, ctx) {
+        if (!source.groupId) return null;
+        return ctx.db.group.findFirst({ where: { id: source.groupId } });
+      },
+    });
+    t.field(CardPrefab.subgroupId);
+    t.field("subgroup", {
+      type: "Subgroup",
+      async resolve(source, _, ctx) {
+        if (!source.subgroupId) return null;
+        return ctx.db.subgroup.findFirst({ where: { id: source.subgroupId } });
+      },
+    });
+    t.field(CardPrefab.characterId);
+    t.field("character", {
+      type: nonNull("Character"),
+      async resolve(source, _, ctx) {
+        return (await ctx.db.character.findFirst({
+          where: { id: source.characterId },
+        }))!;
+      },
+    });
     t.field(CardPrefab.maxCards);
     t.field(CardPrefab.rarity);
   },

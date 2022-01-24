@@ -42,11 +42,14 @@ type Card {
 """Cards"""
 type CardPrefab {
   character: Character!
+  characterId: Int!
   group: Group
+  groupId: Int
   id: Int!
   maxCards: Int!
   rarity: Int!
   subgroup: Subgroup
+  subgroupId: Int
 }
 
 """An individual character."""

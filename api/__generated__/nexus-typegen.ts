@@ -74,9 +74,12 @@ export interface NexusGenObjects {
     tint: number; // Int!
   }
   CardPrefab: { // root type
+    characterId: number; // Int!
+    groupId?: number | null; // Int
     id: number; // Int!
     maxCards: number; // Int!
     rarity: number; // Int!
+    subgroupId?: number | null; // Int
   }
   Character: { // root type
     birthday?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -173,11 +176,14 @@ export interface NexusGenFieldTypes {
   }
   CardPrefab: { // field return type
     character: NexusGenRootTypes['Character']; // Character!
+    characterId: number; // Int!
     group: NexusGenRootTypes['Group'] | null; // Group
+    groupId: number | null; // Int
     id: number; // Int!
     maxCards: number; // Int!
     rarity: number; // Int!
     subgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
+    subgroupId: number | null; // Int
   }
   Character: { // field return type
     birthday: NexusGenScalars['DateTime'] | null; // DateTime
@@ -306,11 +312,14 @@ export interface NexusGenFieldTypeNames {
   }
   CardPrefab: { // field return type name
     character: 'Character'
+    characterId: 'Int'
     group: 'Group'
+    groupId: 'Int'
     id: 'Int'
     maxCards: 'Int'
     rarity: 'Int'
     subgroup: 'Subgroup'
+    subgroupId: 'Int'
   }
   Character: { // field return type name
     birthday: 'DateTime'
