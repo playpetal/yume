@@ -79,6 +79,7 @@ export const UpdateGroupMutation = extendType({
         id: nonNull("Int"),
         name: "String",
         creation: "DateTime",
+        gender: "GroupGender",
       },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
@@ -92,6 +93,7 @@ export const UpdateGroupMutation = extendType({
           data: {
             name: args.name || undefined,
             creation: args.creation,
+            gender: args.gender,
           },
         });
       },

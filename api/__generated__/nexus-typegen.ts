@@ -484,6 +484,7 @@ export interface NexusGenArgTypes {
     }
     updateGroup: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
+      gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
       id: number; // Int!
       name?: string | null; // String
     }

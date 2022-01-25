@@ -115,7 +115,7 @@ type Mutation {
   unassignGroup(accountId: Int!, groupId: Int!): Int!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
-  updateGroup(creation: DateTime, id: Int!, name: String): Group!
+  updateGroup(creation: DateTime, gender: GroupGender, id: Int!, name: String): Group!
   updateSubgroup(creation: DateTime, id: Int!, name: String): Subgroup!
 }
 
