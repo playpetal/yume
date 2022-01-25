@@ -16,7 +16,8 @@
     "jsonwebtoken": "^8.5.1",
     "nanoid": "^3.1.30",
     "nexus": "^1.1.0",
-    "nexus-prisma": "^0.35.0"
+    "nexus-prisma": "^0.35.0",
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
@@ -37,7 +38,8 @@
   "scripts": {
     "dev": "yarn ts-node-dev --transpile-only --no-notify api/index.ts",
     "pgen": "yarn prisma generate --watch",
-    "build": "yarn tsc",
+    "build": "yarn rimraf dist && yarn tsc",
+    "pm2": "NODE_ENV=production pm2 start dist/index.js --watch -i max",
     "generate": "ts-node --transpile-only api/schema",
     "test": "yarn generate && jest"
   },
