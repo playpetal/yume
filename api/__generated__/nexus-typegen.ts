@@ -51,6 +51,7 @@ export interface NexusGenObjects {
     activeTitleId?: number | null; // Int
     bio?: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    currency: number; // Int!
     discordId: string; // String!
     id: number; // Int!
     username: string; // String!
@@ -144,7 +145,9 @@ export interface NexusGenFieldTypes {
   Account: { // field return type
     activeTitleId: number | null; // Int
     bio: string | null; // String
+    cardCount: number; // Int!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    currency: number; // Int!
     discordId: string; // String!
     groups: NexusGenRootTypes['AccountUserGroup'][]; // [AccountUserGroup!]!
     id: number; // Int!
@@ -220,7 +223,7 @@ export interface NexusGenFieldTypes {
     deleteCharacter: number; // Int!
     deleteGroup: number; // Int!
     deleteSubgroup: number; // Int!
-    rollCard: NexusGenRootTypes['Card']; // Card!
+    rollCards: NexusGenRootTypes['Card'][]; // [Card!]!
     setBio: NexusGenRootTypes['Account']; // Account!
     unassignGroup: number; // Int!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
@@ -280,7 +283,9 @@ export interface NexusGenFieldTypeNames {
   Account: { // field return type name
     activeTitleId: 'Int'
     bio: 'String'
+    cardCount: 'Int'
     createdAt: 'DateTime'
+    currency: 'Int'
     discordId: 'String'
     groups: 'AccountUserGroup'
     id: 'Int'
@@ -356,7 +361,7 @@ export interface NexusGenFieldTypeNames {
     deleteCharacter: 'Int'
     deleteGroup: 'Int'
     deleteSubgroup: 'Int'
-    rollCard: 'Card'
+    rollCards: 'Card'
     setBio: 'Account'
     unassignGroup: 'Int'
     updateAlias: 'Alias'
@@ -461,7 +466,8 @@ export interface NexusGenArgTypes {
     deleteSubgroup: { // args
       id: number; // Int!
     }
-    rollCard: { // args
+    rollCards: { // args
+      amount: number; // Int!
       gender?: NexusGenEnums['Gender'] | null; // Gender
     }
     setBio: { // args

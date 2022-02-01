@@ -5,7 +5,9 @@
 type Account {
   activeTitleId: Int
   bio: String
+  cardCount: Int!
   createdAt: DateTime!
+  currency: Int!
   discordId: String!
   groups: [AccountUserGroup!]!
   id: Int!
@@ -110,7 +112,7 @@ type Mutation {
   deleteCharacter(id: Int!): Int!
   deleteGroup(id: Int!): Int!
   deleteSubgroup(id: Int!): Int!
-  rollCard(gender: Gender): Card!
+  rollCards(amount: Int!, gender: Gender): [Card!]!
   setBio(bio: String): Account!
   unassignGroup(accountId: Int!, groupId: Int!): Int!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!

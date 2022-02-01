@@ -30,7 +30,10 @@ model Account {
 
   userGroups AccountUserGroup[]
 
+  currency Int @default(0)
+
   cards Card[]
+  rolls RollLog[]
 }
 
 model UserGroup {
@@ -171,6 +174,8 @@ model Card {
   quality Quality
 
   createdAt DateTime @default(now())
+
+  rolls RollLog[]
 }
 
 enum Quality {
@@ -179,4 +184,19 @@ enum Quality {
   BUD
   FLOWER
   BLOOM
+}
+
+// Action Logging
+model RollLog {
+  id Int @id @default(autoincrement())
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  card   Card @relation(fields: [cardId], references: [id])
+  cardId Int
+
+  gender Gender?
+
+  createdAt DateTime @default(now())
 }

@@ -14,6 +14,13 @@ export const AccountObject = objectType({
     t.field(Account.createdAt);
     t.field(Account.activeTitleId);
     t.field(Account.bio);
+    t.field(Account.currency);
+    t.field("cardCount", {
+      type: nonNull("Int"),
+      resolve(root, _, ctx) {
+        return ctx.db.card.count({ where: { ownerId: root.id } });
+      },
+    });
     t.field("title", {
       type: "TitleInventory",
       resolve(root, _, ctx) {
