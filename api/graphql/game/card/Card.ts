@@ -35,6 +35,45 @@ export const CardObject = objectType({
   },
 });
 
+export const GetCardQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("getCard", {
+      type: "Card",
+      args: {
+        id: nonNull("Int"),
+      },
+      async resolve(_, args, ctx) {
+        return ctx.db.card.findUnique({ where: { id: args.id } });
+      },
+    });
+  },
+});
+
+export const SearchCardsQuery = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("searchCards", {
+      type: nonNull(list(nonNull("Card"))),
+      args: {
+        search: nonNull("String"),
+        ownerId: nonNull("Int"),
+      },
+      async resolve(_, args, ctx) {
+        const cards = await ctx.db.card.findMany({
+          where: { ownerId: args.ownerId },
+        });
+
+        const matches = cards.filter((c) =>
+          c.id.toString(36).includes(args.search)
+        );
+
+        return matches.slice(0, 25);
+      },
+    });
+  },
+});
+
 export const RollCardsMutation = extendType({
   type: "Mutation",
   definition(t) {

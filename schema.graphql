@@ -157,6 +157,7 @@ enum Quality {
 
 type Query {
   aliases(alias: String, groupId: Int, id: Int): [Alias!]!
+  getCard(id: Int!): Card
   getCharacter(id: Int!): Character
   getGroup(id: Int!): Group
   getRandomSong(gender: GroupGender): GameSong
@@ -164,6 +165,7 @@ type Query {
   getUserTitle(id: Int!): TitleInventory
   me: Account
   prefab(id: Int!): CardPrefab
+  searchCards(ownerId: Int!, search: String!): [Card!]!
   searchCharacters(search: String!): [Character!]!
   searchGroups(search: String!): [Group!]!
   searchPrefabs(search: String!): [CardPrefab!]!

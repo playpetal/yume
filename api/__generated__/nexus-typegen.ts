@@ -273,6 +273,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
+    getCard: NexusGenRootTypes['Card'] | null; // Card
     getCharacter: NexusGenRootTypes['Character'] | null; // Character
     getGroup: NexusGenRootTypes['Group'] | null; // Group
     getRandomSong: NexusGenRootTypes['GameSong'] | null; // GameSong
@@ -280,6 +281,7 @@ export interface NexusGenFieldTypes {
     getUserTitle: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
     me: NexusGenRootTypes['Account'] | null; // Account
     prefab: NexusGenRootTypes['CardPrefab'] | null; // CardPrefab
+    searchCards: NexusGenRootTypes['Card'][]; // [Card!]!
     searchCharacters: NexusGenRootTypes['Character'][]; // [Character!]!
     searchGroups: NexusGenRootTypes['Group'][]; // [Group!]!
     searchPrefabs: NexusGenRootTypes['CardPrefab'][]; // [CardPrefab!]!
@@ -436,6 +438,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     aliases: 'Alias'
+    getCard: 'Card'
     getCharacter: 'Character'
     getGroup: 'Group'
     getRandomSong: 'GameSong'
@@ -443,6 +446,7 @@ export interface NexusGenFieldTypeNames {
     getUserTitle: 'TitleInventory'
     me: 'Account'
     prefab: 'CardPrefab'
+    searchCards: 'Card'
     searchCharacters: 'Character'
     searchGroups: 'Group'
     searchPrefabs: 'CardPrefab'
@@ -596,6 +600,9 @@ export interface NexusGenArgTypes {
       groupId?: number | null; // Int
       id?: number | null; // Int
     }
+    getCard: { // args
+      id: number; // Int!
+    }
     getCharacter: { // args
       id: number; // Int!
     }
@@ -613,6 +620,10 @@ export interface NexusGenArgTypes {
     }
     prefab: { // args
       id: number; // Int!
+    }
+    searchCards: { // args
+      ownerId: number; // Int!
+      search: string; // String!
     }
     searchCharacters: { // args
       search: string; // String!
