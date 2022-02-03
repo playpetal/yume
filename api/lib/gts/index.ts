@@ -89,16 +89,12 @@ class GTSManager {
 
     try {
       const {
-        data: { url },
+        data: { video },
       } = (await axios.get(`${process.env.YURE_URL}/song?id=${song.id}`)) as {
-        data: { url: string };
+        data: { video: string };
       };
 
-      const { data } = (await axios.get(url, {
-        responseType: "arraybuffer",
-      })) as { data: Buffer };
-
-      const instance: RedisSong = { ...song, video: data.toString("base64") };
+      const instance: RedisSong = { ...song, video: video };
 
       if (addToStack) {
         await redis.rpush(
