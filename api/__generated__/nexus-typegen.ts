@@ -78,6 +78,7 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
     issue?: number | null; // Int
+    ownerId?: number | null; // Int
     prefabId: number; // Int!
     quality: NexusGenEnums['Quality']; // Quality!
     tint: number; // Int!
@@ -197,6 +198,7 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     issue: number | null; // Int
     owner: NexusGenRootTypes['Account'] | null; // Account
+    ownerId: number | null; // Int
     prefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
     prefabId: number; // Int!
     quality: NexusGenEnums['Quality']; // Quality!
@@ -357,6 +359,7 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     issue: 'Int'
     owner: 'Account'
+    ownerId: 'Int'
     prefab: 'CardPrefab'
     prefabId: 'Int'
     quality: 'Quality'

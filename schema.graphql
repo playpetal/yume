@@ -45,6 +45,7 @@ type Card {
   id: Int!
   issue: Int
   owner: Account
+  ownerId: Int
   prefab: CardPrefab!
   prefabId: Int!
   quality: Quality!
