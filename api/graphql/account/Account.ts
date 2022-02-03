@@ -15,10 +15,27 @@ export const AccountObject = objectType({
     t.field(Account.activeTitleId);
     t.field(Account.bio);
     t.field(Account.currency);
-    t.field("cardCount", {
-      type: nonNull("Int"),
-      resolve(root, _, ctx) {
-        return ctx.db.card.count({ where: { ownerId: root.id } });
+    t.field("stats", {
+      type: "AccountStats",
+      async resolve(root, _, ctx) {
+        const cardCount = await ctx.db.card.count({
+          where: { ownerId: root.id },
+        });
+        const gts = await ctx.db.gTS.findFirst({
+          where: { accountId: root.id },
+        });
+        const rollCount = await ctx.db.rollLog.count({
+          where: { accountId: root.id },
+        });
+
+        return {
+          cardCount,
+          gtsGuessCount: gts?.totalGuesses || 0,
+          gtsTotalGames: gts?.totalGames || 0,
+          gtsTotalTime: gts?.totalTime || 0,
+          gtsTotalRewards: gts?.totalRewards || 0,
+          rollCount,
+        };
       },
     });
     t.field("title", {
@@ -38,6 +55,19 @@ export const AccountObject = objectType({
         });
       },
     });
+  },
+});
+
+export const AccountStatsObject = objectType({
+  name: "AccountStats",
+  description: "Account Stats",
+  definition(t) {
+    t.field("cardCount", { type: nonNull("Int") });
+    t.field("gtsTotalGames", { type: nonNull("Int") });
+    t.field("gtsGuessCount", { type: nonNull("Int") });
+    t.field("gtsTotalTime", { type: nonNull("Int") });
+    t.field("gtsTotalRewards", { type: nonNull("Int") });
+    t.field("rollCount", { type: nonNull("Int") });
   },
 });
 

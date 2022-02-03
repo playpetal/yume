@@ -75,18 +75,16 @@ export const UpdateSubgroupMutation = extendType({
   },
 });
 
-export const SubgroupsQuery = extendType({
+export const GetSubgroupQuery = extendType({
   type: "Query",
   definition(t) {
-    t.field("subgroups", {
-      type: nonNull(list(nonNull("Subgroup"))),
-      args: { id: "Int", name: "String", creation: "DateTime" },
+    t.field("getSubgroup", {
+      type: "Subgroup",
+      args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
-        return ctx.db.subgroup.findMany({
+        return ctx.db.subgroup.findUnique({
           where: {
-            id: args.id ?? undefined,
-            name: args.name ?? undefined,
-            creation: args.creation ?? undefined,
+            id: args.id,
           },
         });
       },

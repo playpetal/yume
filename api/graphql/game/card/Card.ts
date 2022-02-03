@@ -92,6 +92,12 @@ export const RollCardsMutation = extendType({
           cards.push(card);
         }
 
+        await ctx.db.rollLog.createMany({
+          data: cards.map((c) => {
+            return { cardId: c.id, accountId: account.id };
+          }),
+        });
+
         return cards;
       },
     });

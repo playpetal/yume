@@ -50,16 +50,13 @@ export const TitleInventoryObject = objectType({
 export const TitlesQuery = extendType({
   type: "Query",
   definition(t) {
-    t.field("titles", {
-      type: nonNull(list(nonNull("Title"))),
-      args: { id: "Int", name: "String" },
+    t.field("title", {
+      type: "Title",
+      args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
-        return ctx.db.title.findMany({
+        return ctx.db.title.findFirst({
           where: {
-            id: args.id ?? undefined,
-            title: args.name
-              ? { contains: args.name, mode: "insensitive" }
-              : undefined,
+            id: args.id,
           },
         });
       },

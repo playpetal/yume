@@ -1,0 +1,19 @@
+-- CreateTable
+CREATE TABLE "GTSLog" (
+    "id" SERIAL NOT NULL,
+    "accountId" INTEGER NOT NULL,
+    "guesses" INTEGER NOT NULL,
+    "time" DOUBLE PRECISION NOT NULL,
+    "reward" INTEGER NOT NULL,
+    "songId" INTEGER NOT NULL,
+    "correct" BOOLEAN NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "GTSLog_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "GTSLog" ADD CONSTRAINT "GTSLog_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "Account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "GTSLog" ADD CONSTRAINT "GTSLog_songId_fkey" FOREIGN KEY ("songId") REFERENCES "Song"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

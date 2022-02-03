@@ -91,24 +91,18 @@ export const UpdateCharacterMutation = extendType({
   },
 });
 
-export const CharactersQuery = extendType({
+export const GetCharacterQuery = extendType({
   type: "Query",
   definition(t) {
-    t.field("characters", {
-      type: nonNull(list(nonNull("Character"))),
+    t.field("getCharacter", {
+      type: "Character",
       args: {
-        id: "Int",
-        name: "String",
-        birthday: "DateTime",
-        gender: "Gender",
+        id: nonNull("Int"),
       },
       async resolve(_, args, ctx) {
-        return ctx.db.character.findMany({
+        return ctx.db.character.findUnique({
           where: {
-            id: args.id ?? undefined,
-            name: args.name ?? undefined,
-            birthday: args.birthday ?? undefined,
-            gender: args.gender,
+            id: args.id,
           },
         });
       },

@@ -10,6 +10,7 @@
   "dependencies": {
     "@prisma/client": "^3.8.1",
     "apollo-server": "^3.6.0",
+    "axios": "^0.25.0",
     "discord-oauth2": "^2.9.0",
     "graphql": "15.8",
     "graphql-scalars": "^1.14.1",

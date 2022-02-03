@@ -101,28 +101,19 @@ export const UpdateGroupMutation = extendType({
   },
 });
 
-export const GroupsQuery = extendType({
+export const GetGroupQuery = extendType({
   type: "Query",
   definition(t) {
-    t.field("groups", {
-      type: nonNull(list(nonNull("Group"))),
+    t.field("getGroup", {
+      type: "Group",
       args: {
-        id: "Int",
-        name: "String",
-        creation: "DateTime",
-        alias: "String",
-        after: "Int",
+        id: nonNull("Int"),
       },
       async resolve(_, args, ctx) {
-        return ctx.db.group.findMany({
+        return ctx.db.group.findUnique({
           where: {
-            id: args.id ?? undefined,
-            name: args.name ?? undefined,
-            creation: args.creation ?? undefined,
-            aliases: args.alias ? { some: { alias: args.alias } } : undefined,
+            id: args.id,
           },
-          cursor: args.after ? { id: args.after + 1 } : undefined,
-          take: 25,
         });
       },
     });

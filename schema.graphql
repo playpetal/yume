@@ -5,14 +5,24 @@
 type Account {
   activeTitleId: Int
   bio: String
-  cardCount: Int!
   createdAt: DateTime!
   currency: Int!
   discordId: String!
   groups: [AccountUserGroup!]!
   id: Int!
+  stats: AccountStats
   title: TitleInventory
   username: String!
+}
+
+"""Account Stats"""
+type AccountStats {
+  cardCount: Int!
+  gtsGuessCount: Int!
+  gtsTotalGames: Int!
+  gtsTotalRewards: Int!
+  gtsTotalTime: Int!
+  rollCount: Int!
 }
 
 type AccountUserGroup {
@@ -76,6 +86,17 @@ type DiscordUser {
   username: String!
 }
 
+"""Game song"""
+type GameSong {
+  group: String!
+  id: Int!
+  maxGuesses: Int!
+  maxReward: Int!
+  timeLimit: Int!
+  title: String!
+  video: String!
+}
+
 """Character gender"""
 enum Gender {
   FEMALE
@@ -101,6 +122,7 @@ enum GroupGender {
 
 type Mutation {
   assignGroup(accountId: Int!, groupId: Int!): AccountUserGroup!
+  completeGts(correct: Boolean!, guesses: Int!, reward: Int!, songId: Int!, startedAt: DateTime!, time: Int!): Int!
   createAccount(username: String!): Account!
   createAlias(alias: String!, groupId: Int!): Alias!
   createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
@@ -114,10 +136,12 @@ type Mutation {
   deleteSubgroup(id: Int!): Int!
   rollCards(amount: Int!, gender: Gender): [Card!]!
   setBio(bio: String): Account!
+  setMaxGtsReward(maxReward: Int!): Int!
   unassignGroup(accountId: Int!, groupId: Int!): Int!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
   updateGroup(creation: DateTime, gender: GroupGender, id: Int!, name: String): Group!
+  updatePrefab(characterId: Int, groupId: Int, maxCards: Int, prefabId: Int!, rarity: Int, subgroupId: Int): CardPrefab!
   updateSubgroup(creation: DateTime, id: Int!, name: String): Subgroup!
 }
 
@@ -131,16 +155,18 @@ enum Quality {
 
 type Query {
   aliases(alias: String, groupId: Int, id: Int): [Alias!]!
-  characters(birthday: DateTime, gender: Gender, id: Int, name: String): [Character!]!
-  getRandomSong(gender: GroupGender): Song
-  groups(after: Int, alias: String, creation: DateTime, id: Int, name: String): [Group!]!
+  getCharacter(id: Int!): Character
+  getGroup(id: Int!): Group
+  getRandomSong(gender: GroupGender): GameSong
+  getSubgroup(id: Int!): Subgroup
   me: Account
+  prefab(id: Int!): CardPrefab
   searchCharacters(search: String!): [Character!]!
   searchGroups(search: String!): [Group!]!
+  searchPrefabs(search: String!): [CardPrefab!]!
   searchSubgroups(search: String!): [Subgroup!]!
   searchTitles(search: String!): [Title!]!
-  subgroups(creation: DateTime, id: Int, name: String): [Subgroup!]!
-  titles(id: Int, name: String): [Title!]!
+  title(id: Int!): Title
   user(discordId: String, id: Int, username: String): Account
   userGroups(exact: String, search: String): [UserGroup!]!
   userTitles(id: Int!): [TitleInventory!]!

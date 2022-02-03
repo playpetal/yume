@@ -1,5 +1,7 @@
-import { extendType, objectType } from "nexus";
+import { extendType, nonNull, objectType } from "nexus";
 import { Song } from "nexus-prisma";
+import { checkAuth } from "../../../lib/Auth";
+import { gts } from "../../../lib/gts";
 
 export const SongObject = objectType({
   name: Song.$name,
@@ -19,30 +21,121 @@ export const SongObject = objectType({
   },
 });
 
+export const GameSongObject = objectType({
+  name: "GameSong",
+  description: "Game song",
+  definition(t) {
+    t.field("id", { type: nonNull("Int") });
+    t.field("video", { type: nonNull("String") });
+    t.field("title", { type: nonNull("String") });
+    t.field("group", { type: nonNull("String") });
+    t.field("maxReward", { type: nonNull("Int") });
+    t.field("timeLimit", { type: nonNull("Int") });
+    t.field("maxGuesses", { type: nonNull("Int") });
+  },
+});
+
 export const GetRandomSongQuery = extendType({
   type: "Query",
   definition(t) {
     t.field("getRandomSong", {
-      type: "Song",
+      type: "GameSong",
       args: { gender: "GroupGender" },
       async resolve(_, args, ctx) {
-        const songCount = await ctx.db.song.count();
-        const skip = Math.round(Math.random() * (songCount - 1));
-        const orderBy = ["id", "title", "groupId"][
-          Math.floor(Math.random() * 3)
-        ];
-        const orderDir = ["asc", "desc"][Math.floor(Math.random() * 2)];
+        const song = await gts.getSong(ctx, args.gender ?? undefined);
 
-        console.log(
-          `picking randomly from ${songCount} songs, skipping ${skip}, ordering by ${orderBy} ${orderDir}`
-        );
+        if (!song) return null;
 
-        return ctx.db.song.findFirst({
-          take: 1,
-          skip,
-          orderBy: { [orderBy]: orderDir },
-          where: args.gender ? { group: { gender: args.gender } } : undefined,
+        gts.getStackLength(ctx).then(async (v) => {
+          if (v < 50) {
+            await gts.requestSong(ctx);
+          }
         });
+
+        gts.getStackLength(ctx, "MALE").then(async (v) => {
+          if (v < 50) {
+            await gts.requestSong(ctx, true, "MALE");
+          }
+        });
+
+        gts.getStackLength(ctx, "FEMALE").then(async (v) => {
+          if (v < 50) {
+            await gts.requestSong(ctx, true, "FEMALE");
+          }
+        });
+
+        return {
+          ...song,
+          group: song.group.name,
+        };
+      },
+    });
+  },
+});
+
+export const SetMaxRewardMutation = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("setMaxGtsReward", {
+      type: nonNull("Int"),
+      args: { maxReward: nonNull("Int") },
+      async resolve(_, args, ctx) {
+        await ctx.redis.set("gts:maxreward", args.maxReward);
+        return args.maxReward;
+      },
+    });
+  },
+});
+
+export const CompleteGTSMutation = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("completeGts", {
+      type: nonNull("Int"),
+      args: {
+        guesses: nonNull("Int"),
+        time: nonNull("Int"),
+        reward: nonNull("Int"),
+        songId: nonNull("Int"),
+        correct: nonNull("Boolean"),
+        startedAt: nonNull("DateTime"),
+      },
+      async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+
+        await ctx.db.gTSLog.create({
+          data: {
+            accountId: account.id,
+            correct: args.correct,
+            songId: args.songId,
+            createdAt: new Date(args.startedAt),
+          },
+        });
+
+        await ctx.db.gTS.upsert({
+          create: {
+            accountId: account.id,
+            totalGames: 1,
+            totalGuesses: args.guesses,
+            totalRewards: args.reward,
+            totalTime: args.time,
+          },
+          update: {
+            totalGames: { increment: args.correct ? 1 : 0 },
+            totalGuesses: { increment: args.guesses },
+            totalRewards: { increment: args.reward },
+            totalTime: { increment: args.time },
+          },
+          where: { accountId: account.id },
+        });
+
+        if (args.correct)
+          await ctx.db.account.update({
+            data: { currency: { increment: args.reward } },
+            where: { id: account.id },
+          });
+
+        return args.reward;
       },
     });
   },

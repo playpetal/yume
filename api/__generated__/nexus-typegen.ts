@@ -56,6 +56,14 @@ export interface NexusGenObjects {
     id: number; // Int!
     username: string; // String!
   }
+  AccountStats: { // root type
+    cardCount: number; // Int!
+    gtsGuessCount: number; // Int!
+    gtsTotalGames: number; // Int!
+    gtsTotalRewards: number; // Int!
+    gtsTotalTime: number; // Int!
+    rollCount: number; // Int!
+  }
   AccountUserGroup: { // root type
     accountId: number; // Int!
     groupId: number; // Int!
@@ -96,6 +104,15 @@ export interface NexusGenObjects {
     locale?: string | null; // String
     mfa_enabled?: boolean | null; // Boolean
     username: string; // String!
+  }
+  GameSong: { // root type
+    group: string; // String!
+    id: number; // Int!
+    maxGuesses: number; // Int!
+    maxReward: number; // Int!
+    timeLimit: number; // Int!
+    title: string; // String!
+    video: string; // String!
   }
   Group: { // root type
     creation?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -145,14 +162,22 @@ export interface NexusGenFieldTypes {
   Account: { // field return type
     activeTitleId: number | null; // Int
     bio: string | null; // String
-    cardCount: number; // Int!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     currency: number; // Int!
     discordId: string; // String!
     groups: NexusGenRootTypes['AccountUserGroup'][]; // [AccountUserGroup!]!
     id: number; // Int!
+    stats: NexusGenRootTypes['AccountStats'] | null; // AccountStats
     title: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
     username: string; // String!
+  }
+  AccountStats: { // field return type
+    cardCount: number; // Int!
+    gtsGuessCount: number; // Int!
+    gtsTotalGames: number; // Int!
+    gtsTotalRewards: number; // Int!
+    gtsTotalTime: number; // Int!
+    rollCount: number; // Int!
   }
   AccountUserGroup: { // field return type
     account: NexusGenRootTypes['Account'] | null; // Account
@@ -203,6 +228,15 @@ export interface NexusGenFieldTypes {
     mfa_enabled: boolean | null; // Boolean
     username: string; // String!
   }
+  GameSong: { // field return type
+    group: string; // String!
+    id: number; // Int!
+    maxGuesses: number; // Int!
+    maxReward: number; // Int!
+    timeLimit: number; // Int!
+    title: string; // String!
+    video: string; // String!
+  }
   Group: { // field return type
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
     creation: NexusGenScalars['DateTime'] | null; // DateTime
@@ -212,6 +246,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     assignGroup: NexusGenRootTypes['AccountUserGroup']; // AccountUserGroup!
+    completeGts: number; // Int!
     createAccount: NexusGenRootTypes['Account']; // Account!
     createAlias: NexusGenRootTypes['Alias']; // Alias!
     createCharacter: NexusGenRootTypes['Character']; // Character!
@@ -225,24 +260,28 @@ export interface NexusGenFieldTypes {
     deleteSubgroup: number; // Int!
     rollCards: NexusGenRootTypes['Card'][]; // [Card!]!
     setBio: NexusGenRootTypes['Account']; // Account!
+    setMaxGtsReward: number; // Int!
     unassignGroup: number; // Int!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
     updateCharacter: NexusGenRootTypes['Character']; // Character!
     updateGroup: NexusGenRootTypes['Group']; // Group!
+    updatePrefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
     updateSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
   }
   Query: { // field return type
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
-    characters: NexusGenRootTypes['Character'][]; // [Character!]!
-    getRandomSong: NexusGenRootTypes['Song'] | null; // Song
-    groups: NexusGenRootTypes['Group'][]; // [Group!]!
+    getCharacter: NexusGenRootTypes['Character'] | null; // Character
+    getGroup: NexusGenRootTypes['Group'] | null; // Group
+    getRandomSong: NexusGenRootTypes['GameSong'] | null; // GameSong
+    getSubgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
     me: NexusGenRootTypes['Account'] | null; // Account
+    prefab: NexusGenRootTypes['CardPrefab'] | null; // CardPrefab
     searchCharacters: NexusGenRootTypes['Character'][]; // [Character!]!
     searchGroups: NexusGenRootTypes['Group'][]; // [Group!]!
+    searchPrefabs: NexusGenRootTypes['CardPrefab'][]; // [CardPrefab!]!
     searchSubgroups: NexusGenRootTypes['Subgroup'][]; // [Subgroup!]!
     searchTitles: NexusGenRootTypes['Title'][]; // [Title!]!
-    subgroups: NexusGenRootTypes['Subgroup'][]; // [Subgroup!]!
-    titles: NexusGenRootTypes['Title'][]; // [Title!]!
+    title: NexusGenRootTypes['Title'] | null; // Title
     user: NexusGenRootTypes['Account'] | null; // Account
     userGroups: NexusGenRootTypes['UserGroup'][]; // [UserGroup!]!
     userTitles: NexusGenRootTypes['TitleInventory'][]; // [TitleInventory!]!
@@ -283,14 +322,22 @@ export interface NexusGenFieldTypeNames {
   Account: { // field return type name
     activeTitleId: 'Int'
     bio: 'String'
-    cardCount: 'Int'
     createdAt: 'DateTime'
     currency: 'Int'
     discordId: 'String'
     groups: 'AccountUserGroup'
     id: 'Int'
+    stats: 'AccountStats'
     title: 'TitleInventory'
     username: 'String'
+  }
+  AccountStats: { // field return type name
+    cardCount: 'Int'
+    gtsGuessCount: 'Int'
+    gtsTotalGames: 'Int'
+    gtsTotalRewards: 'Int'
+    gtsTotalTime: 'Int'
+    rollCount: 'Int'
   }
   AccountUserGroup: { // field return type name
     account: 'Account'
@@ -341,6 +388,15 @@ export interface NexusGenFieldTypeNames {
     mfa_enabled: 'Boolean'
     username: 'String'
   }
+  GameSong: { // field return type name
+    group: 'String'
+    id: 'Int'
+    maxGuesses: 'Int'
+    maxReward: 'Int'
+    timeLimit: 'Int'
+    title: 'String'
+    video: 'String'
+  }
   Group: { // field return type name
     aliases: 'Alias'
     creation: 'DateTime'
@@ -350,6 +406,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     assignGroup: 'AccountUserGroup'
+    completeGts: 'Int'
     createAccount: 'Account'
     createAlias: 'Alias'
     createCharacter: 'Character'
@@ -363,24 +420,28 @@ export interface NexusGenFieldTypeNames {
     deleteSubgroup: 'Int'
     rollCards: 'Card'
     setBio: 'Account'
+    setMaxGtsReward: 'Int'
     unassignGroup: 'Int'
     updateAlias: 'Alias'
     updateCharacter: 'Character'
     updateGroup: 'Group'
+    updatePrefab: 'CardPrefab'
     updateSubgroup: 'Subgroup'
   }
   Query: { // field return type name
     aliases: 'Alias'
-    characters: 'Character'
-    getRandomSong: 'Song'
-    groups: 'Group'
+    getCharacter: 'Character'
+    getGroup: 'Group'
+    getRandomSong: 'GameSong'
+    getSubgroup: 'Subgroup'
     me: 'Account'
+    prefab: 'CardPrefab'
     searchCharacters: 'Character'
     searchGroups: 'Group'
+    searchPrefabs: 'CardPrefab'
     searchSubgroups: 'Subgroup'
     searchTitles: 'Title'
-    subgroups: 'Subgroup'
-    titles: 'Title'
+    title: 'Title'
     user: 'Account'
     userGroups: 'UserGroup'
     userTitles: 'TitleInventory'
@@ -422,6 +483,14 @@ export interface NexusGenArgTypes {
     assignGroup: { // args
       accountId: number; // Int!
       groupId: number; // Int!
+    }
+    completeGts: { // args
+      correct: boolean; // Boolean!
+      guesses: number; // Int!
+      reward: number; // Int!
+      songId: number; // Int!
+      startedAt: NexusGenScalars['DateTime']; // DateTime!
+      time: number; // Int!
     }
     createAccount: { // args
       username: string; // String!
@@ -473,6 +542,9 @@ export interface NexusGenArgTypes {
     setBio: { // args
       bio?: string | null; // String
     }
+    setMaxGtsReward: { // args
+      maxReward: number; // Int!
+    }
     unassignGroup: { // args
       accountId: number; // Int!
       groupId: number; // Int!
@@ -494,6 +566,14 @@ export interface NexusGenArgTypes {
       id: number; // Int!
       name?: string | null; // String
     }
+    updatePrefab: { // args
+      characterId?: number | null; // Int
+      groupId?: number | null; // Int
+      maxCards?: number | null; // Int
+      prefabId: number; // Int!
+      rarity?: number | null; // Int
+      subgroupId?: number | null; // Int
+    }
     updateSubgroup: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
       id: number; // Int!
@@ -506,26 +586,28 @@ export interface NexusGenArgTypes {
       groupId?: number | null; // Int
       id?: number | null; // Int
     }
-    characters: { // args
-      birthday?: NexusGenScalars['DateTime'] | null; // DateTime
-      gender?: NexusGenEnums['Gender'] | null; // Gender
-      id?: number | null; // Int
-      name?: string | null; // String
+    getCharacter: { // args
+      id: number; // Int!
+    }
+    getGroup: { // args
+      id: number; // Int!
     }
     getRandomSong: { // args
       gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
     }
-    groups: { // args
-      after?: number | null; // Int
-      alias?: string | null; // String
-      creation?: NexusGenScalars['DateTime'] | null; // DateTime
-      id?: number | null; // Int
-      name?: string | null; // String
+    getSubgroup: { // args
+      id: number; // Int!
+    }
+    prefab: { // args
+      id: number; // Int!
     }
     searchCharacters: { // args
       search: string; // String!
     }
     searchGroups: { // args
+      search: string; // String!
+    }
+    searchPrefabs: { // args
       search: string; // String!
     }
     searchSubgroups: { // args
@@ -534,14 +616,8 @@ export interface NexusGenArgTypes {
     searchTitles: { // args
       search: string; // String!
     }
-    subgroups: { // args
-      creation?: NexusGenScalars['DateTime'] | null; // DateTime
-      id?: number | null; // Int
-      name?: string | null; // String
-    }
-    titles: { // args
-      id?: number | null; // Int
-      name?: string | null; // String
+    title: { // args
+      id: number; // Int!
     }
     user: { // args
       discordId?: string | null; // String
