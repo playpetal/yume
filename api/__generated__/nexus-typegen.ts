@@ -248,6 +248,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     assignGroup: NexusGenRootTypes['AccountUserGroup']; // AccountUserGroup!
+    burnCard: number; // Int!
     completeGts: number; // Int!
     createAccount: NexusGenRootTypes['Account']; // Account!
     createAlias: NexusGenRootTypes['Alias']; // Alias!
@@ -413,6 +414,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     assignGroup: 'AccountUserGroup'
+    burnCard: 'Int'
     completeGts: 'Int'
     createAccount: 'Account'
     createAlias: 'Alias'
@@ -494,6 +496,9 @@ export interface NexusGenArgTypes {
     assignGroup: { // args
       accountId: number; // Int!
       groupId: number; // Int!
+    }
+    burnCard: { // args
+      cardId: number; // Int!
     }
     completeGts: { // args
       correct: boolean; // Boolean!

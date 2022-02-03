@@ -123,6 +123,7 @@ enum GroupGender {
 
 type Mutation {
   assignGroup(accountId: Int!, groupId: Int!): AccountUserGroup!
+  burnCard(cardId: Int!): Int!
   completeGts(correct: Boolean!, guesses: Int!, reward: Int!, songId: Int!, startedAt: DateTime!, time: Int!): Int!
   createAccount(username: String!): Account!
   createAlias(alias: String!, groupId: Int!): Alias!
