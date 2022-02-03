@@ -11,7 +11,15 @@ export const CardObject = objectType({
   definition(t) {
     t.field(Card.id);
     t.field(Card.prefabId);
-    t.field(Card.owner);
+    t.field("owner", {
+      type: "Account",
+      async resolve(root, _, ctx) {
+        if (!root.ownerId) return null;
+
+        return ctx.db.account.findUnique({ where: { id: root.ownerId } });
+      },
+    });
+    t.field(Card.ownerId);
     t.field(Card.issue);
     t.field(Card.quality);
     t.field(Card.tint);
