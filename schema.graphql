@@ -161,6 +161,7 @@ type Query {
   getGroup(id: Int!): Group
   getRandomSong(gender: GroupGender): GameSong
   getSubgroup(id: Int!): Subgroup
+  getUserTitle(id: Int!): TitleInventory
   me: Account
   prefab(id: Int!): CardPrefab
   searchCharacters(search: String!): [Character!]!

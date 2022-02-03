@@ -277,6 +277,7 @@ export interface NexusGenFieldTypes {
     getGroup: NexusGenRootTypes['Group'] | null; // Group
     getRandomSong: NexusGenRootTypes['GameSong'] | null; // GameSong
     getSubgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
+    getUserTitle: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
     me: NexusGenRootTypes['Account'] | null; // Account
     prefab: NexusGenRootTypes['CardPrefab'] | null; // CardPrefab
     searchCharacters: NexusGenRootTypes['Character'][]; // [Character!]!
@@ -439,6 +440,7 @@ export interface NexusGenFieldTypeNames {
     getGroup: 'Group'
     getRandomSong: 'GameSong'
     getSubgroup: 'Subgroup'
+    getUserTitle: 'TitleInventory'
     me: 'Account'
     prefab: 'CardPrefab'
     searchCharacters: 'Character'
@@ -604,6 +606,9 @@ export interface NexusGenArgTypes {
       gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
     }
     getSubgroup: { // args
+      id: number; // Int!
+    }
+    getUserTitle: { // args
       id: number; // Int!
     }
     prefab: { // args
