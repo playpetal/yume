@@ -263,6 +263,7 @@ export interface NexusGenFieldTypes {
     rollCards: NexusGenRootTypes['Card'][]; // [Card!]!
     setBio: NexusGenRootTypes['Account']; // Account!
     setMaxGtsReward: number; // Int!
+    setUserTitle: NexusGenRootTypes['Account']; // Account!
     unassignGroup: number; // Int!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
     updateCharacter: NexusGenRootTypes['Character']; // Character!
@@ -424,6 +425,7 @@ export interface NexusGenFieldTypeNames {
     rollCards: 'Card'
     setBio: 'Account'
     setMaxGtsReward: 'Int'
+    setUserTitle: 'Account'
     unassignGroup: 'Int'
     updateAlias: 'Alias'
     updateCharacter: 'Character'
@@ -547,6 +549,9 @@ export interface NexusGenArgTypes {
     }
     setMaxGtsReward: { // args
       maxReward: number; // Int!
+    }
+    setUserTitle: { // args
+      id: number; // Int!
     }
     unassignGroup: { // args
       accountId: number; // Int!

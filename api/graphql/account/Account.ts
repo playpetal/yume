@@ -3,6 +3,7 @@ import { Account } from "nexus-prisma";
 import { discordOAuth2 } from "../util/auth/DiscordOAuth";
 import { UserInputError, AuthenticationError } from "apollo-server";
 import jwt from "jsonwebtoken";
+import { checkAuth } from "../../lib/Auth";
 
 export const AccountObject = objectType({
   name: Account.$name,
@@ -214,6 +215,24 @@ export const SetBioMutation = extendType({
           console.log(e);
           throw new Error("An unexpected error occurred.");
         }
+      },
+    });
+  },
+});
+
+export const SetUserTitle = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("setUserTitle", {
+      type: nonNull("Account"),
+      args: { id: nonNull("Int") },
+      async resolve(_, args, ctx) {
+        const auth = await checkAuth(ctx);
+
+        return ctx.db.account.update({
+          where: { id: auth.id },
+          data: { activeTitleId: args.id },
+        });
       },
     });
   },

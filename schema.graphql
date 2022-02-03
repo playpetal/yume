@@ -138,6 +138,7 @@ type Mutation {
   rollCards(amount: Int!, gender: Gender): [Card!]!
   setBio(bio: String): Account!
   setMaxGtsReward(maxReward: Int!): Int!
+  setUserTitle(id: Int!): Account!
   unassignGroup(accountId: Int!, groupId: Int!): Int!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
