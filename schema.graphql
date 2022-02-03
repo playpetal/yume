@@ -174,7 +174,7 @@ type Query {
   title(id: Int!): Title
   user(discordId: String, id: Int, username: String): Account
   userGroups(exact: String, search: String): [UserGroup!]!
-  userTitles(id: Int!): [TitleInventory!]!
+  userTitles(accountId: Int!, search: String): [TitleInventory!]!
 }
 
 type Song {

@@ -653,7 +653,8 @@ export interface NexusGenArgTypes {
       search?: string | null; // String
     }
     userTitles: { // args
-      id: number; // Int!
+      accountId: number; // Int!
+      search?: string | null; // String
     }
   }
 }
