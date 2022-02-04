@@ -174,7 +174,7 @@ export interface NexusGenFieldTypes {
     groups: NexusGenRootTypes['AccountUserGroup'][]; // [AccountUserGroup!]!
     id: number; // Int!
     stats: NexusGenRootTypes['AccountStats'] | null; // AccountStats
-    title: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
+    title: NexusGenRootTypes['Title'] | null; // Title
     username: string; // String!
   }
   AccountStats: { // field return type
@@ -347,7 +347,7 @@ export interface NexusGenFieldTypeNames {
     groups: 'AccountUserGroup'
     id: 'Int'
     stats: 'AccountStats'
-    title: 'TitleInventory'
+    title: 'Title'
     username: 'String'
   }
   AccountStats: { // field return type name

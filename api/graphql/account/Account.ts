@@ -40,12 +40,16 @@ export const AccountObject = objectType({
       },
     });
     t.field("title", {
-      type: "TitleInventory",
-      resolve(root, _, ctx) {
+      type: "Title",
+      async resolve(root, _, ctx) {
         if (!root.activeTitleId) return null;
-        return ctx.db.titleInventory.findFirst({
+
+        const inventory = await ctx.db.titleInventory.findFirst({
           where: { id: root.activeTitleId },
+          select: { title: true },
         });
+
+        return inventory?.title || null;
       },
     });
     t.field("groups", {

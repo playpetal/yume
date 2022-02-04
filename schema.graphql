@@ -11,7 +11,7 @@ type Account {
   groups: [AccountUserGroup!]!
   id: Int!
   stats: AccountStats
-  title: TitleInventory
+  title: Title
   username: String!
 }
 
