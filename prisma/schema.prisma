@@ -158,8 +158,9 @@ model CardPrefab {
   group   Group? @relation(fields: [groupId], references: [id])
   groupId Int?
 
-  maxCards Int @default(0)
-  rarity   Int @default(100)
+  lastIssue Int @default(0)
+  maxCards  Int @default(0)
+  rarity    Int @default(100)
 
   cards Card[]
 }

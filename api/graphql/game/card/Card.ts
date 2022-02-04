@@ -3,8 +3,8 @@ import { AuthenticationError, UserInputError } from "apollo-server";
 import { enumType, extendType, list, nonNull, objectType } from "nexus";
 import { Card, Quality as NexusQuality } from "nexus-prisma";
 import { checkAuth } from "../../../lib/Auth";
+import { incrementIssue } from "../../../lib/card";
 import { getRandomColor } from "../../../lib/Color";
-import { redis } from "../../../lib/redis";
 
 export const CardObject = objectType({
   name: Card.$name,
@@ -186,7 +186,7 @@ export const RollCardsMutation = extendType({
               : undefined,
           }))!;
 
-          const issue = await redis.incr(`prefab_issue:${prefab.id}`);
+          const issue = await incrementIssue(ctx, prefab);
 
           const card = await ctx.db.card.create({
             data: {
