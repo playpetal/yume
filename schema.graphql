@@ -18,7 +18,9 @@ type Account {
 """Account Stats"""
 type AccountStats {
   cardCount: Int!
+  gtsCurrentGames: Int!
   gtsGuessCount: Int!
+  gtsLastGame: DateTime
   gtsTotalGames: Int!
   gtsTotalRewards: Int!
   gtsTotalTime: Int!

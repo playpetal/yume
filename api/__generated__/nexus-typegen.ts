@@ -58,7 +58,9 @@ export interface NexusGenObjects {
   }
   AccountStats: { // root type
     cardCount: number; // Int!
+    gtsCurrentGames: number; // Int!
     gtsGuessCount: number; // Int!
+    gtsLastGame?: NexusGenScalars['DateTime'] | null; // DateTime
     gtsTotalGames: number; // Int!
     gtsTotalRewards: number; // Int!
     gtsTotalTime: number; // Int!
@@ -179,7 +181,9 @@ export interface NexusGenFieldTypes {
   }
   AccountStats: { // field return type
     cardCount: number; // Int!
+    gtsCurrentGames: number; // Int!
     gtsGuessCount: number; // Int!
+    gtsLastGame: NexusGenScalars['DateTime'] | null; // DateTime
     gtsTotalGames: number; // Int!
     gtsTotalRewards: number; // Int!
     gtsTotalTime: number; // Int!
@@ -352,7 +356,9 @@ export interface NexusGenFieldTypeNames {
   }
   AccountStats: { // field return type name
     cardCount: 'Int'
+    gtsCurrentGames: 'Int'
     gtsGuessCount: 'Int'
+    gtsLastGame: 'DateTime'
     gtsTotalGames: 'Int'
     gtsTotalRewards: 'Int'
     gtsTotalTime: 'Int'

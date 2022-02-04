@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "GTS" ADD COLUMN     "games" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "lastGame" TIMESTAMP(3);

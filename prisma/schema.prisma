@@ -193,7 +193,10 @@ enum Quality {
 
 model GTS {
   account   Account @relation(fields: [accountId], references: [id])
-  accountId Int     @unique
+  accountId Int     @id @unique
+
+  games    Int       @default(0)
+  lastGame DateTime?
 
   totalGames   Int
   totalGuesses Int

@@ -36,6 +36,8 @@ export const AccountObject = objectType({
           gtsTotalTime: gts?.totalTime || 0,
           gtsTotalRewards: gts?.totalRewards || 0,
           rollCount,
+          gtsCurrentGames: gts?.games || 0,
+          gtsLastGame: gts?.lastGame || null,
         };
       },
     });
@@ -73,6 +75,8 @@ export const AccountStatsObject = objectType({
     t.field("gtsTotalTime", { type: nonNull("Int") });
     t.field("gtsTotalRewards", { type: nonNull("Int") });
     t.field("rollCount", { type: nonNull("Int") });
+    t.field("gtsCurrentGames", { type: nonNull("Int") });
+    t.field("gtsLastGame", { type: "DateTime" });
   },
 });
 

@@ -112,6 +112,19 @@ export const CompleteGTSMutation = extendType({
           },
         });
 
+        const stats = await ctx.db.gTS.findFirst({
+          where: { accountId: account.id },
+        });
+
+        const isNewHour = new Date().getHours() !== stats?.lastGame?.getHours();
+
+        console.log(isNewHour);
+
+        const isExtra = stats
+          ? stats.games > 2 &&
+            (stats.lastGame || Date.now()) > Date.now() - 3600000
+          : false;
+
         await ctx.db.gTS.upsert({
           create: {
             accountId: account.id,
@@ -119,12 +132,26 @@ export const CompleteGTSMutation = extendType({
             totalGuesses: args.guesses,
             totalRewards: args.reward,
             totalTime: args.time,
+            games: 1,
+            lastGame: new Date(),
           },
           update: {
             totalGames: { increment: args.correct ? 1 : 0 },
             totalGuesses: { increment: args.guesses },
             totalRewards: { increment: args.reward },
             totalTime: { increment: args.time },
+            games: args.correct
+              ? isNewHour
+                ? { set: 1 }
+                : isExtra
+                ? undefined
+                : { increment: 1 }
+              : undefined,
+            lastGame: args.correct
+              ? isExtra
+                ? undefined
+                : new Date()
+              : undefined,
           },
           where: { accountId: account.id },
         });
