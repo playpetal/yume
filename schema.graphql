@@ -121,6 +121,12 @@ enum GroupGender {
   MALE
 }
 
+type InventoryPage {
+  cards: Int!
+  current: Int!
+  max: Int!
+}
+
 type Mutation {
   assignGroup(accountId: Int!, groupId: Int!): AccountUserGroup!
   burnCard(cardId: Int!): Int!
@@ -164,6 +170,8 @@ type Query {
   getRandomSong(gender: GroupGender): GameSong
   getSubgroup(id: Int!): Subgroup
   getUserTitle(id: Int!): TitleInventory
+  inventory(next: Int, prev: Int, user: Int!): [Card!]!
+  inventoryPage(cursor: Int!, user: Int!): InventoryPage!
   me: Account
   prefab(id: Int!): CardPrefab
   searchCards(ownerId: Int!, search: String!): [Card!]!

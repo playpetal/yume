@@ -51,6 +51,67 @@ export const GetCardQuery = extendType({
   },
 });
 
+export const Inventory = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("inventory", {
+      type: nonNull(list(nonNull("Card"))),
+      args: {
+        user: nonNull("Int"),
+        next: "Int",
+        prev: "Int",
+      },
+      async resolve(_, { user, next, prev }, ctx) {
+        return ctx.db.card.findMany({
+          take: 10,
+          orderBy: next || prev ? { id: next ? "asc" : "desc" } : undefined,
+          where: {
+            owner: { id: user },
+            id: next ? { gt: next } : prev ? { lt: prev } : undefined,
+          },
+        });
+      },
+    });
+  },
+});
+
+export const InventoryPageObject = objectType({
+  name: "InventoryPage",
+  definition(t) {
+    t.field("current", { type: nonNull("Int") });
+    t.field("max", { type: nonNull("Int") });
+    t.field("cards", { type: nonNull("Int") });
+  },
+});
+
+export const InventoryPage = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("inventoryPage", {
+      type: nonNull("InventoryPage"),
+      args: {
+        cursor: nonNull("Int"),
+        user: nonNull("Int"),
+      },
+      async resolve(_, args, ctx) {
+        const total = await ctx.db.card.count({
+          where: { owner: { id: args.user } },
+        });
+
+        const current = await ctx.db.card.count({
+          where: { owner: { id: args.user }, id: { lte: args.cursor } },
+        });
+
+        return {
+          current: Math.floor(current / 10) + 1,
+          max: Math.ceil(total / 10),
+          cards: total,
+        };
+      },
+    });
+  },
+});
+
 export const SearchCardsQuery = extendType({
   type: "Query",
   definition(t) {

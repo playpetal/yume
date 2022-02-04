@@ -121,6 +121,11 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   }
+  InventoryPage: { // root type
+    cards: number; // Int!
+    current: number; // Int!
+    max: number; // Int!
+  }
   Mutation: {};
   Query: {};
   Song: { // root type
@@ -246,6 +251,11 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     name: string; // String!
   }
+  InventoryPage: { // field return type
+    cards: number; // Int!
+    current: number; // Int!
+    max: number; // Int!
+  }
   Mutation: { // field return type
     assignGroup: NexusGenRootTypes['AccountUserGroup']; // AccountUserGroup!
     burnCard: number; // Int!
@@ -280,6 +290,8 @@ export interface NexusGenFieldTypes {
     getRandomSong: NexusGenRootTypes['GameSong'] | null; // GameSong
     getSubgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
     getUserTitle: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
+    inventory: NexusGenRootTypes['Card'][]; // [Card!]!
+    inventoryPage: NexusGenRootTypes['InventoryPage']; // InventoryPage!
     me: NexusGenRootTypes['Account'] | null; // Account
     prefab: NexusGenRootTypes['CardPrefab'] | null; // CardPrefab
     searchCards: NexusGenRootTypes['Card'][]; // [Card!]!
@@ -412,6 +424,11 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     name: 'String'
   }
+  InventoryPage: { // field return type name
+    cards: 'Int'
+    current: 'Int'
+    max: 'Int'
+  }
   Mutation: { // field return type name
     assignGroup: 'AccountUserGroup'
     burnCard: 'Int'
@@ -446,6 +463,8 @@ export interface NexusGenFieldTypeNames {
     getRandomSong: 'GameSong'
     getSubgroup: 'Subgroup'
     getUserTitle: 'TitleInventory'
+    inventory: 'Card'
+    inventoryPage: 'InventoryPage'
     me: 'Account'
     prefab: 'CardPrefab'
     searchCards: 'Card'
@@ -622,6 +641,15 @@ export interface NexusGenArgTypes {
     }
     getUserTitle: { // args
       id: number; // Int!
+    }
+    inventory: { // args
+      next?: number | null; // Int
+      prev?: number | null; // Int
+      user: number; // Int!
+    }
+    inventoryPage: { // args
+      cursor: number; // Int!
+      user: number; // Int!
     }
     prefab: { // args
       id: number; // Int!
