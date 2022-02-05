@@ -116,14 +116,15 @@ export const CompleteGTSMutation = extendType({
           where: { accountId: account.id },
         });
 
-        const isNewHour = new Date().getHours() !== stats?.lastGame?.getHours();
+        const isNewHour =
+          new Date().getHours() !==
+          (stats?.lastGame ? new Date(stats.lastGame).getHours() : -1);
 
-        console.log(isNewHour);
+        let isExtra = false;
 
-        const isExtra = stats
-          ? stats.games > 2 &&
-            (stats.lastGame || Date.now()) > Date.now() - 3600000
-          : false;
+        if ((stats?.games || 0) >= 3 && !isNewHour) {
+          isExtra = true;
+        }
 
         await ctx.db.gTS.upsert({
           create: {
