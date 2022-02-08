@@ -100,15 +100,19 @@ export const CompleteGTSMutation = extendType({
         correct: nonNull("Boolean"),
         startedAt: nonNull("DateTime"),
       },
-      async resolve(_, args, ctx) {
+      async resolve(
+        _,
+        { guesses, time, reward, correct, songId, startedAt },
+        ctx
+      ) {
         const account = await checkAuth(ctx);
 
         await ctx.db.gTSLog.create({
           data: {
             accountId: account.id,
-            correct: args.correct,
-            songId: args.songId,
-            createdAt: new Date(args.startedAt),
+            correct: correct,
+            songId: songId,
+            createdAt: new Date(startedAt),
           },
         });
 
@@ -127,43 +131,39 @@ export const CompleteGTSMutation = extendType({
         }
 
         await ctx.db.gTS.upsert({
+          where: { accountId: account.id },
           create: {
             accountId: account.id,
             totalGames: 1,
-            totalGuesses: args.guesses,
-            totalRewards: args.reward,
-            totalTime: args.time,
-            games: 1,
+            totalGuesses: guesses,
+            totalRewards: correct ? reward : 0,
+            totalTime: time,
+            games: correct ? 1 : 0,
             lastGame: new Date(),
           },
           update: {
-            totalGames: { increment: args.correct ? 1 : 0 },
-            totalGuesses: { increment: args.guesses },
-            totalRewards: { increment: args.reward },
-            totalTime: { increment: args.time },
-            games: args.correct
+            totalGames: { increment: 1 },
+            totalGuesses: { increment: guesses },
+            totalRewards: correct ? { increment: reward } : undefined,
+            totalTime: { increment: time },
+            games: correct
               ? isNewHour
-                ? { set: 1 }
+                ? 1
                 : isExtra
                 ? undefined
                 : { increment: 1 }
               : undefined,
-            lastGame: args.correct
-              ? isExtra
-                ? undefined
-                : new Date()
-              : undefined,
+            lastGame: correct ? (isExtra ? undefined : new Date()) : undefined,
           },
-          where: { accountId: account.id },
         });
 
-        if (args.correct)
+        if (correct && !isExtra)
           await ctx.db.account.update({
-            data: { currency: { increment: args.reward } },
+            data: { currency: { increment: reward } },
             where: { id: account.id },
           });
 
-        return args.reward;
+        return reward;
       },
     });
   },
