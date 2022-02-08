@@ -32,6 +32,8 @@ export const GameSongObject = objectType({
     t.field("maxReward", { type: nonNull("Int") });
     t.field("timeLimit", { type: nonNull("Int") });
     t.field("maxGuesses", { type: nonNull("Int") });
+    t.field("remainingGames", { type: nonNull("Int") });
+    t.field("isNewHour", { type: nonNull("Boolean") });
   },
 });
 
@@ -42,7 +44,8 @@ export const GetRandomSongQuery = extendType({
       type: "GameSong",
       args: { gender: "GroupGender" },
       async resolve(_, args, ctx) {
-        const song = await gts.getSong(ctx, args.gender ?? undefined);
+        const account = await checkAuth(ctx);
+        const song = await gts.getSong(ctx, account, args.gender ?? undefined);
 
         if (!song) return null;
 
@@ -96,39 +99,11 @@ export const CompleteGTSMutation = extendType({
         guesses: nonNull("Int"),
         time: nonNull("Int"),
         reward: nonNull("Int"),
-        songId: nonNull("Int"),
         correct: nonNull("Boolean"),
-        startedAt: nonNull("DateTime"),
+        isNewHour: nonNull("Boolean"),
       },
-      async resolve(
-        _,
-        { guesses, time, reward, correct, songId, startedAt },
-        ctx
-      ) {
+      async resolve(_, { guesses, time, reward, correct, isNewHour }, ctx) {
         const account = await checkAuth(ctx);
-
-        await ctx.db.gTSLog.create({
-          data: {
-            accountId: account.id,
-            correct: correct,
-            songId: songId,
-            createdAt: new Date(startedAt),
-          },
-        });
-
-        const stats = await ctx.db.gTS.findFirst({
-          where: { accountId: account.id },
-        });
-
-        const isNewHour =
-          new Date().getHours() !==
-          (stats?.lastGame ? new Date(stats.lastGame).getHours() : -1);
-
-        let isExtra = false;
-
-        if ((stats?.games || 0) >= 3 && !isNewHour) {
-          isExtra = true;
-        }
 
         await ctx.db.gTS.upsert({
           where: { accountId: account.id },
@@ -147,17 +122,17 @@ export const CompleteGTSMutation = extendType({
             totalRewards: correct ? { increment: reward } : undefined,
             totalTime: { increment: time },
             games: correct
-              ? isNewHour
-                ? 1
-                : isExtra
-                ? undefined
-                : { increment: 1 }
+              ? reward > 0
+                ? isNewHour
+                  ? 1
+                  : { increment: 1 }
+                : undefined
               : undefined,
-            lastGame: correct ? (isExtra ? undefined : new Date()) : undefined,
+            lastGame: correct ? new Date() : undefined,
           },
         });
 
-        if (correct && !isExtra)
+        if (reward > 0)
           await ctx.db.account.update({
             data: { currency: { increment: reward } },
             where: { id: account.id },

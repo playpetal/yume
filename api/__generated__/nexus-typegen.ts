@@ -111,8 +111,10 @@ export interface NexusGenObjects {
   GameSong: { // root type
     group: string; // String!
     id: number; // Int!
+    isNewHour: boolean; // Boolean!
     maxGuesses: number; // Int!
     maxReward: number; // Int!
+    remainingGames: number; // Int!
     timeLimit: number; // Int!
     title: string; // String!
     video: string; // String!
@@ -242,8 +244,10 @@ export interface NexusGenFieldTypes {
   GameSong: { // field return type
     group: string; // String!
     id: number; // Int!
+    isNewHour: boolean; // Boolean!
     maxGuesses: number; // Int!
     maxReward: number; // Int!
+    remainingGames: number; // Int!
     timeLimit: number; // Int!
     title: string; // String!
     video: string; // String!
@@ -417,8 +421,10 @@ export interface NexusGenFieldTypeNames {
   GameSong: { // field return type name
     group: 'String'
     id: 'Int'
+    isNewHour: 'Boolean'
     maxGuesses: 'Int'
     maxReward: 'Int'
+    remainingGames: 'Int'
     timeLimit: 'Int'
     title: 'String'
     video: 'String'
@@ -528,9 +534,8 @@ export interface NexusGenArgTypes {
     completeGts: { // args
       correct: boolean; // Boolean!
       guesses: number; // Int!
+      isNewHour: boolean; // Boolean!
       reward: number; // Int!
-      songId: number; // Int!
-      startedAt: NexusGenScalars['DateTime']; // DateTime!
       time: number; // Int!
     }
     createAccount: { // args

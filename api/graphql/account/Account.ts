@@ -4,6 +4,7 @@ import { discordOAuth2 } from "../util/auth/DiscordOAuth";
 import { UserInputError, AuthenticationError } from "apollo-server";
 import jwt from "jsonwebtoken";
 import { checkAuth } from "../../lib/Auth";
+import { getAccountStats } from "../../lib/account";
 
 export const AccountObject = objectType({
   name: Account.$name,
@@ -19,26 +20,7 @@ export const AccountObject = objectType({
     t.field("stats", {
       type: "AccountStats",
       async resolve(root, _, ctx) {
-        const cardCount = await ctx.db.card.count({
-          where: { ownerId: root.id },
-        });
-        const gts = await ctx.db.gTS.findFirst({
-          where: { accountId: root.id },
-        });
-        const rollCount = await ctx.db.rollLog.count({
-          where: { accountId: root.id },
-        });
-
-        return {
-          cardCount,
-          gtsGuessCount: gts?.totalGuesses || 0,
-          gtsTotalGames: gts?.totalGames || 0,
-          gtsTotalTime: gts?.totalTime || 0,
-          gtsTotalRewards: gts?.totalRewards || 0,
-          rollCount,
-          gtsCurrentGames: gts?.games || 0,
-          gtsLastGame: gts?.lastGame || null,
-        };
+        return getAccountStats(ctx, root.id);
       },
     });
     t.field("title", {

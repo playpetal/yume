@@ -1,7 +1,9 @@
 import axios from "axios";
-import { GroupGender } from "@prisma/client";
+import { Account, GroupGender } from "@prisma/client";
 import { Context } from "../../context";
 import { parseElse } from "../util/parseElse";
+import { DateTime } from "luxon";
+import { getAccountStats } from "../account";
 
 type Song = { id: number; title: string; group: { name: string } };
 type RedisSong = Song & { video: string };
@@ -9,6 +11,8 @@ type GTSSong = RedisSong & {
   maxReward: number;
   timeLimit: number;
   maxGuesses: number;
+  remainingGames: number;
+  isNewHour: boolean;
 };
 
 class GTSManager {
@@ -21,20 +25,58 @@ class GTSManager {
     return await redis.llen(`gts:songs:${gender?.toLowerCase() || "all"}`);
   }
 
-  private async getOptions({ redis }: Context): Promise<{
+  private async getOptions(
+    ctx: Context,
+    account: Account
+  ): Promise<{
     maxReward: number;
     timeLimit: number;
     maxGuesses: number;
+    remainingGames: number;
+    isNewHour: boolean;
   }> {
-    const maxReward = parseElse(await redis.get("gts:maxreward"), 0);
-    const timeLimit = parseElse(await redis.get("gts:timelimit"), 15000);
-    const maxGuesses = parseElse(await redis.get("gts:maxguesses"), 3);
+    const stats = await getAccountStats(ctx, account.id);
+    let remainingGames = 3;
+    let isNewHour = false;
 
-    return { maxReward, timeLimit, maxGuesses };
+    const timeLimit = parseElse(await ctx.redis.get("gts:timelimit"), 15000);
+
+    if (stats.gtsLastGame) {
+      const start = DateTime.fromMillis(stats.gtsLastGame.getTime()).startOf(
+        "hour"
+      );
+      const now = DateTime.now().startOf("hour");
+
+      isNewHour = now > start;
+
+      if (!isNewHour) {
+        if (stats.gtsCurrentGames >= 3) {
+          return {
+            maxReward: 0,
+            timeLimit,
+            maxGuesses: 10,
+            remainingGames,
+            isNewHour,
+          };
+        } else remainingGames -= stats.gtsCurrentGames;
+      }
+    }
+
+    const maxReward = parseElse(await ctx.redis.get("gts:maxreward"), 0);
+    const maxGuesses = parseElse(await ctx.redis.get("gts:maxguesses"), 3);
+
+    return {
+      maxReward,
+      timeLimit,
+      maxGuesses,
+      remainingGames,
+      isNewHour,
+    };
   }
 
   public async getSong(
     ctx: Context,
+    account: Account,
     gender?: GroupGender
   ): Promise<GTSSong | undefined> {
     const song = await ctx.redis.rpop(
@@ -46,14 +88,14 @@ class GTSManager {
 
       return {
         ...json,
-        ...(await this.getOptions(ctx)),
+        ...(await this.getOptions(ctx, account)),
       };
     }
 
     const requestedSong = await this.requestSong(ctx, false, gender);
     if (!requestedSong) return;
 
-    return { ...requestedSong, ...(await this.getOptions(ctx)) };
+    return { ...requestedSong, ...(await this.getOptions(ctx, account)) };
   }
 
   public async requestSong(
