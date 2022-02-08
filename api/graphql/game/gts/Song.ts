@@ -13,6 +13,7 @@ export const SongObject = objectType({
     t.field("group", {
       type: "Group",
       async resolve(song, _, ctx) {
+        if (!song.groupId) return null;
         return (await ctx.db.group.findFirst({
           where: { id: song.groupId },
         }))!;
@@ -28,7 +29,7 @@ export const GameSongObject = objectType({
     t.field("id", { type: nonNull("Int") });
     t.field("video", { type: nonNull("String") });
     t.field("title", { type: nonNull("String") });
-    t.field("group", { type: nonNull("String") });
+    t.field("group", { type: "String" });
     t.field("maxReward", { type: nonNull("Int") });
     t.field("timeLimit", { type: nonNull("Int") });
     t.field("maxGuesses", { type: nonNull("Int") });
@@ -69,7 +70,7 @@ export const GetRandomSongQuery = extendType({
 
         return {
           ...song,
-          group: song.group.name,
+          group: song.group?.name,
         };
       },
     });

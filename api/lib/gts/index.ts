@@ -5,7 +5,7 @@ import { parseElse } from "../util/parseElse";
 import { DateTime } from "luxon";
 import { getAccountStats } from "../account";
 
-type Song = { id: number; title: string; group: { name: string } };
+type Song = { id: number; title: string; group?: { name: string } };
 type RedisSong = Song & { video: string };
 type GTSSong = RedisSong & {
   maxReward: number;
@@ -110,6 +110,8 @@ class GTSManager {
       },
     });
 
+    console.log(songCount);
+
     if (songCount === 0) return;
 
     const skip = Math.round(Math.random() * (songCount - 1));
@@ -126,6 +128,8 @@ class GTSManager {
       },
       include: { group: { select: { name: true } } },
     });
+
+    console.log(song);
 
     if (!song) return;
 
@@ -147,6 +151,7 @@ class GTSManager {
 
       return instance;
     } catch (e) {
+      console.log(e);
       console.log(
         `error occurred with song id ${song.id}, adding to bad songs...`
       );

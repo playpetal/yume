@@ -110,7 +110,7 @@ export interface NexusGenObjects {
     username: string; // String!
   }
   GameSong: { // root type
-    group: string; // String!
+    group?: string | null; // String
     id: number; // Int!
     isNewHour: boolean; // Boolean!
     maxGuesses: number; // Int!
@@ -138,7 +138,7 @@ export interface NexusGenObjects {
     id: number; // Int!
   }
   Song: { // root type
-    groupId: number; // Int!
+    groupId?: number | null; // Int
     id: number; // Int!
     title: string; // String!
   }
@@ -249,7 +249,7 @@ export interface NexusGenFieldTypes {
     username: string; // String!
   }
   GameSong: { // field return type
-    group: string; // String!
+    group: string | null; // String
     id: number; // Int!
     isNewHour: boolean; // Boolean!
     maxGuesses: number; // Int!
@@ -331,7 +331,7 @@ export interface NexusGenFieldTypes {
   }
   Song: { // field return type
     group: NexusGenRootTypes['Group'] | null; // Group
-    groupId: number; // Int!
+    groupId: number | null; // Int
     id: number; // Int!
     title: string; // String!
   }

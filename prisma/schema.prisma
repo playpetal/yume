@@ -140,8 +140,8 @@ model Song {
   id Int @id @default(autoincrement())
 
   title   String
-  group   Group  @relation(fields: [groupId], references: [id])
-  groupId Int
+  group   Group? @relation(fields: [groupId], references: [id])
+  groupId Int?
 
   gts GTSLog[]
 }

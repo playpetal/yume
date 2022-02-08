@@ -93,7 +93,7 @@ type DiscordUser {
 
 """Game song"""
 type GameSong {
-  group: String!
+  group: String
   id: Int!
   isNewHour: Boolean!
   maxGuesses: Int!
@@ -204,7 +204,7 @@ type Release {
 
 type Song {
   group: Group
-  groupId: Int!
+  groupId: Int
   id: Int!
   title: String!
 }
