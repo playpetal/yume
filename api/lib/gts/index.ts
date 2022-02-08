@@ -5,7 +5,7 @@ import { parseElse } from "../util/parseElse";
 import { DateTime } from "luxon";
 import { getAccountStats } from "../account";
 
-type Song = { id: number; title: string; group?: { name: string } };
+type Song = { id: number; title: string; group?: { name: string } | null };
 type RedisSong = Song & { video: string };
 type GTSSong = RedisSong & {
   maxReward: number;
