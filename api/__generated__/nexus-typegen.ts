@@ -91,6 +91,7 @@ export interface NexusGenObjects {
     id: number; // Int!
     maxCards: number; // Int!
     rarity: number; // Int!
+    releaseId: number; // Int!
     subgroupId?: number | null; // Int
   }
   Character: { // root type
@@ -132,6 +133,10 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Query: {};
+  Release: { // root type
+    droppable: boolean; // Boolean!
+    id: number; // Int!
+  }
   Song: { // root type
     groupId: number; // Int!
     id: number; // Int!
@@ -223,6 +228,8 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     maxCards: number; // Int!
     rarity: number; // Int!
+    release: NexusGenRootTypes['Release']; // Release!
+    releaseId: number; // Int!
     subgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
     subgroupId: number | null; // Int
   }
@@ -273,6 +280,7 @@ export interface NexusGenFieldTypes {
     createCharacter: NexusGenRootTypes['Character']; // Character!
     createGroup: NexusGenRootTypes['Group']; // Group!
     createPrefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
+    createRelease: NexusGenRootTypes['Release']; // Release!
     createSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
     createUserGroup: NexusGenRootTypes['UserGroup']; // UserGroup!
     deleteAlias: number; // Int!
@@ -288,6 +296,7 @@ export interface NexusGenFieldTypes {
     updateCharacter: NexusGenRootTypes['Character']; // Character!
     updateGroup: NexusGenRootTypes['Group']; // Group!
     updatePrefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
+    updateRelease: NexusGenRootTypes['Release']; // Release!
     updateSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
   }
   Query: { // field return type
@@ -300,8 +309,10 @@ export interface NexusGenFieldTypes {
     getUserTitle: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
     inventory: NexusGenRootTypes['Card'][]; // [Card!]!
     inventoryPage: NexusGenRootTypes['InventoryPage']; // InventoryPage!
+    lastRelease: NexusGenRootTypes['Release'] | null; // Release
     me: NexusGenRootTypes['Account'] | null; // Account
     prefab: NexusGenRootTypes['CardPrefab'] | null; // CardPrefab
+    release: NexusGenRootTypes['Release'] | null; // Release
     searchCards: NexusGenRootTypes['Card'][]; // [Card!]!
     searchCharacters: NexusGenRootTypes['Character'][]; // [Character!]!
     searchGroups: NexusGenRootTypes['Group'][]; // [Group!]!
@@ -312,6 +323,11 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['Account'] | null; // Account
     userGroups: NexusGenRootTypes['UserGroup'][]; // [UserGroup!]!
     userTitles: NexusGenRootTypes['TitleInventory'][]; // [TitleInventory!]!
+  }
+  Release: { // field return type
+    cards: NexusGenRootTypes['CardPrefab'][]; // [CardPrefab!]!
+    droppable: boolean; // Boolean!
+    id: number; // Int!
   }
   Song: { // field return type
     group: NexusGenRootTypes['Group'] | null; // Group
@@ -400,6 +416,8 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     maxCards: 'Int'
     rarity: 'Int'
+    release: 'Release'
+    releaseId: 'Int'
     subgroup: 'Subgroup'
     subgroupId: 'Int'
   }
@@ -450,6 +468,7 @@ export interface NexusGenFieldTypeNames {
     createCharacter: 'Character'
     createGroup: 'Group'
     createPrefab: 'CardPrefab'
+    createRelease: 'Release'
     createSubgroup: 'Subgroup'
     createUserGroup: 'UserGroup'
     deleteAlias: 'Int'
@@ -465,6 +484,7 @@ export interface NexusGenFieldTypeNames {
     updateCharacter: 'Character'
     updateGroup: 'Group'
     updatePrefab: 'CardPrefab'
+    updateRelease: 'Release'
     updateSubgroup: 'Subgroup'
   }
   Query: { // field return type name
@@ -477,8 +497,10 @@ export interface NexusGenFieldTypeNames {
     getUserTitle: 'TitleInventory'
     inventory: 'Card'
     inventoryPage: 'InventoryPage'
+    lastRelease: 'Release'
     me: 'Account'
     prefab: 'CardPrefab'
+    release: 'Release'
     searchCards: 'Card'
     searchCharacters: 'Character'
     searchGroups: 'Group'
@@ -489,6 +511,11 @@ export interface NexusGenFieldTypeNames {
     user: 'Account'
     userGroups: 'UserGroup'
     userTitles: 'TitleInventory'
+  }
+  Release: { // field return type name
+    cards: 'CardPrefab'
+    droppable: 'Boolean'
+    id: 'Int'
   }
   Song: { // field return type name
     group: 'Group'
@@ -560,6 +587,7 @@ export interface NexusGenArgTypes {
       groupId?: number | null; // Int
       maxCards?: number | null; // Int
       rarity?: number | null; // Int
+      releaseId?: number | null; // Int
       subgroupId?: number | null; // Int
     }
     createSubgroup: { // args
@@ -621,7 +649,12 @@ export interface NexusGenArgTypes {
       maxCards?: number | null; // Int
       prefabId: number; // Int!
       rarity?: number | null; // Int
+      releaseId?: number | null; // Int
       subgroupId?: number | null; // Int
+    }
+    updateRelease: { // args
+      droppable?: boolean | null; // Boolean
+      id: number; // Int!
     }
     updateSubgroup: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -663,6 +696,9 @@ export interface NexusGenArgTypes {
       user: number; // Int!
     }
     prefab: { // args
+      id: number; // Int!
+    }
+    release: { // args
       id: number; // Int!
     }
     searchCards: { // args

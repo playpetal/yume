@@ -165,9 +165,10 @@ export const RollCardsMutation = extendType({
           const tint = getRandomColor();
 
           const cardCount = await ctx.db.cardPrefab.count({
-            where: args.gender
-              ? { character: { gender: args.gender } }
-              : undefined,
+            where: {
+              release: { droppable: true },
+              character: args.gender ? { gender: args.gender } : undefined,
+            },
           });
           const skip = Math.round(Math.random() * (cardCount - 1));
           const orderBy = ["id", "characterId", "groupId"][
@@ -181,9 +182,10 @@ export const RollCardsMutation = extendType({
             take: 1,
             skip,
             orderBy: { [orderBy]: orderDir },
-            where: args.gender
-              ? { character: { gender: args.gender } }
-              : undefined,
+            where: {
+              release: { droppable: true },
+              character: args.gender ? { gender: args.gender } : undefined,
+            },
           }))!;
 
           const issue = await incrementIssue(ctx, prefab);

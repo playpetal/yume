@@ -63,6 +63,8 @@ type CardPrefab {
   id: Int!
   maxCards: Int!
   rarity: Int!
+  release: Release!
+  releaseId: Int!
   subgroup: Subgroup
   subgroupId: Int
 }
@@ -139,7 +141,8 @@ type Mutation {
   createAlias(alias: String!, groupId: Int!): Alias!
   createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
   createGroup(creation: DateTime, gender: GroupGender, name: String!): Group!
-  createPrefab(characterId: Int!, groupId: Int, maxCards: Int, rarity: Int, subgroupId: Int): CardPrefab!
+  createPrefab(characterId: Int!, groupId: Int, maxCards: Int, rarity: Int, releaseId: Int, subgroupId: Int): CardPrefab!
+  createRelease: Release!
   createSubgroup(creation: DateTime, name: String!): Subgroup!
   createUserGroup(name: String!): UserGroup!
   deleteAlias(id: Int!): Int!
@@ -154,7 +157,8 @@ type Mutation {
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
   updateGroup(creation: DateTime, gender: GroupGender, id: Int!, name: String): Group!
-  updatePrefab(characterId: Int, groupId: Int, maxCards: Int, prefabId: Int!, rarity: Int, subgroupId: Int): CardPrefab!
+  updatePrefab(characterId: Int, groupId: Int, maxCards: Int, prefabId: Int!, rarity: Int, releaseId: Int, subgroupId: Int): CardPrefab!
+  updateRelease(droppable: Boolean, id: Int!): Release!
   updateSubgroup(creation: DateTime, id: Int!, name: String): Subgroup!
 }
 
@@ -176,8 +180,10 @@ type Query {
   getUserTitle(id: Int!): TitleInventory
   inventory(next: Int, prev: Int, user: Int!): [Card!]!
   inventoryPage(cursor: Int!, user: Int!): InventoryPage!
+  lastRelease: Release
   me: Account
   prefab(id: Int!): CardPrefab
+  release(id: Int!): Release
   searchCards(ownerId: Int!, search: String!): [Card!]!
   searchCharacters(search: String!): [Character!]!
   searchGroups(search: String!): [Group!]!
@@ -188,6 +194,12 @@ type Query {
   user(discordId: String, id: Int, username: String): Account
   userGroups(exact: String, search: String): [UserGroup!]!
   userTitles(accountId: Int!, search: String): [TitleInventory!]!
+}
+
+type Release {
+  cards: [CardPrefab!]!
+  droppable: Boolean!
+  id: Int!
 }
 
 type Song {

@@ -146,6 +146,12 @@ model Song {
   gts GTSLog[]
 }
 
+model Release {
+  id        Int          @id @default(autoincrement())
+  droppable Boolean      @default(false)
+  cards     CardPrefab[]
+}
+
 /// Cards
 model CardPrefab {
   id Int @id @default(autoincrement())
@@ -162,6 +168,9 @@ model CardPrefab {
   lastIssue Int @default(0)
   maxCards  Int @default(0)
   rarity    Int @default(100)
+
+  release   Release @relation(fields: [releaseId], references: [id])
+  releaseId Int
 
   cards Card[]
 }

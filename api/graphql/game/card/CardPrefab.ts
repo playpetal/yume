@@ -34,6 +34,15 @@ export const CardPrefabObject = objectType({
         }))!;
       },
     });
+    t.field(CardPrefab.releaseId);
+    t.field("release", {
+      type: nonNull("Release"),
+      async resolve(source, _, ctx) {
+        return (await ctx.db.release.findFirst({
+          where: { id: source.releaseId },
+        }))!;
+      },
+    });
     t.field(CardPrefab.maxCards);
     t.field(CardPrefab.rarity);
   },
@@ -46,17 +55,33 @@ export const CreatePrefabMutation = extendType({
       type: nonNull("CardPrefab"),
       args: {
         characterId: nonNull("Int"),
+        releaseId: "Int",
         subgroupId: "Int",
         groupId: "Int",
         maxCards: "Int",
         rarity: "Int",
       },
       async resolve(_, args, ctx) {
+        let releaseId = args.releaseId;
+
+        if (!releaseId) {
+          const lastRelease = await ctx.db.release.findFirst({
+            where: { droppable: false },
+            orderBy: { id: "desc" },
+          });
+
+          if (!lastRelease) {
+            const release = await ctx.db.release.create({ data: {} });
+            releaseId = release.id;
+          } else releaseId = lastRelease.id;
+        }
+
         return ctx.db.cardPrefab.create({
           data: {
             ...args,
             maxCards: args.maxCards ?? undefined,
             rarity: args.rarity ?? undefined,
+            releaseId,
           },
         });
       },
@@ -76,8 +101,21 @@ export const UpdatePrefabMutation = extendType({
         groupId: "Int",
         maxCards: "Int",
         rarity: "Int",
+        releaseId: "Int",
       },
-      async resolve(_, args, ctx) {
+      async resolve(
+        _,
+        {
+          prefabId,
+          characterId,
+          subgroupId,
+          groupId,
+          maxCards,
+          rarity,
+          releaseId,
+        },
+        ctx
+      ) {
         const account = await checkAuth(ctx);
         const isInGroup = await userInGroup(ctx, account.discordId, [
           "Developer",
@@ -90,13 +128,14 @@ export const UpdatePrefabMutation = extendType({
           );
 
         return ctx.db.cardPrefab.update({
-          where: { id: args.prefabId },
+          where: { id: prefabId },
           data: {
-            characterId: args.characterId ?? undefined,
-            subgroupId: args.subgroupId,
-            groupId: args.groupId,
-            maxCards: args.maxCards ?? undefined,
-            rarity: args.rarity ?? undefined,
+            characterId: characterId ?? undefined,
+            subgroupId: subgroupId,
+            groupId: groupId,
+            maxCards: maxCards ?? undefined,
+            rarity: rarity ?? undefined,
+            releaseId: releaseId ?? undefined,
           },
         });
       },
