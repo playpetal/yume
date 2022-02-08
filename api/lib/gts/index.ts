@@ -110,8 +110,6 @@ class GTSManager {
       },
     });
 
-    console.log(songCount);
-
     if (songCount === 0) return;
 
     const skip = Math.round(Math.random() * (songCount - 1));
@@ -128,8 +126,6 @@ class GTSManager {
       },
       include: { group: { select: { name: true } } },
     });
-
-    console.log(song);
 
     if (!song) return;
 
