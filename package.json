@@ -14,7 +14,7 @@
     "discord-oauth2": "^2.9.0",
     "graphql": "15.8",
     "graphql-scalars": "^1.14.1",
-    "ioredis": "^4.28.3",
+    "ioredis": "^4.28.5",
     "jsonwebtoken": "^8.5.1",
     "nanoid": "^3.1.30",
     "nexus": "^1.1.0",
@@ -42,7 +42,7 @@
     "dev": "yarn ts-node-dev --transpile-only --no-notify api/index.ts",
     "pgen": "yarn prisma generate --watch",
     "build": "yarn rimraf dist && yarn tsc",
-    "pm2": "NODE_ENV=production pm2 start dist/index.js --watch -i max",
+    "pm2": "NODE_ENV=production pm2-runtime start dist/index.js --watch -i max",
     "generate": "ts-node --transpile-only api/schema",
     "test": "yarn generate && jest"
   },
