@@ -6,11 +6,7 @@ jobs:
       - image: arvindr226/alpine-ssh
     steps:
       - checkout
-      - run: |
-          ssh -oStrictHostKeyChecking=no -v $USER@$IP
-          curl -o- -L https://yarnpkg.com/install.sh | bash
-          echo 'export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"' >> $BASH_ENV
-          ./deploy.sh
+      - run: ssh -oStrictHostKeyChecking=no -v $USER@$IP "bash deploy.sh"
 
 workflows:
   version: 2
