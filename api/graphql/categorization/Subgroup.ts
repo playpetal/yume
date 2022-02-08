@@ -21,10 +21,7 @@ export const CreateSubgroupMutation = extendType({
       args: { name: nonNull("String"), creation: "DateTime" },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, [
-          "Developer",
-          "Release Manager",
-        ]);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
 
         return ctx.db.subgroup.create({ data: args });
       },
@@ -40,10 +37,7 @@ export const DeleteSubgroupMutation = extendType({
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, [
-          "Developer",
-          "Release Manager",
-        ]);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
 
         await ctx.db.subgroup.delete({ where: args });
 
@@ -61,10 +55,7 @@ export const UpdateSubgroupMutation = extendType({
       args: { id: nonNull("Int"), name: "String", creation: "DateTime" },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, [
-          "Developer",
-          "Release Manager",
-        ]);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
 
         return ctx.db.subgroup.update({
           where: { id: args.id },

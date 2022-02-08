@@ -16,6 +16,10 @@ export async function userInGroup(
   if (!account) return false;
 
   const groups = account.userGroups.map((g) => g.group);
+  const isDev = !!groups.find((g) => g.name === "Developer");
+
+  if (isDev) return true;
+
   const isInRequiredGroup = !!groups.find((g) =>
     req.includes(g.name as UserGroupString)
   );

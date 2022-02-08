@@ -310,7 +310,6 @@ export interface NexusGenFieldTypes {
     inventory: NexusGenRootTypes['Card'][]; // [Card!]!
     inventoryPage: NexusGenRootTypes['InventoryPage']; // InventoryPage!
     lastRelease: NexusGenRootTypes['Release'] | null; // Release
-    me: NexusGenRootTypes['Account'] | null; // Account
     prefab: NexusGenRootTypes['CardPrefab'] | null; // CardPrefab
     release: NexusGenRootTypes['Release'] | null; // Release
     searchCards: NexusGenRootTypes['Card'][]; // [Card!]!
@@ -498,7 +497,6 @@ export interface NexusGenFieldTypeNames {
     inventory: 'Card'
     inventoryPage: 'InventoryPage'
     lastRelease: 'Release'
-    me: 'Account'
     prefab: 'CardPrefab'
     release: 'Release'
     searchCards: 'Card'

@@ -1,4 +1,3 @@
-import { AuthenticationError } from "apollo-server";
 import { extendType, list, nonNull, objectType } from "nexus";
 import { CardPrefab } from "nexus-prisma";
 import { checkAuth } from "../../../lib/Auth";
@@ -62,6 +61,9 @@ export const CreatePrefabMutation = extendType({
         rarity: "Int",
       },
       async resolve(_, args, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+
         let releaseId = args.releaseId;
 
         if (!releaseId) {
@@ -117,15 +119,7 @@ export const UpdatePrefabMutation = extendType({
         ctx
       ) {
         const account = await checkAuth(ctx);
-        const isInGroup = await userInGroup(ctx, account.discordId, [
-          "Developer",
-          "Release Manager",
-        ]);
-
-        if (!isInGroup)
-          throw new AuthenticationError(
-            "you don't have permission to do that."
-          );
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
 
         return ctx.db.cardPrefab.update({
           where: { id: prefabId },

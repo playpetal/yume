@@ -22,10 +22,7 @@ export const CreateCharacterMutation = extendType({
       args: { name: nonNull("String"), birthday: "DateTime", gender: "Gender" },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, [
-          "Developer",
-          "Release Manager",
-        ]);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
 
         return ctx.db.character.create({
           data: {
@@ -47,10 +44,7 @@ export const DeleteCharacterMutation = extendType({
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, [
-          "Developer",
-          "Release Manager",
-        ]);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
 
         await ctx.db.character.delete({ where: { id: args.id } });
 
@@ -73,10 +67,7 @@ export const UpdateCharacterMutation = extendType({
       },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, [
-          "Developer",
-          "Release Manager",
-        ]);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
 
         return ctx.db.character.update({
           where: { id: args.id },

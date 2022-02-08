@@ -1,6 +1,5 @@
 import { extendType, list, nonNull, objectType } from "nexus";
 import { Account } from "nexus-prisma";
-import { discordOAuth2 } from "../util/auth/DiscordOAuth";
 import { UserInputError, AuthenticationError } from "apollo-server";
 import jwt from "jsonwebtoken";
 import { checkAuth } from "../../lib/Auth";
@@ -62,7 +61,7 @@ export const AccountStatsObject = objectType({
   },
 });
 
-export const GetMeQuery = extendType({
+/*export const GetMeQuery = extendType({
   type: "Query",
   definition(t) {
     t.field("me", {
@@ -92,7 +91,7 @@ export const GetMeQuery = extendType({
       },
     });
   },
-});
+});*/
 
 export const CreateAccountMutation = extendType({
   type: "Mutation",

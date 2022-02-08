@@ -181,7 +181,6 @@ type Query {
   inventory(next: Int, prev: Int, user: Int!): [Card!]!
   inventoryPage(cursor: Int!, user: Int!): InventoryPage!
   lastRelease: Release
-  me: Account
   prefab(id: Int!): CardPrefab
   release(id: Int!): Release
   searchCards(ownerId: Int!, search: String!): [Card!]!

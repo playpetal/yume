@@ -1,5 +1,7 @@
 import { extendType, list, nonNull, objectType } from "nexus";
 import { Release } from "nexus-prisma";
+import { checkAuth } from "../../../lib/Auth";
+import { userInGroup } from "../../../lib/Permissions";
 
 export const ReleaseObject = objectType({
   name: Release.$name,
@@ -22,6 +24,9 @@ export const CreateReleaseMutation = extendType({
     t.field("createRelease", {
       type: nonNull("Release"),
       async resolve(_, __, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+
         return ctx.db.release.create({ data: {} });
       },
     });
@@ -38,6 +43,9 @@ export const UpdateReleaseMutation = extendType({
         droppable: "Boolean",
       },
       async resolve(_, { id, droppable }, ctx) {
+        const account = await checkAuth(ctx);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+
         return ctx.db.release.update({
           where: { id },
           data: { droppable: droppable ?? undefined },

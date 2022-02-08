@@ -32,10 +32,7 @@ export const CreateAliasMutation = extendType({
       },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, [
-          "Developer",
-          "Release Manager",
-        ]);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
 
         return ctx.db.alias.create({ data: args });
       },
@@ -51,10 +48,7 @@ export const DeleteAliasMutation = extendType({
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, [
-          "Developer",
-          "Release Manager",
-        ]);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
 
         await ctx.db.alias.delete({ where: args });
 
@@ -72,10 +66,7 @@ export const UpdateAliasMutation = extendType({
       args: { id: nonNull("Int"), groupId: "Int", alias: "String" },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, [
-          "Developer",
-          "Release Manager",
-        ]);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
 
         return ctx.db.alias.update({
           where: { id: args.id },

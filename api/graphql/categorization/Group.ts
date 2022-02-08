@@ -32,10 +32,7 @@ export const CreateGroupMutation = extendType({
       },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, [
-          "Developer",
-          "Release Manager",
-        ]);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
 
         return ctx.db.group.create({
           data: {
@@ -57,10 +54,7 @@ export const DeleteGroupMutation = extendType({
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, [
-          "Developer",
-          "Release Manager",
-        ]);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
 
         await ctx.db.group.delete({ where: { id: args.id } });
 
@@ -83,10 +77,7 @@ export const UpdateGroupMutation = extendType({
       },
       async resolve(_, args, ctx) {
         const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, [
-          "Developer",
-          "Release Manager",
-        ]);
+        await userInGroup(ctx, account.discordId, ["Release Manager"]);
 
         return ctx.db.group.update({
           where: { id: args.id },
