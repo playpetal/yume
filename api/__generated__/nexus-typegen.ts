@@ -287,6 +287,7 @@ export interface NexusGenFieldTypes {
     deleteCharacter: number; // Int!
     deleteGroup: number; // Int!
     deleteSubgroup: number; // Int!
+    gift: boolean; // Boolean!
     rollCards: NexusGenRootTypes['Card'][]; // [Card!]!
     setBio: NexusGenRootTypes['Account']; // Account!
     setMaxGtsReward: number; // Int!
@@ -474,6 +475,7 @@ export interface NexusGenFieldTypeNames {
     deleteCharacter: 'Int'
     deleteGroup: 'Int'
     deleteSubgroup: 'Int'
+    gift: 'Boolean'
     rollCards: 'Card'
     setBio: 'Account'
     setMaxGtsReward: 'Int'
@@ -606,6 +608,11 @@ export interface NexusGenArgTypes {
     }
     deleteSubgroup: { // args
       id: number; // Int!
+    }
+    gift: { // args
+      cardIds?: number[] | null; // [Int!]
+      petals?: number | null; // Int
+      recipientId: number; // Int!
     }
     rollCards: { // args
       amount: number; // Int!

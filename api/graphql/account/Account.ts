@@ -4,6 +4,7 @@ import { UserInputError, AuthenticationError } from "apollo-server";
 import jwt from "jsonwebtoken";
 import { checkAuth } from "../../lib/Auth";
 import { getAccountStats } from "../../lib/account";
+import { Card } from "@prisma/client";
 
 export const AccountObject = objectType({
   name: Account.$name,
@@ -222,6 +223,74 @@ export const SetUserTitle = extendType({
           where: { id: auth.id },
           data: { activeTitleId: args.id },
         });
+      },
+    });
+  },
+});
+
+export const Gift = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("gift", {
+      type: nonNull("Boolean"),
+      args: {
+        recipientId: nonNull("Int"),
+        cardIds: list(nonNull("Int")),
+        petals: "Int",
+      },
+      async resolve(_, { recipientId, cardIds, petals }, ctx) {
+        const account = await checkAuth(ctx);
+        const recipient = await ctx.db.account.findFirst({
+          where: { id: recipientId },
+        });
+
+        if (!recipient)
+          throw new UserInputError(`i couldn't find that user :(`);
+
+        if (petals) {
+          if (account.currency < petals)
+            throw new UserInputError(
+              "you don't have enough petals to do that."
+            );
+
+          await ctx.db.account.update({
+            where: { id: account.id },
+            data: { currency: { decrement: petals } },
+          });
+
+          await ctx.db.account.update({
+            where: { id: recipient.id },
+            data: { currency: { increment: petals } },
+          });
+        }
+
+        if (cardIds && cardIds.length > 0) {
+          const cards: Card[] = [];
+
+          for (let cardId of cardIds) {
+            const card = await ctx.db.card.findFirst({ where: { id: cardId } });
+
+            if (!card)
+              throw new UserInputError(
+                `\`${cardId.toString(36)}\` does not exist.`
+              );
+            if (card.ownerId !== account.id)
+              throw new UserInputError(
+                `\`${cardId.toString(36)}\` does not belong to you.`
+              );
+
+            cards.push(card);
+          }
+
+          if (cards.length > 0) {
+            await ctx.db.card.updateMany({
+              where: { id: { in: cards.map((c) => c.id) } },
+              data: { ownerId: recipient.id },
+            });
+          }
+        }
+
+        return true;
       },
     });
   },
