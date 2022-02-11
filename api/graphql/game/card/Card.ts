@@ -127,7 +127,7 @@ export const SearchCardsQuery = extendType({
         });
 
         const matches = cards.filter((c) =>
-          c.id.toString(36).includes(args.search)
+          c.id.toString(16).includes(args.search)
         );
 
         return matches.slice(0, 25);

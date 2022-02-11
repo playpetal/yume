@@ -272,11 +272,11 @@ export const Gift = extendType({
 
             if (!card)
               throw new UserInputError(
-                `\`${cardId.toString(36)}\` does not exist.`
+                `\`${cardId.toString(16)}\` does not exist.`
               );
             if (card.ownerId !== account.id)
               throw new UserInputError(
-                `\`${cardId.toString(36)}\` does not belong to you.`
+                `\`${cardId.toString(16)}\` does not belong to you.`
               );
 
             cards.push(card);
