@@ -184,9 +184,10 @@ model Card {
   owner   Account? @relation(fields: [ownerId], references: [id])
   ownerId Int?
 
-  tint    Int     @default(16755404)
-  issue   Int?
-  quality Quality
+  tint     Int     @default(16755404)
+  hasFrame Boolean @default(false)
+  issue    Int?
+  quality  Quality
 
   createdAt DateTime @default(now())
 

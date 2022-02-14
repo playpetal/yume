@@ -33,6 +33,7 @@ export const CardObject = objectType({
         }))!;
       },
     });
+    t.field(Card.hasFrame);
   },
 });
 

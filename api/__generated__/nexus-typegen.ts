@@ -78,6 +78,7 @@ export interface NexusGenObjects {
   }
   Card: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    hasFrame: boolean; // Boolean!
     id: number; // Int!
     issue?: number | null; // Int
     ownerId?: number | null; // Int
@@ -211,6 +212,7 @@ export interface NexusGenFieldTypes {
   }
   Card: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    hasFrame: boolean; // Boolean!
     id: number; // Int!
     issue: number | null; // Int
     owner: NexusGenRootTypes['Account'] | null; // Account
@@ -399,6 +401,7 @@ export interface NexusGenFieldTypeNames {
   }
   Card: { // field return type name
     createdAt: 'DateTime'
+    hasFrame: 'Boolean'
     id: 'Int'
     issue: 'Int'
     owner: 'Account'
