@@ -125,10 +125,19 @@ export const SearchCardsQuery = extendType({
       async resolve(_, args, ctx) {
         const cards = await ctx.db.card.findMany({
           where: { ownerId: args.ownerId },
+          include: {
+            prefab: {
+              include: { character: true, group: true, subgroup: true },
+            },
+          },
         });
 
-        const matches = cards.filter((c) =>
-          c.id.toString(16).includes(args.search)
+        const matches = cards.filter(
+          (c) =>
+            c.id.toString(16).includes(args.search) ||
+            c.prefab.character.name.toLowerCase().includes(args.search) ||
+            c.prefab.group?.name.toLowerCase().includes(args.search) ||
+            c.prefab.subgroup?.name.toLowerCase().includes(args.search)
         );
 
         return matches.slice(0, 25);
