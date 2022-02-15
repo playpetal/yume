@@ -180,8 +180,8 @@ type Query {
   getRandomSong(gender: GroupGender): GameSong
   getSubgroup(id: Int!): Subgroup
   getUserTitle(id: Int!): TitleInventory
-  inventory(next: Int, prev: Int, user: Int!): [Card!]!
-  inventoryPage(cursor: Int!, user: Int!): InventoryPage!
+  inventory(character: String, group: String, next: Int, prev: Int, subgroup: String, user: Int!): [Card!]!
+  inventoryPage(character: String, cursor: Int!, group: String, subgroup: String, user: Int!): InventoryPage!
   lastRelease: Release
   prefab(id: Int!): CardPrefab
   release(id: Int!): Release

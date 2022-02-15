@@ -59,16 +59,30 @@ export const Inventory = extendType({
       type: nonNull(list(nonNull("Card"))),
       args: {
         user: nonNull("Int"),
+        group: "String",
+        subgroup: "String",
+        character: "String",
         next: "Int",
         prev: "Int",
       },
-      async resolve(_, { user, next, prev }, ctx) {
+      async resolve(_, { user, next, prev, character, subgroup, group }, ctx) {
         return ctx.db.card.findMany({
           take: 10,
           orderBy: next || prev ? { id: next ? "asc" : "desc" } : undefined,
           where: {
             owner: { id: user },
             id: next ? { gt: next } : prev ? { lt: prev } : undefined,
+            prefab: {
+              character: character
+                ? { name: { contains: character, mode: "insensitive" } }
+                : undefined,
+              group: group
+                ? { name: { contains: group, mode: "insensitive" } }
+                : undefined,
+              subgroup: subgroup
+                ? { name: { contains: subgroup, mode: "insensitive" } }
+                : undefined,
+            },
           },
         });
       },
@@ -93,14 +107,44 @@ export const InventoryPage = extendType({
       args: {
         cursor: nonNull("Int"),
         user: nonNull("Int"),
+        group: "String",
+        subgroup: "String",
+        character: "String",
       },
-      async resolve(_, args, ctx) {
+      async resolve(_, { cursor, user, group, subgroup, character }, ctx) {
         const total = await ctx.db.card.count({
-          where: { owner: { id: args.user } },
+          where: {
+            owner: { id: user },
+            prefab: {
+              character: character
+                ? { name: { contains: character, mode: "insensitive" } }
+                : undefined,
+              group: group
+                ? { name: { contains: group, mode: "insensitive" } }
+                : undefined,
+              subgroup: subgroup
+                ? { name: { contains: subgroup, mode: "insensitive" } }
+                : undefined,
+            },
+          },
         });
 
         const current = await ctx.db.card.count({
-          where: { owner: { id: args.user }, id: { lte: args.cursor } },
+          where: {
+            owner: { id: user },
+            id: { lte: cursor },
+            prefab: {
+              character: character
+                ? { name: { contains: character, mode: "insensitive" } }
+                : undefined,
+              group: group
+                ? { name: { contains: group, mode: "insensitive" } }
+                : undefined,
+              subgroup: subgroup
+                ? { name: { contains: subgroup, mode: "insensitive" } }
+                : undefined,
+            },
+          },
         });
 
         return {

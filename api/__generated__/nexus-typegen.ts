@@ -695,12 +695,18 @@ export interface NexusGenArgTypes {
       id: number; // Int!
     }
     inventory: { // args
+      character?: string | null; // String
+      group?: string | null; // String
       next?: number | null; // Int
       prev?: number | null; // Int
+      subgroup?: string | null; // String
       user: number; // Int!
     }
     inventoryPage: { // args
+      character?: string | null; // String
       cursor: number; // Int!
+      group?: string | null; // String
+      subgroup?: string | null; // String
       user: number; // Int!
     }
     prefab: { // args
