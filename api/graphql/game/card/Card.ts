@@ -235,7 +235,7 @@ export const BurnCard = extendType({
         });
         await ctx.db.account.update({
           where: { id: account.id },
-          data: { currency: { increment: tier * 5 } },
+          data: { currency: { increment: tier * 3 } },
         });
 
         return card.id;
