@@ -18,11 +18,10 @@ type Account {
 """Account Stats"""
 type AccountStats {
   cardCount: Int!
-  gtsCurrentGames: Int!
   gtsGuessCount: Int!
-  gtsLastGame: DateTime
+  gtsTotalCards: Int!
+  gtsTotalCurrency: Int!
   gtsTotalGames: Int!
-  gtsTotalRewards: Int!
   gtsTotalTime: Int!
   rollCount: Int!
 }
@@ -96,11 +95,6 @@ type DiscordUser {
 type GameSong {
   group: String
   id: Int!
-  isNewHour: Boolean!
-  maxGuesses: Int!
-  maxReward: Int!
-  remainingGames: Int!
-  timeLimit: Int!
   title: String!
   video: String!
 }
@@ -137,7 +131,9 @@ type InventoryPage {
 type Mutation {
   assignGroup(accountId: Int!, groupId: Int!): AccountUserGroup!
   burnCard(cardId: Int!): Int!
-  completeGts(correct: Boolean!, guesses: Int!, isNewHour: Boolean!, reward: Int!, time: Int!): Int!
+  claimMinigameCardReward: [Card!]!
+  claimMinigamePetalReward: Account!
+  completeGts(guesses: Int!, reward: Reward!, time: Int!): Boolean!
   createAccount(username: String!): Account!
   createAlias(alias: String!, groupId: Int!): Alias!
   createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
@@ -153,7 +149,6 @@ type Mutation {
   gift(cardIds: [Int!], petals: Int, recipientId: Int!): Boolean!
   rollCards(amount: Int!, gender: Gender): [Card!]!
   setBio(bio: String): Account!
-  setMaxGtsReward(maxReward: Int!): Int!
   setUserTitle(id: Int!): Account!
   unassignGroup(accountId: Int!, groupId: Int!): Int!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
@@ -174,6 +169,7 @@ enum Quality {
 
 type Query {
   aliases(alias: String, groupId: Int, id: Int): [Alias!]!
+  canClaimRewards: Int!
   getCard(id: Int!): Card
   getCharacter(id: Int!): Character
   getGroup(id: Int!): Group
@@ -182,6 +178,7 @@ type Query {
   getUserTitle(id: Int!): TitleInventory
   inventory(character: String, group: String, next: Int, prev: Int, subgroup: String, user: Int!): [Card!]!
   inventoryPage(character: String, cursor: Int!, group: String, subgroup: String, user: Int!): InventoryPage!
+  isWordValid(word: String!): Boolean!
   lastRelease: Release
   prefab(id: Int!): CardPrefab
   release(id: Int!): Release
@@ -195,12 +192,18 @@ type Query {
   user(discordId: String, id: Int, username: String): Account
   userGroups(exact: String, search: String): [UserGroup!]!
   userTitles(accountId: Int!, search: String): [TitleInventory!]!
+  word: String!
 }
 
 type Release {
   cards: [CardPrefab!]!
   droppable: Boolean!
   id: Int!
+}
+
+enum Reward {
+  CARD
+  PETAL
 }
 
 type Song {

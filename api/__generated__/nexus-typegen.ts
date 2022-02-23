@@ -35,6 +35,7 @@ export interface NexusGenEnums {
   Gender: "FEMALE" | "MALE" | "NONBINARY"
   GroupGender: "COED" | "FEMALE" | "MALE"
   Quality: "BLOOM" | "BUD" | "FLOWER" | "SEED" | "SPROUT"
+  Reward: "CARD" | "PETAL"
 }
 
 export interface NexusGenScalars {
@@ -58,11 +59,10 @@ export interface NexusGenObjects {
   }
   AccountStats: { // root type
     cardCount: number; // Int!
-    gtsCurrentGames: number; // Int!
     gtsGuessCount: number; // Int!
-    gtsLastGame?: NexusGenScalars['DateTime'] | null; // DateTime
+    gtsTotalCards: number; // Int!
+    gtsTotalCurrency: number; // Int!
     gtsTotalGames: number; // Int!
-    gtsTotalRewards: number; // Int!
     gtsTotalTime: number; // Int!
     rollCount: number; // Int!
   }
@@ -113,11 +113,6 @@ export interface NexusGenObjects {
   GameSong: { // root type
     group?: string | null; // String
     id: number; // Int!
-    isNewHour: boolean; // Boolean!
-    maxGuesses: number; // Int!
-    maxReward: number; // Int!
-    remainingGames: number; // Int!
-    timeLimit: number; // Int!
     title: string; // String!
     video: string; // String!
   }
@@ -189,11 +184,10 @@ export interface NexusGenFieldTypes {
   }
   AccountStats: { // field return type
     cardCount: number; // Int!
-    gtsCurrentGames: number; // Int!
     gtsGuessCount: number; // Int!
-    gtsLastGame: NexusGenScalars['DateTime'] | null; // DateTime
+    gtsTotalCards: number; // Int!
+    gtsTotalCurrency: number; // Int!
     gtsTotalGames: number; // Int!
-    gtsTotalRewards: number; // Int!
     gtsTotalTime: number; // Int!
     rollCount: number; // Int!
   }
@@ -253,11 +247,6 @@ export interface NexusGenFieldTypes {
   GameSong: { // field return type
     group: string | null; // String
     id: number; // Int!
-    isNewHour: boolean; // Boolean!
-    maxGuesses: number; // Int!
-    maxReward: number; // Int!
-    remainingGames: number; // Int!
-    timeLimit: number; // Int!
     title: string; // String!
     video: string; // String!
   }
@@ -276,7 +265,9 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     assignGroup: NexusGenRootTypes['AccountUserGroup']; // AccountUserGroup!
     burnCard: number; // Int!
-    completeGts: number; // Int!
+    claimMinigameCardReward: NexusGenRootTypes['Card'][]; // [Card!]!
+    claimMinigamePetalReward: NexusGenRootTypes['Account']; // Account!
+    completeGts: boolean; // Boolean!
     createAccount: NexusGenRootTypes['Account']; // Account!
     createAlias: NexusGenRootTypes['Alias']; // Alias!
     createCharacter: NexusGenRootTypes['Character']; // Character!
@@ -292,7 +283,6 @@ export interface NexusGenFieldTypes {
     gift: boolean; // Boolean!
     rollCards: NexusGenRootTypes['Card'][]; // [Card!]!
     setBio: NexusGenRootTypes['Account']; // Account!
-    setMaxGtsReward: number; // Int!
     setUserTitle: NexusGenRootTypes['Account']; // Account!
     unassignGroup: number; // Int!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
@@ -304,6 +294,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
+    canClaimRewards: number; // Int!
     getCard: NexusGenRootTypes['Card'] | null; // Card
     getCharacter: NexusGenRootTypes['Character'] | null; // Character
     getGroup: NexusGenRootTypes['Group'] | null; // Group
@@ -312,6 +303,7 @@ export interface NexusGenFieldTypes {
     getUserTitle: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
     inventory: NexusGenRootTypes['Card'][]; // [Card!]!
     inventoryPage: NexusGenRootTypes['InventoryPage']; // InventoryPage!
+    isWordValid: boolean; // Boolean!
     lastRelease: NexusGenRootTypes['Release'] | null; // Release
     prefab: NexusGenRootTypes['CardPrefab'] | null; // CardPrefab
     release: NexusGenRootTypes['Release'] | null; // Release
@@ -325,6 +317,7 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['Account'] | null; // Account
     userGroups: NexusGenRootTypes['UserGroup'][]; // [UserGroup!]!
     userTitles: NexusGenRootTypes['TitleInventory'][]; // [TitleInventory!]!
+    word: string; // String!
   }
   Release: { // field return type
     cards: NexusGenRootTypes['CardPrefab'][]; // [CardPrefab!]!
@@ -378,11 +371,10 @@ export interface NexusGenFieldTypeNames {
   }
   AccountStats: { // field return type name
     cardCount: 'Int'
-    gtsCurrentGames: 'Int'
     gtsGuessCount: 'Int'
-    gtsLastGame: 'DateTime'
+    gtsTotalCards: 'Int'
+    gtsTotalCurrency: 'Int'
     gtsTotalGames: 'Int'
-    gtsTotalRewards: 'Int'
     gtsTotalTime: 'Int'
     rollCount: 'Int'
   }
@@ -442,11 +434,6 @@ export interface NexusGenFieldTypeNames {
   GameSong: { // field return type name
     group: 'String'
     id: 'Int'
-    isNewHour: 'Boolean'
-    maxGuesses: 'Int'
-    maxReward: 'Int'
-    remainingGames: 'Int'
-    timeLimit: 'Int'
     title: 'String'
     video: 'String'
   }
@@ -465,7 +452,9 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     assignGroup: 'AccountUserGroup'
     burnCard: 'Int'
-    completeGts: 'Int'
+    claimMinigameCardReward: 'Card'
+    claimMinigamePetalReward: 'Account'
+    completeGts: 'Boolean'
     createAccount: 'Account'
     createAlias: 'Alias'
     createCharacter: 'Character'
@@ -481,7 +470,6 @@ export interface NexusGenFieldTypeNames {
     gift: 'Boolean'
     rollCards: 'Card'
     setBio: 'Account'
-    setMaxGtsReward: 'Int'
     setUserTitle: 'Account'
     unassignGroup: 'Int'
     updateAlias: 'Alias'
@@ -493,6 +481,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     aliases: 'Alias'
+    canClaimRewards: 'Int'
     getCard: 'Card'
     getCharacter: 'Character'
     getGroup: 'Group'
@@ -501,6 +490,7 @@ export interface NexusGenFieldTypeNames {
     getUserTitle: 'TitleInventory'
     inventory: 'Card'
     inventoryPage: 'InventoryPage'
+    isWordValid: 'Boolean'
     lastRelease: 'Release'
     prefab: 'CardPrefab'
     release: 'Release'
@@ -514,6 +504,7 @@ export interface NexusGenFieldTypeNames {
     user: 'Account'
     userGroups: 'UserGroup'
     userTitles: 'TitleInventory'
+    word: 'String'
   }
   Release: { // field return type name
     cards: 'CardPrefab'
@@ -562,10 +553,8 @@ export interface NexusGenArgTypes {
       cardId: number; // Int!
     }
     completeGts: { // args
-      correct: boolean; // Boolean!
       guesses: number; // Int!
-      isNewHour: boolean; // Boolean!
-      reward: number; // Int!
+      reward: NexusGenEnums['Reward']; // Reward!
       time: number; // Int!
     }
     createAccount: { // args
@@ -623,9 +612,6 @@ export interface NexusGenArgTypes {
     }
     setBio: { // args
       bio?: string | null; // String
-    }
-    setMaxGtsReward: { // args
-      maxReward: number; // Int!
     }
     setUserTitle: { // args
       id: number; // Int!
@@ -708,6 +694,9 @@ export interface NexusGenArgTypes {
       group?: string | null; // String
       subgroup?: string | null; // String
       user: number; // Int!
+    }
+    isWordValid: { // args
+      word: string; // String!
     }
     prefab: { // args
       id: number; // Int!
