@@ -1,19 +1,9 @@
 import axios from "axios";
-import { Account, GroupGender } from "@prisma/client";
+import { GroupGender } from "@prisma/client";
 import { Context } from "../../context";
-import { parseElse } from "../util/parseElse";
-import { DateTime } from "luxon";
-import { getAccountStats } from "../account";
 
 type Song = { id: number; title: string; group?: { name: string } | null };
 type RedisSong = Song & { video: string };
-type GTSSong = RedisSong & {
-  maxReward: number;
-  timeLimit: number;
-  maxGuesses: number;
-  remainingGames: number;
-  isNewHour: boolean;
-};
 
 class GTSManager {
   private badSongs: number[] = [];
@@ -25,77 +15,20 @@ class GTSManager {
     return await redis.llen(`gts:songs:${gender?.toLowerCase() || "all"}`);
   }
 
-  private async getOptions(
-    ctx: Context,
-    account: Account
-  ): Promise<{
-    maxReward: number;
-    timeLimit: number;
-    maxGuesses: number;
-    remainingGames: number;
-    isNewHour: boolean;
-  }> {
-    const stats = await getAccountStats(ctx, account.id);
-    let remainingGames = 3;
-    let isNewHour = false;
-
-    const timeLimit = parseElse(await ctx.redis.get("gts:timelimit"), 15000);
-
-    if (stats.gtsLastGame) {
-      const start = DateTime.fromMillis(stats.gtsLastGame.getTime()).startOf(
-        "hour"
-      );
-      const now = DateTime.now().startOf("hour");
-
-      isNewHour = now > start;
-
-      if (!isNewHour) {
-        if (stats.gtsCurrentGames >= 3) {
-          return {
-            maxReward: 0,
-            timeLimit,
-            maxGuesses: 10,
-            remainingGames,
-            isNewHour,
-          };
-        } else remainingGames -= stats.gtsCurrentGames;
-      }
-    }
-
-    const maxReward = parseElse(await ctx.redis.get("gts:maxreward"), 0);
-    const maxGuesses = parseElse(await ctx.redis.get("gts:maxguesses"), 3);
-
-    return {
-      maxReward,
-      timeLimit,
-      maxGuesses,
-      remainingGames,
-      isNewHour,
-    };
-  }
-
   public async getSong(
     ctx: Context,
-    account: Account,
     gender?: GroupGender
-  ): Promise<GTSSong | undefined> {
+  ): Promise<RedisSong | undefined> {
     const song = await ctx.redis.rpop(
       `gts:songs:${gender?.toLowerCase() || "all"}`
     );
 
-    if (song) {
-      const json = JSON.parse(song) as RedisSong;
-
-      return {
-        ...json,
-        ...(await this.getOptions(ctx, account)),
-      };
-    }
+    if (song) return JSON.parse(song) as RedisSong;
 
     const requestedSong = await this.requestSong(ctx, false, gender);
     if (!requestedSong) return;
 
-    return { ...requestedSong, ...(await this.getOptions(ctx, account)) };
+    return requestedSong;
   }
 
   public async requestSong(

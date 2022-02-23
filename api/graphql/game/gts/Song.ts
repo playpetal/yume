@@ -1,6 +1,9 @@
-import { extendType, nonNull, objectType } from "nexus";
+import { UserInputError } from "apollo-server";
+import { enumType, extendType, list, nonNull, objectType } from "nexus";
 import { Song } from "nexus-prisma";
 import { checkAuth } from "../../../lib/Auth";
+import { roll } from "../../../lib/card";
+import { canClaimRewards } from "../../../lib/game";
 import { gts } from "../../../lib/gts";
 
 export const SongObject = objectType({
@@ -30,11 +33,6 @@ export const GameSongObject = objectType({
     t.field("video", { type: nonNull("String") });
     t.field("title", { type: nonNull("String") });
     t.field("group", { type: "String" });
-    t.field("maxReward", { type: nonNull("Int") });
-    t.field("timeLimit", { type: nonNull("Int") });
-    t.field("maxGuesses", { type: nonNull("Int") });
-    t.field("remainingGames", { type: nonNull("Int") });
-    t.field("isNewHour", { type: nonNull("Boolean") });
   },
 });
 
@@ -45,8 +43,7 @@ export const GetRandomSongQuery = extendType({
       type: "GameSong",
       args: { gender: "GroupGender" },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        const song = await gts.getSong(ctx, account, args.gender ?? undefined);
+        const song = await gts.getSong(ctx, args.gender ?? undefined);
 
         if (!song) return null;
 
@@ -77,33 +74,81 @@ export const GetRandomSongQuery = extendType({
   },
 });
 
-export const SetMaxRewardMutation = extendType({
+export const Reward = enumType({
+  name: "Reward",
+  members: ["CARD", "PETAL"],
+});
+
+export const ClaimMinigamePetalReward = extendType({
   type: "Mutation",
   definition(t) {
-    t.field("setMaxGtsReward", {
-      type: nonNull("Int"),
-      args: { maxReward: nonNull("Int") },
-      async resolve(_, args, ctx) {
-        await ctx.redis.set("gts:maxreward", args.maxReward);
-        return args.maxReward;
+    t.field("claimMinigamePetalReward", {
+      type: nonNull("Account"),
+      async resolve(_, __, ctx) {
+        const account = await checkAuth(ctx);
+
+        const canClaim = await canClaimRewards(ctx);
+        if (!canClaim) throw new UserInputError("you cannot claim rewards");
+
+        await ctx.db.minigame.upsert({
+          create: { accountId: account.id, claimed: 1, lastClaim: new Date() },
+          update: {
+            claimed: canClaim === 3 ? 1 : { increment: 1 },
+            lastClaim: new Date(),
+          },
+          where: {
+            accountId: account.id,
+          },
+        });
+
+        return ctx.db.account.update({
+          where: { id: account.id },
+          data: { currency: { increment: 5 } },
+        });
       },
     });
   },
 });
 
-export const CompleteGTSMutation = extendType({
+export const ClaimMinigameCardReward = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("claimMinigameCardReward", {
+      type: nonNull(list(nonNull("Card"))),
+      async resolve(_, __, ctx) {
+        const account = await checkAuth(ctx);
+
+        const canClaim = await canClaimRewards(ctx);
+        if (!canClaim) throw new UserInputError("you cannot claim rewards");
+
+        await ctx.db.minigame.upsert({
+          create: { accountId: account.id, claimed: 1, lastClaim: new Date() },
+          update: {
+            claimed: { increment: 1 },
+            lastClaim: new Date(),
+          },
+          where: {
+            accountId: account.id,
+          },
+        });
+
+        return roll(ctx, 1);
+      },
+    });
+  },
+});
+
+export const CompleteGTS = extendType({
   type: "Mutation",
   definition(t) {
     t.field("completeGts", {
-      type: nonNull("Int"),
+      type: nonNull("Boolean"),
       args: {
+        reward: nonNull("Reward"),
         guesses: nonNull("Int"),
         time: nonNull("Int"),
-        reward: nonNull("Int"),
-        correct: nonNull("Boolean"),
-        isNewHour: nonNull("Boolean"),
       },
-      async resolve(_, { guesses, time, reward, correct, isNewHour }, ctx) {
+      async resolve(_, { reward, guesses, time }, ctx) {
         const account = await checkAuth(ctx);
 
         await ctx.db.gTS.upsert({
@@ -112,34 +157,20 @@ export const CompleteGTSMutation = extendType({
             accountId: account.id,
             totalGames: 1,
             totalGuesses: guesses,
-            totalRewards: correct ? reward : 0,
             totalTime: time,
-            games: correct ? 1 : 0,
-            lastGame: new Date(),
+            totalCurrency: reward === "CARD" ? 5 : undefined,
+            totalCards: reward === "PETAL" ? 1 : undefined,
           },
           update: {
             totalGames: { increment: 1 },
             totalGuesses: { increment: guesses },
-            totalRewards: correct ? { increment: reward } : undefined,
             totalTime: { increment: time },
-            games: correct
-              ? reward > 0
-                ? isNewHour
-                  ? 1
-                  : { increment: 1 }
-                : undefined
-              : undefined,
-            lastGame: correct ? new Date() : undefined,
+            totalCurrency: reward === "PETAL" ? { increment: 5 } : undefined,
+            totalCards: reward === "CARD" ? { increment: 1 } : undefined,
           },
         });
 
-        if (reward > 0)
-          await ctx.db.account.update({
-            data: { currency: { increment: reward } },
-            where: { id: account.id },
-          });
-
-        return reward;
+        return true;
       },
     });
   },
