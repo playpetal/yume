@@ -59,11 +59,6 @@ export interface NexusGenObjects {
   }
   AccountStats: { // root type
     cardCount: number; // Int!
-    gtsGuessCount: number; // Int!
-    gtsTotalCards: number; // Int!
-    gtsTotalCurrency: number; // Int!
-    gtsTotalGames: number; // Int!
-    gtsTotalTime: number; // Int!
     rollCount: number; // Int!
   }
   AccountUserGroup: { // root type
@@ -109,6 +104,14 @@ export interface NexusGenObjects {
     locale?: string | null; // String
     mfa_enabled?: boolean | null; // Boolean
     username: string; // String!
+  }
+  GTS: { // root type
+    accountId: number; // Int!
+    totalCards: number; // Int!
+    totalCurrency: number; // Int!
+    totalGames: number; // Int!
+    totalGuesses: number; // Int!
+    totalTime: number; // Int!
   }
   GameSong: { // root type
     group?: string | null; // String
@@ -177,6 +180,7 @@ export interface NexusGenFieldTypes {
     currency: number; // Int!
     discordId: string; // String!
     groups: NexusGenRootTypes['AccountUserGroup'][]; // [AccountUserGroup!]!
+    gts: NexusGenRootTypes['GTS'] | null; // GTS
     id: number; // Int!
     stats: NexusGenRootTypes['AccountStats'] | null; // AccountStats
     title: NexusGenRootTypes['Title'] | null; // Title
@@ -184,11 +188,6 @@ export interface NexusGenFieldTypes {
   }
   AccountStats: { // field return type
     cardCount: number; // Int!
-    gtsGuessCount: number; // Int!
-    gtsTotalCards: number; // Int!
-    gtsTotalCurrency: number; // Int!
-    gtsTotalGames: number; // Int!
-    gtsTotalTime: number; // Int!
     rollCount: number; // Int!
   }
   AccountUserGroup: { // field return type
@@ -243,6 +242,14 @@ export interface NexusGenFieldTypes {
     locale: string | null; // String
     mfa_enabled: boolean | null; // Boolean
     username: string; // String!
+  }
+  GTS: { // field return type
+    accountId: number; // Int!
+    totalCards: number; // Int!
+    totalCurrency: number; // Int!
+    totalGames: number; // Int!
+    totalGuesses: number; // Int!
+    totalTime: number; // Int!
   }
   GameSong: { // field return type
     group: string | null; // String
@@ -364,6 +371,7 @@ export interface NexusGenFieldTypeNames {
     currency: 'Int'
     discordId: 'String'
     groups: 'AccountUserGroup'
+    gts: 'GTS'
     id: 'Int'
     stats: 'AccountStats'
     title: 'Title'
@@ -371,11 +379,6 @@ export interface NexusGenFieldTypeNames {
   }
   AccountStats: { // field return type name
     cardCount: 'Int'
-    gtsGuessCount: 'Int'
-    gtsTotalCards: 'Int'
-    gtsTotalCurrency: 'Int'
-    gtsTotalGames: 'Int'
-    gtsTotalTime: 'Int'
     rollCount: 'Int'
   }
   AccountUserGroup: { // field return type name
@@ -430,6 +433,14 @@ export interface NexusGenFieldTypeNames {
     locale: 'String'
     mfa_enabled: 'Boolean'
     username: 'String'
+  }
+  GTS: { // field return type name
+    accountId: 'Int'
+    totalCards: 'Int'
+    totalCurrency: 'Int'
+    totalGames: 'Int'
+    totalGuesses: 'Int'
+    totalTime: 'Int'
   }
   GameSong: { // field return type name
     group: 'String'

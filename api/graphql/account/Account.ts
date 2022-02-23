@@ -17,6 +17,12 @@ export const AccountObject = objectType({
     t.field(Account.activeTitleId);
     t.field(Account.bio);
     t.field(Account.currency);
+    t.field("gts", {
+      type: "GTS",
+      async resolve(root, _, ctx) {
+        return ctx.db.gTS.findFirst({ where: { accountId: root.id } });
+      },
+    });
     t.field("stats", {
       type: "AccountStats",
       async resolve(root, _, ctx) {
@@ -47,52 +53,27 @@ export const AccountObject = objectType({
   },
 });
 
+export const GTSStats = objectType({
+  name: "GTS",
+  description: "GTS Statistics",
+  definition(t) {
+    t.field("accountId", { type: nonNull("Int") });
+    t.field("totalGuesses", { type: nonNull("Int") });
+    t.field("totalTime", { type: nonNull("Int") });
+    t.field("totalGames", { type: nonNull("Int") });
+    t.field("totalCards", { type: nonNull("Int") });
+    t.field("totalCurrency", { type: nonNull("Int") });
+  },
+});
+
 export const AccountStatsObject = objectType({
   name: "AccountStats",
   description: "Account Stats",
   definition(t) {
     t.field("cardCount", { type: nonNull("Int") });
-    t.field("gtsTotalGames", { type: nonNull("Int") });
-    t.field("gtsGuessCount", { type: nonNull("Int") });
-    t.field("gtsTotalTime", { type: nonNull("Int") });
-    t.field("gtsTotalRewards", { type: nonNull("Int") });
     t.field("rollCount", { type: nonNull("Int") });
-    t.field("gtsCurrentGames", { type: nonNull("Int") });
-    t.field("gtsLastGame", { type: "DateTime" });
   },
 });
-
-/*export const GetMeQuery = extendType({
-  type: "Query",
-  definition(t) {
-    t.field("me", {
-      type: "Account",
-      async resolve(_, __, ctx) {
-        if (!ctx.req.headers.authorization)
-          throw new AuthenticationError(
-            "Authorization is required to use this query."
-          );
-
-        try {
-          const user = await discordOAuth2.getUser(
-            ctx.req.headers.authorization
-          );
-
-          return await ctx.db.account.findFirst({
-            where: { discordId: user.id },
-          });
-        } catch (e) {
-          if (e instanceof UserInputError) throw e;
-
-          console.log(`Error while attempting to retrieve self: ${e}`);
-          throw new AuthenticationError(
-            "An error occurred while retrieving your account."
-          );
-        }
-      },
-    });
-  },
-});*/
 
 export const CreateAccountMutation = extendType({
   type: "Mutation",

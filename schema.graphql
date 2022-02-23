@@ -9,6 +9,7 @@ type Account {
   currency: Int!
   discordId: String!
   groups: [AccountUserGroup!]!
+  gts: GTS
   id: Int!
   stats: AccountStats
   title: Title
@@ -18,11 +19,6 @@ type Account {
 """Account Stats"""
 type AccountStats {
   cardCount: Int!
-  gtsGuessCount: Int!
-  gtsTotalCards: Int!
-  gtsTotalCurrency: Int!
-  gtsTotalGames: Int!
-  gtsTotalTime: Int!
   rollCount: Int!
 }
 
@@ -89,6 +85,16 @@ type DiscordUser {
   locale: String
   mfa_enabled: Boolean
   username: String!
+}
+
+"""GTS Statistics"""
+type GTS {
+  accountId: Int!
+  totalCards: Int!
+  totalCurrency: Int!
+  totalGames: Int!
+  totalGuesses: Int!
+  totalTime: Int!
 }
 
 """Game song"""
