@@ -33,10 +33,10 @@ model Account {
 
   currency Int @default(0)
 
-  cards Card[]
-  rolls RollLog[]
-  gts   GTSLog[]
-  GTS   GTS[]
+  cards     Card[]
+  rolls     RollLog[]
+  gts       GTS[]
+  minigames Minigame[]
 }
 
 model UserGroup {
@@ -142,8 +142,6 @@ model Song {
   title   String
   group   Group? @relation(fields: [groupId], references: [id])
   groupId Int?
-
-  gts GTSLog[]
 }
 
 model Release {
@@ -202,17 +200,23 @@ enum Quality {
   BLOOM
 }
 
+model Minigame {
+  account   Account  @relation(fields: [accountId], references: [id])
+  accountId Int      @id @unique
+  claimed   Int      @default(0)
+  lastClaim DateTime
+  pending   Boolean  @default(false)
+}
+
 model GTS {
   account   Account @relation(fields: [accountId], references: [id])
   accountId Int     @id @unique
 
-  games    Int       @default(0)
-  lastGame DateTime?
-
-  totalGames   Int
-  totalGuesses Int
-  totalTime    Int
-  totalRewards Int
+  totalGames    Int @default(0)
+  totalGuesses  Int @default(0)
+  totalTime     Int @default(0)
+  totalCurrency Int @default(0)
+  totalCards    Int @default(0)
 }
 
 // Action Logging
@@ -228,18 +232,4 @@ model RollLog {
   gender Gender?
 
   createdAt DateTime @default(now())
-}
-
-model GTSLog {
-  id Int @id @default(autoincrement())
-
-  account   Account @relation(fields: [accountId], references: [id])
-  accountId Int
-
-  song   Song @relation(fields: [songId], references: [id])
-  songId Int
-
-  correct Boolean
-
-  createdAt DateTime
 }
