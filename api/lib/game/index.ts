@@ -36,7 +36,7 @@ export async function claimRewards(
   if (!canClaim) throw new Error("cannot claim rewards");
 
   if (reward === "CARD") {
-    const [card] = await roll(ctx, 1);
+    const [card] = await roll(ctx, { amount: 1, free: true });
     return card.id;
   } else {
     await ctx.db.account.update({

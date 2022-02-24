@@ -124,7 +124,7 @@ export const ClaimMinigameCardReward = extendType({
         await ctx.db.minigame.upsert({
           create: { accountId: account.id, claimed: 1, lastClaim: new Date() },
           update: {
-            claimed: { increment: 1 },
+            claimed: canClaim === 3 ? 1 : { increment: 1 },
             lastClaim: new Date(),
           },
           where: {
@@ -132,7 +132,7 @@ export const ClaimMinigameCardReward = extendType({
           },
         });
 
-        return roll(ctx, 1);
+        return roll(ctx, { amount: 1, free: true });
       },
     });
   },

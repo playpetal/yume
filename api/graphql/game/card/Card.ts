@@ -197,8 +197,8 @@ export const RollCardsMutation = extendType({
         gender: "Gender",
         amount: nonNull("Int"),
       },
-      async resolve(_, args, ctx) {
-        return await roll(ctx, args.amount, args.gender ?? undefined);
+      async resolve(_, { amount, gender }, ctx) {
+        return await roll(ctx, { amount, gender: gender || undefined });
       },
     });
   },

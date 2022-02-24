@@ -14,16 +14,29 @@ export async function incrementIssue(
   return lastIssue;
 }
 
-export async function roll(ctx: Context, amount: number, gender?: Gender) {
+export async function roll(
+  ctx: Context,
+  {
+    amount,
+    gender,
+    free,
+  }: {
+    amount: number;
+    gender?: Gender;
+    free?: boolean;
+  }
+) {
   const account = await checkAuth(ctx);
 
-  const cost = (gender ? 15 : 10) * amount;
-  if (account.currency < cost) throw new Error("Not enough currency");
+  if (!free) {
+    const cost = (gender ? 15 : 10) * amount;
+    if (account.currency < cost) throw new Error("Not enough currency");
 
-  await ctx.db.account.update({
-    where: { id: account.id },
-    data: { currency: { decrement: cost } },
-  });
+    await ctx.db.account.update({
+      where: { id: account.id },
+      data: { currency: { decrement: cost } },
+    });
+  }
 
   const cards = [];
 
