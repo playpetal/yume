@@ -35,7 +35,7 @@ export interface NexusGenEnums {
   Gender: "FEMALE" | "MALE" | "NONBINARY"
   GroupGender: "COED" | "FEMALE" | "MALE"
   Quality: "BLOOM" | "BUD" | "FLOWER" | "SEED" | "SPROUT"
-  Reward: "CARD" | "PETAL"
+  Reward: "CARD" | "LILY" | "PETAL"
 }
 
 export interface NexusGenScalars {
@@ -277,6 +277,7 @@ export interface NexusGenFieldTypes {
     assignGroup: NexusGenRootTypes['AccountUserGroup']; // AccountUserGroup!
     burnCard: number; // Int!
     claimMinigameCardReward: NexusGenRootTypes['Card'][]; // [Card!]!
+    claimMinigameLilyReward: NexusGenRootTypes['Account']; // Account!
     claimMinigamePetalReward: NexusGenRootTypes['Account']; // Account!
     completeGts: boolean; // Boolean!
     createAccount: NexusGenRootTypes['Account']; // Account!
@@ -470,6 +471,7 @@ export interface NexusGenFieldTypeNames {
     assignGroup: 'AccountUserGroup'
     burnCard: 'Int'
     claimMinigameCardReward: 'Card'
+    claimMinigameLilyReward: 'Account'
     claimMinigamePetalReward: 'Account'
     completeGts: 'Boolean'
     createAccount: 'Account'

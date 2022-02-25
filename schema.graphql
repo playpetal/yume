@@ -140,6 +140,7 @@ type Mutation {
   assignGroup(accountId: Int!, groupId: Int!): AccountUserGroup!
   burnCard(cardId: Int!): Int!
   claimMinigameCardReward: [Card!]!
+  claimMinigameLilyReward: Account!
   claimMinigamePetalReward: Account!
   completeGts(guesses: Int!, reward: Reward!, time: Int!): Boolean!
   createAccount(username: String!): Account!
@@ -211,6 +212,7 @@ type Release {
 
 enum Reward {
   CARD
+  LILY
   PETAL
 }
 
