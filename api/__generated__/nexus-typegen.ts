@@ -306,6 +306,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
+    canClaimPremiumRewards: number; // Int!
     canClaimRewards: number; // Int!
     getCard: NexusGenRootTypes['Card'] | null; // Card
     getCharacter: NexusGenRootTypes['Character'] | null; // Character
@@ -500,6 +501,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     aliases: 'Alias'
+    canClaimPremiumRewards: 'Int'
     canClaimRewards: 'Int'
     getCard: 'Card'
     getCharacter: 'Character'

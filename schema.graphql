@@ -178,6 +178,7 @@ enum Quality {
 
 type Query {
   aliases(alias: String, groupId: Int, id: Int): [Alias!]!
+  canClaimPremiumRewards: Int!
   canClaimRewards: Int!
   getCard(id: Int!): Card
   getCharacter(id: Int!): Character

@@ -3,7 +3,7 @@ import { enumType, extendType, list, nonNull, objectType } from "nexus";
 import { Song } from "nexus-prisma";
 import { checkAuth } from "../../../lib/Auth";
 import { roll } from "../../../lib/card";
-import { canClaimRewards } from "../../../lib/game";
+import { canClaimPremiumCurrency, canClaimRewards } from "../../../lib/game";
 import { gts } from "../../../lib/gts";
 
 export const SongObject = objectType({
@@ -121,11 +121,15 @@ export const ClaimMinigameLilyReward = extendType({
         const canClaim = await canClaimRewards(ctx);
         if (!canClaim) throw new UserInputError("you cannot claim rewards");
 
+        const canClaimPremium = await canClaimPremiumCurrency(account, ctx);
+
         await ctx.db.minigame.upsert({
           create: { accountId: account.id, claimed: 1, lastClaim: new Date() },
           update: {
             claimed: canClaim === 3 ? 1 : { increment: 1 },
             lastClaim: new Date(),
+            premiumClaimed: canClaimPremium === 25 ? 1 : { increment: 1 },
+            lastPremiumClaim: new Date(),
           },
           where: {
             accountId: account.id,

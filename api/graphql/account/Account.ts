@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { checkAuth } from "../../lib/Auth";
 import { getAccountStats } from "../../lib/account";
 import { Card } from "@prisma/client";
-import { canClaimRewards } from "../../lib/game";
+import { canClaimPremiumCurrency, canClaimRewards } from "../../lib/game";
 
 export const AccountObject = objectType({
   name: Account.$name,
@@ -287,6 +287,19 @@ export const CanClaimRewards = extendType({
       type: nonNull("Int"),
       async resolve(_, __, ctx) {
         return await canClaimRewards(ctx);
+      },
+    });
+  },
+});
+
+export const CanClaimPremiumRewards = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("canClaimPremiumRewards", {
+      type: nonNull("Int"),
+      async resolve(_, __, ctx) {
+        const account = await checkAuth(ctx);
+        return await canClaimPremiumCurrency(account, ctx);
       },
     });
   },
