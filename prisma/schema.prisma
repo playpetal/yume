@@ -31,7 +31,8 @@ model Account {
 
   userGroups AccountUserGroup[]
 
-  currency Int @default(0)
+  currency        Int @default(0)
+  premiumCurrency Int @default(0)
 
   cards     Card[]
   rolls     RollLog[]
@@ -206,17 +207,21 @@ model Minigame {
   claimed   Int      @default(0)
   lastClaim DateTime
   pending   Boolean  @default(false)
+
+  premiumClaimed   Int      @default(0)
+  lastPremiumClaim DateTime @default("1999-07-27T00:00:00+00:00")
 }
 
 model GTS {
   account   Account @relation(fields: [accountId], references: [id])
   accountId Int     @id @unique
 
-  totalGames    Int @default(0)
-  totalGuesses  Int @default(0)
-  totalTime     Int @default(0)
-  totalCurrency Int @default(0)
-  totalCards    Int @default(0)
+  totalGames           Int @default(0)
+  totalGuesses         Int @default(0)
+  totalTime            Int @default(0)
+  totalCurrency        Int @default(0)
+  totalPremiumCurrency Int @default(0)
+  totalCards           Int @default(0)
 }
 
 // Action Logging

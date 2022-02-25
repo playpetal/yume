@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { checkAuth } from "../../lib/Auth";
 import { getAccountStats } from "../../lib/account";
 import { Card } from "@prisma/client";
-import { canClaimRewards } from "../../lib/game";
+import { canClaimPremiumCurrency, canClaimRewards } from "../../lib/game";
 
 export const AccountObject = objectType({
   name: Account.$name,
@@ -18,6 +18,7 @@ export const AccountObject = objectType({
     t.field(Account.activeTitleId);
     t.field(Account.bio);
     t.field(Account.currency);
+    t.field(Account.premiumCurrency);
     t.field("gts", {
       type: "GTS",
       async resolve(root, _, ctx) {
@@ -64,6 +65,7 @@ export const GTSStats = objectType({
     t.field("totalGames", { type: nonNull("Int") });
     t.field("totalCards", { type: nonNull("Int") });
     t.field("totalCurrency", { type: nonNull("Int") });
+    t.field("totalPremiumCurrency", { type: nonNull("Int") });
   },
 });
 
@@ -285,6 +287,19 @@ export const CanClaimRewards = extendType({
       type: nonNull("Int"),
       async resolve(_, __, ctx) {
         return await canClaimRewards(ctx);
+      },
+    });
+  },
+});
+
+export const CanClaimPremiumRewards = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("canClaimPremiumRewards", {
+      type: nonNull("Int"),
+      async resolve(_, __, ctx) {
+        const account = await checkAuth(ctx);
+        return await canClaimPremiumCurrency(account, ctx);
       },
     });
   },

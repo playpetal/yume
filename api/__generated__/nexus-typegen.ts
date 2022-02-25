@@ -35,7 +35,7 @@ export interface NexusGenEnums {
   Gender: "FEMALE" | "MALE" | "NONBINARY"
   GroupGender: "COED" | "FEMALE" | "MALE"
   Quality: "BLOOM" | "BUD" | "FLOWER" | "SEED" | "SPROUT"
-  Reward: "CARD" | "PETAL"
+  Reward: "CARD" | "LILY" | "PETAL"
 }
 
 export interface NexusGenScalars {
@@ -55,6 +55,7 @@ export interface NexusGenObjects {
     currency: number; // Int!
     discordId: string; // String!
     id: number; // Int!
+    premiumCurrency: number; // Int!
     username: string; // String!
   }
   AccountStats: { // root type
@@ -111,6 +112,7 @@ export interface NexusGenObjects {
     totalCurrency: number; // Int!
     totalGames: number; // Int!
     totalGuesses: number; // Int!
+    totalPremiumCurrency: number; // Int!
     totalTime: number; // Int!
   }
   GameSong: { // root type
@@ -182,6 +184,7 @@ export interface NexusGenFieldTypes {
     groups: NexusGenRootTypes['AccountUserGroup'][]; // [AccountUserGroup!]!
     gts: NexusGenRootTypes['GTS'] | null; // GTS
     id: number; // Int!
+    premiumCurrency: number; // Int!
     stats: NexusGenRootTypes['AccountStats'] | null; // AccountStats
     title: NexusGenRootTypes['Title'] | null; // Title
     username: string; // String!
@@ -249,6 +252,7 @@ export interface NexusGenFieldTypes {
     totalCurrency: number; // Int!
     totalGames: number; // Int!
     totalGuesses: number; // Int!
+    totalPremiumCurrency: number; // Int!
     totalTime: number; // Int!
   }
   GameSong: { // field return type
@@ -273,6 +277,7 @@ export interface NexusGenFieldTypes {
     assignGroup: NexusGenRootTypes['AccountUserGroup']; // AccountUserGroup!
     burnCard: number; // Int!
     claimMinigameCardReward: NexusGenRootTypes['Card'][]; // [Card!]!
+    claimMinigameLilyReward: NexusGenRootTypes['Account']; // Account!
     claimMinigamePetalReward: NexusGenRootTypes['Account']; // Account!
     completeGts: boolean; // Boolean!
     createAccount: NexusGenRootTypes['Account']; // Account!
@@ -301,6 +306,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
+    canClaimPremiumRewards: number; // Int!
     canClaimRewards: number; // Int!
     getCard: NexusGenRootTypes['Card'] | null; // Card
     getCharacter: NexusGenRootTypes['Character'] | null; // Character
@@ -373,6 +379,7 @@ export interface NexusGenFieldTypeNames {
     groups: 'AccountUserGroup'
     gts: 'GTS'
     id: 'Int'
+    premiumCurrency: 'Int'
     stats: 'AccountStats'
     title: 'Title'
     username: 'String'
@@ -440,6 +447,7 @@ export interface NexusGenFieldTypeNames {
     totalCurrency: 'Int'
     totalGames: 'Int'
     totalGuesses: 'Int'
+    totalPremiumCurrency: 'Int'
     totalTime: 'Int'
   }
   GameSong: { // field return type name
@@ -464,6 +472,7 @@ export interface NexusGenFieldTypeNames {
     assignGroup: 'AccountUserGroup'
     burnCard: 'Int'
     claimMinigameCardReward: 'Card'
+    claimMinigameLilyReward: 'Account'
     claimMinigamePetalReward: 'Account'
     completeGts: 'Boolean'
     createAccount: 'Account'
@@ -492,6 +501,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     aliases: 'Alias'
+    canClaimPremiumRewards: 'Int'
     canClaimRewards: 'Int'
     getCard: 'Card'
     getCharacter: 'Character'

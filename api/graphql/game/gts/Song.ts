@@ -3,7 +3,7 @@ import { enumType, extendType, list, nonNull, objectType } from "nexus";
 import { Song } from "nexus-prisma";
 import { checkAuth } from "../../../lib/Auth";
 import { roll } from "../../../lib/card";
-import { canClaimRewards } from "../../../lib/game";
+import { canClaimPremiumCurrency, canClaimRewards } from "../../../lib/game";
 import { gts } from "../../../lib/gts";
 
 export const SongObject = objectType({
@@ -76,7 +76,7 @@ export const GetRandomSongQuery = extendType({
 
 export const Reward = enumType({
   name: "Reward",
-  members: ["CARD", "PETAL"],
+  members: ["CARD", "PETAL", "LILY"],
 });
 
 export const ClaimMinigamePetalReward = extendType({
@@ -104,6 +104,41 @@ export const ClaimMinigamePetalReward = extendType({
         return ctx.db.account.update({
           where: { id: account.id },
           data: { currency: { increment: 5 } },
+        });
+      },
+    });
+  },
+});
+
+export const ClaimMinigameLilyReward = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("claimMinigameLilyReward", {
+      type: nonNull("Account"),
+      async resolve(_, __, ctx) {
+        const account = await checkAuth(ctx);
+
+        const canClaim = await canClaimRewards(ctx);
+        if (!canClaim) throw new UserInputError("you cannot claim rewards");
+
+        const canClaimPremium = await canClaimPremiumCurrency(account, ctx);
+
+        await ctx.db.minigame.upsert({
+          create: { accountId: account.id, claimed: 1, lastClaim: new Date() },
+          update: {
+            claimed: canClaim === 3 ? 1 : { increment: 1 },
+            lastClaim: new Date(),
+            premiumClaimed: canClaimPremium === 25 ? 1 : { increment: 1 },
+            lastPremiumClaim: new Date(),
+          },
+          where: {
+            accountId: account.id,
+          },
+        });
+
+        return ctx.db.account.update({
+          where: { id: account.id },
+          data: { premiumCurrency: { increment: 1 } },
         });
       },
     });
@@ -160,6 +195,7 @@ export const CompleteGTS = extendType({
             totalTime: time,
             totalCurrency: reward === "CARD" ? 5 : undefined,
             totalCards: reward === "PETAL" ? 1 : undefined,
+            totalPremiumCurrency: reward === "LILY" ? 1 : undefined,
           },
           update: {
             totalGames: { increment: 1 },
@@ -167,6 +203,8 @@ export const CompleteGTS = extendType({
             totalTime: { increment: time },
             totalCurrency: reward === "PETAL" ? { increment: 5 } : undefined,
             totalCards: reward === "CARD" ? { increment: 1 } : undefined,
+            totalPremiumCurrency:
+              reward === "LILY" ? { increment: 1 } : undefined,
           },
         });
 
