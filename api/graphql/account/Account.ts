@@ -233,7 +233,7 @@ export const Gift = extendType({
           throw new UserInputError(`i couldn't find that user :(`);
 
         if (lilies) {
-          if (account.premiumCurrency < lilies)
+          if (account.premiumCurrency < lilies || lilies < 0)
             throw new UserInputError(
               "you don't have enough lilies to do that."
             );
@@ -250,7 +250,7 @@ export const Gift = extendType({
         }
 
         if (petals) {
-          if (account.currency < petals)
+          if (account.currency < petals || petals < 0)
             throw new UserInputError(
               "you don't have enough petals to do that."
             );
