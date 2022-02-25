@@ -1,7 +1,6 @@
 import { DateTime as Time } from "luxon";
 import { Context } from "../../context";
 import { checkAuth } from "../Auth";
-import { roll } from "../card";
 
 export function isNewHour(last: Date): boolean {
   const lastHour = Time.fromMillis(last.getTime()).startOf("hour");
@@ -24,28 +23,4 @@ export async function canClaimRewards(ctx: Context): Promise<number> {
   if (stats.claimed < 3) return 3 - stats.claimed;
 
   return 0;
-}
-
-export async function claimRewards(
-  ctx: Context,
-  reward: "CARD" | "PETAL"
-): Promise<number> {
-  const account = await checkAuth(ctx);
-  const canClaim = await canClaimRewards(ctx);
-
-  if (!canClaim) throw new Error("cannot claim rewards");
-
-  if (reward === "CARD") {
-    const [card] = await roll(ctx, { amount: 1, free: true });
-    return card.id;
-  } else {
-    await ctx.db.account.update({
-      where: { id: account.id },
-      data: {
-        currency: { increment: 5 },
-      },
-    });
-
-    return 5;
-  }
 }
