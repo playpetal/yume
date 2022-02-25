@@ -207,6 +207,9 @@ model Minigame {
   claimed   Int      @default(0)
   lastClaim DateTime
   pending   Boolean  @default(false)
+
+  premiumClaimed   Int      @default(0)
+  lastPremiumClaim DateTime @default("1999-07-27T00:00:00+00:00")
 }
 
 model GTS {
