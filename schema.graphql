@@ -156,7 +156,7 @@ type Mutation {
   deleteCharacter(id: Int!): Int!
   deleteGroup(id: Int!): Int!
   deleteSubgroup(id: Int!): Int!
-  gift(cardIds: [Int!], petals: Int, recipientId: Int!): Boolean!
+  gift(cardIds: [Int!], lilies: Int, petals: Int, recipientId: Int!): Boolean!
   rollCards(amount: Int!, gender: Gender): [Card!]!
   setBio(bio: String): Account!
   setUserTitle(id: Int!): Account!

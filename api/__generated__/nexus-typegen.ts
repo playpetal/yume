@@ -630,6 +630,7 @@ export interface NexusGenArgTypes {
     }
     gift: { // args
       cardIds?: number[] | null; // [Int!]
+      lilies?: number | null; // Int
       petals?: number | null; // Int
       recipientId: number; // Int!
     }

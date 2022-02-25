@@ -221,8 +221,9 @@ export const Gift = extendType({
         recipientId: nonNull("Int"),
         cardIds: list(nonNull("Int")),
         petals: "Int",
+        lilies: "Int",
       },
-      async resolve(_, { recipientId, cardIds, petals }, ctx) {
+      async resolve(_, { recipientId, cardIds, petals, lilies }, ctx) {
         const account = await checkAuth(ctx);
         const recipient = await ctx.db.account.findFirst({
           where: { id: recipientId },
@@ -230,6 +231,23 @@ export const Gift = extendType({
 
         if (!recipient)
           throw new UserInputError(`i couldn't find that user :(`);
+
+        if (lilies) {
+          if (account.currency < lilies)
+            throw new UserInputError(
+              "you don't have enough lilies to do that."
+            );
+
+          await ctx.db.account.update({
+            where: { id: account.id },
+            data: { premiumCurrency: { decrement: lilies } },
+          });
+
+          await ctx.db.account.update({
+            where: { id: recipient.id },
+            data: { premiumCurrency: { increment: lilies } },
+          });
+        }
 
         if (petals) {
           if (account.currency < petals)
