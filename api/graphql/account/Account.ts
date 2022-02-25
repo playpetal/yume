@@ -65,6 +65,7 @@ export const GTSStats = objectType({
     t.field("totalGames", { type: nonNull("Int") });
     t.field("totalCards", { type: nonNull("Int") });
     t.field("totalCurrency", { type: nonNull("Int") });
+    t.field("totalPremiumCurrency", { type: nonNull("Int") });
   },
 });
 

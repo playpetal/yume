@@ -95,6 +95,7 @@ type GTS {
   totalCurrency: Int!
   totalGames: Int!
   totalGuesses: Int!
+  totalPremiumCurrency: Int!
   totalTime: Int!
 }
 

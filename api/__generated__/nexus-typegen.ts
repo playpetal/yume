@@ -112,6 +112,7 @@ export interface NexusGenObjects {
     totalCurrency: number; // Int!
     totalGames: number; // Int!
     totalGuesses: number; // Int!
+    totalPremiumCurrency: number; // Int!
     totalTime: number; // Int!
   }
   GameSong: { // root type
@@ -251,6 +252,7 @@ export interface NexusGenFieldTypes {
     totalCurrency: number; // Int!
     totalGames: number; // Int!
     totalGuesses: number; // Int!
+    totalPremiumCurrency: number; // Int!
     totalTime: number; // Int!
   }
   GameSong: { // field return type
@@ -443,6 +445,7 @@ export interface NexusGenFieldTypeNames {
     totalCurrency: 'Int'
     totalGames: 'Int'
     totalGuesses: 'Int'
+    totalPremiumCurrency: 'Int'
     totalTime: 'Int'
   }
   GameSong: { // field return type name
