@@ -31,7 +31,8 @@ model Account {
 
   userGroups AccountUserGroup[]
 
-  currency Int @default(0)
+  currency        Int @default(0)
+  premiumCurrency Int @default(0)
 
   cards     Card[]
   rolls     RollLog[]
