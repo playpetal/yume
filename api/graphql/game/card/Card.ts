@@ -172,6 +172,7 @@ export const SearchCardsQuery = extendType({
               include: { character: true, group: true, subgroup: true },
             },
           },
+          orderBy: { updatedAt: "desc" },
         });
 
         const matches = cards.filter(
