@@ -276,6 +276,7 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     assignGroup: NexusGenRootTypes['AccountUserGroup']; // AccountUserGroup!
     burnCard: number; // Int!
+    changeCardColor: NexusGenRootTypes['Card']; // Card!
     claimMinigameCardReward: NexusGenRootTypes['Card'][]; // [Card!]!
     claimMinigameLilyReward: NexusGenRootTypes['Account']; // Account!
     claimMinigamePetalReward: NexusGenRootTypes['Account']; // Account!
@@ -471,6 +472,7 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     assignGroup: 'AccountUserGroup'
     burnCard: 'Int'
+    changeCardColor: 'Card'
     claimMinigameCardReward: 'Card'
     claimMinigameLilyReward: 'Account'
     claimMinigamePetalReward: 'Account'
@@ -572,6 +574,10 @@ export interface NexusGenArgTypes {
     }
     burnCard: { // args
       cardId: number; // Int!
+    }
+    changeCardColor: { // args
+      cardId: number; // Int!
+      color: number; // Int!
     }
     completeGts: { // args
       guesses: number; // Int!

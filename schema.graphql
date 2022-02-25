@@ -139,6 +139,7 @@ type InventoryPage {
 type Mutation {
   assignGroup(accountId: Int!, groupId: Int!): AccountUserGroup!
   burnCard(cardId: Int!): Int!
+  changeCardColor(cardId: Int!, color: Int!): Card!
   claimMinigameCardReward: [Card!]!
   claimMinigameLilyReward: Account!
   claimMinigamePetalReward: Account!
