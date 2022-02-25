@@ -11,6 +11,7 @@ type Account {
   groups: [AccountUserGroup!]!
   gts: GTS
   id: Int!
+  premiumCurrency: Int!
   stats: AccountStats
   title: Title
   username: String!

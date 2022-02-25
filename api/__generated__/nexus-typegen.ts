@@ -55,6 +55,7 @@ export interface NexusGenObjects {
     currency: number; // Int!
     discordId: string; // String!
     id: number; // Int!
+    premiumCurrency: number; // Int!
     username: string; // String!
   }
   AccountStats: { // root type
@@ -182,6 +183,7 @@ export interface NexusGenFieldTypes {
     groups: NexusGenRootTypes['AccountUserGroup'][]; // [AccountUserGroup!]!
     gts: NexusGenRootTypes['GTS'] | null; // GTS
     id: number; // Int!
+    premiumCurrency: number; // Int!
     stats: NexusGenRootTypes['AccountStats'] | null; // AccountStats
     title: NexusGenRootTypes['Title'] | null; // Title
     username: string; // String!
@@ -373,6 +375,7 @@ export interface NexusGenFieldTypeNames {
     groups: 'AccountUserGroup'
     gts: 'GTS'
     id: 'Int'
+    premiumCurrency: 'Int'
     stats: 'AccountStats'
     title: 'Title'
     username: 'String'

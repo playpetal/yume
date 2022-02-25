@@ -18,6 +18,7 @@ export const AccountObject = objectType({
     t.field(Account.activeTitleId);
     t.field(Account.bio);
     t.field(Account.currency);
+    t.field(Account.premiumCurrency);
     t.field("gts", {
       type: "GTS",
       async resolve(root, _, ctx) {
