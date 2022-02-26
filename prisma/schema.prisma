@@ -38,6 +38,7 @@ model Account {
   rolls     RollLog[]
   gts       GTS[]
   minigames Minigame[]
+  Words     Words[]
 }
 
 model UserGroup {
@@ -219,6 +220,18 @@ model GTS {
 
   totalGames           Int @default(0)
   totalGuesses         Int @default(0)
+  totalTime            Int @default(0)
+  totalCurrency        Int @default(0)
+  totalPremiumCurrency Int @default(0)
+  totalCards           Int @default(0)
+}
+
+model Words {
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int     @id @unique
+
+  totalGames           Int @default(0)
+  totalWords           Int @default(0)
   totalTime            Int @default(0)
   totalCurrency        Int @default(0)
   totalPremiumCurrency Int @default(0)

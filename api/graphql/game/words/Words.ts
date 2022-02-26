@@ -29,3 +29,45 @@ export const WordIsValid = extendType({
     });
   },
 });
+
+export const CompleteWords = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("completeWords", {
+      type: nonNull("Boolean"),
+      args: {
+        reward: nonNull("Reward"),
+        words: nonNull("Int"),
+        time: nonNull("Int"),
+      },
+      async resolve(_, { reward, words, time }, ctx) {
+        const account = await checkAuth(ctx);
+        console.log(reward);
+
+        await ctx.db.words.upsert({
+          where: { accountId: account.id },
+          create: {
+            accountId: account.id,
+            totalGames: 1,
+            totalWords: words,
+            totalTime: time,
+            totalCurrency: reward === "CARD" ? 5 : undefined,
+            totalCards: reward === "PETAL" ? 1 : undefined,
+            totalPremiumCurrency: reward === "LILY" ? 1 : undefined,
+          },
+          update: {
+            totalGames: { increment: 1 },
+            totalWords: { increment: words },
+            totalTime: { increment: time },
+            totalCurrency: reward === "PETAL" ? { increment: 5 } : undefined,
+            totalCards: reward === "CARD" ? { increment: 1 } : undefined,
+            totalPremiumCurrency:
+              reward === "LILY" ? { increment: 1 } : undefined,
+          },
+        });
+
+        return true;
+      },
+    });
+  },
+});

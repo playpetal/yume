@@ -162,6 +162,15 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   }
+  Words: { // root type
+    accountId: number; // Int!
+    totalCards: number; // Int!
+    totalCurrency: number; // Int!
+    totalGames: number; // Int!
+    totalPremiumCurrency: number; // Int!
+    totalTime: number; // Int!
+    totalWords: number; // Int!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -188,6 +197,7 @@ export interface NexusGenFieldTypes {
     stats: NexusGenRootTypes['AccountStats'] | null; // AccountStats
     title: NexusGenRootTypes['Title'] | null; // Title
     username: string; // String!
+    words: NexusGenRootTypes['Words'] | null; // Words
   }
   AccountStats: { // field return type
     cardCount: number; // Int!
@@ -281,6 +291,7 @@ export interface NexusGenFieldTypes {
     claimMinigameLilyReward: NexusGenRootTypes['Account']; // Account!
     claimMinigamePetalReward: NexusGenRootTypes['Account']; // Account!
     completeGts: boolean; // Boolean!
+    completeWords: boolean; // Boolean!
     createAccount: NexusGenRootTypes['Account']; // Account!
     createAlias: NexusGenRootTypes['Alias']; // Alias!
     createCharacter: NexusGenRootTypes['Character']; // Character!
@@ -368,6 +379,15 @@ export interface NexusGenFieldTypes {
     members: NexusGenRootTypes['AccountUserGroup'][]; // [AccountUserGroup!]!
     name: string; // String!
   }
+  Words: { // field return type
+    accountId: number; // Int!
+    totalCards: number; // Int!
+    totalCurrency: number; // Int!
+    totalGames: number; // Int!
+    totalPremiumCurrency: number; // Int!
+    totalTime: number; // Int!
+    totalWords: number; // Int!
+  }
 }
 
 export interface NexusGenFieldTypeNames {
@@ -384,6 +404,7 @@ export interface NexusGenFieldTypeNames {
     stats: 'AccountStats'
     title: 'Title'
     username: 'String'
+    words: 'Words'
   }
   AccountStats: { // field return type name
     cardCount: 'Int'
@@ -477,6 +498,7 @@ export interface NexusGenFieldTypeNames {
     claimMinigameLilyReward: 'Account'
     claimMinigamePetalReward: 'Account'
     completeGts: 'Boolean'
+    completeWords: 'Boolean'
     createAccount: 'Account'
     createAlias: 'Alias'
     createCharacter: 'Character'
@@ -564,6 +586,15 @@ export interface NexusGenFieldTypeNames {
     members: 'AccountUserGroup'
     name: 'String'
   }
+  Words: { // field return type name
+    accountId: 'Int'
+    totalCards: 'Int'
+    totalCurrency: 'Int'
+    totalGames: 'Int'
+    totalPremiumCurrency: 'Int'
+    totalTime: 'Int'
+    totalWords: 'Int'
+  }
 }
 
 export interface NexusGenArgTypes {
@@ -583,6 +614,11 @@ export interface NexusGenArgTypes {
       guesses: number; // Int!
       reward: NexusGenEnums['Reward']; // Reward!
       time: number; // Int!
+    }
+    completeWords: { // args
+      reward: NexusGenEnums['Reward']; // Reward!
+      time: number; // Int!
+      words: number; // Int!
     }
     createAccount: { // args
       username: string; // String!
