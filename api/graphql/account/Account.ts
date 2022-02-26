@@ -25,6 +25,12 @@ export const AccountObject = objectType({
         return ctx.db.gTS.findFirst({ where: { accountId: root.id } });
       },
     });
+    t.field("words", {
+      type: "Words",
+      async resolve(root, _, ctx) {
+        return ctx.db.words.findFirst({ where: { accountId: root.id } });
+      },
+    });
     t.field("stats", {
       type: "AccountStats",
       async resolve(root, _, ctx) {
@@ -61,6 +67,20 @@ export const GTSStats = objectType({
   definition(t) {
     t.field("accountId", { type: nonNull("Int") });
     t.field("totalGuesses", { type: nonNull("Int") });
+    t.field("totalTime", { type: nonNull("Int") });
+    t.field("totalGames", { type: nonNull("Int") });
+    t.field("totalCards", { type: nonNull("Int") });
+    t.field("totalCurrency", { type: nonNull("Int") });
+    t.field("totalPremiumCurrency", { type: nonNull("Int") });
+  },
+});
+
+export const WordsStats = objectType({
+  name: "Words",
+  description: "Words Minigame Statistics",
+  definition(t) {
+    t.field("accountId", { type: nonNull("Int") });
+    t.field("totalWords", { type: nonNull("Int") });
     t.field("totalTime", { type: nonNull("Int") });
     t.field("totalGames", { type: nonNull("Int") });
     t.field("totalCards", { type: nonNull("Int") });

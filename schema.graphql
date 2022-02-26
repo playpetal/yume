@@ -15,6 +15,7 @@ type Account {
   stats: AccountStats
   title: Title
   username: String!
+  words: Words
 }
 
 """Account Stats"""
@@ -144,6 +145,7 @@ type Mutation {
   claimMinigameLilyReward: Account!
   claimMinigamePetalReward: Account!
   completeGts(guesses: Int!, reward: Reward!, time: Int!): Boolean!
+  completeWords(reward: Reward!, time: Int!, words: Int!): Boolean!
   createAccount(username: String!): Account!
   createAlias(alias: String!, groupId: Int!): Alias!
   createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
@@ -252,4 +254,15 @@ type UserGroup {
   id: Int!
   members: [AccountUserGroup!]!
   name: String!
+}
+
+"""Words Minigame Statistics"""
+type Words {
+  accountId: Int!
+  totalCards: Int!
+  totalCurrency: Int!
+  totalGames: Int!
+  totalPremiumCurrency: Int!
+  totalTime: Int!
+  totalWords: Int!
 }
