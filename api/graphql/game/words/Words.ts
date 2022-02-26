@@ -42,7 +42,6 @@ export const CompleteWords = extendType({
       },
       async resolve(_, { reward, words, time }, ctx) {
         const account = await checkAuth(ctx);
-        console.log(reward);
 
         await ctx.db.words.upsert({
           where: { accountId: account.id },
