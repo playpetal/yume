@@ -1,4 +1,4 @@
-import { ServerInfo } from "apollo-server";
+/*import { ServerInfo } from "apollo-server";
 import { GraphQLClient } from "graphql-request";
 import getPort, { makeRange } from "get-port";
 import { server } from "../api/server";
@@ -85,3 +85,4 @@ function prismaTestContext() {
     },
   };
 }
+*/

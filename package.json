@@ -13,11 +13,9 @@
     "axios": "^0.25.0",
     "discord-oauth2": "^2.9.0",
     "graphql": "15.8",
-    "graphql-scalars": "^1.14.1",
     "ioredis": "^4.28.5",
     "jsonwebtoken": "^8.5.1",
     "luxon": "^2.3.0",
-    "nanoid": "^3.1.30",
     "nexus": "^1.1.0",
     "nexus-prisma": "^0.35.0",
     "rimraf": "^3.0.2"
