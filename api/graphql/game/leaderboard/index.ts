@@ -31,7 +31,7 @@ export const GetGTSTimeLeaderboard = extendType({
               time: Math.ceil(u.totalTime / u.totalGames),
             };
           })
-          .sort((a, b) => b.time - a.time)
+          .sort((a, b) => a.time - b.time)
           .slice(0, 10);
       },
     });
