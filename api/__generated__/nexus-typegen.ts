@@ -115,6 +115,10 @@ export interface NexusGenObjects {
     totalPremiumCurrency: number; // Int!
     totalTime: number; // Int!
   }
+  GTSTimeLeaderboard: { // root type
+    accountId: number; // Int!
+    time: number; // Int!
+  }
   GameSong: { // root type
     group?: string | null; // String
     id: number; // Int!
@@ -265,6 +269,11 @@ export interface NexusGenFieldTypes {
     totalPremiumCurrency: number; // Int!
     totalTime: number; // Int!
   }
+  GTSTimeLeaderboard: { // field return type
+    account: NexusGenRootTypes['Account']; // Account!
+    accountId: number; // Int!
+    time: number; // Int!
+  }
   GameSong: { // field return type
     group: string | null; // String
     id: number; // Int!
@@ -322,6 +331,7 @@ export interface NexusGenFieldTypes {
     canClaimRewards: number; // Int!
     getCard: NexusGenRootTypes['Card'] | null; // Card
     getCharacter: NexusGenRootTypes['Character'] | null; // Character
+    getGTSTimeLeaderboard: NexusGenRootTypes['GTSTimeLeaderboard'][]; // [GTSTimeLeaderboard!]!
     getGroup: NexusGenRootTypes['Group'] | null; // Group
     getRandomSong: NexusGenRootTypes['GameSong'] | null; // GameSong
     getSubgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
@@ -472,6 +482,11 @@ export interface NexusGenFieldTypeNames {
     totalPremiumCurrency: 'Int'
     totalTime: 'Int'
   }
+  GTSTimeLeaderboard: { // field return type name
+    account: 'Account'
+    accountId: 'Int'
+    time: 'Int'
+  }
   GameSong: { // field return type name
     group: 'String'
     id: 'Int'
@@ -529,6 +544,7 @@ export interface NexusGenFieldTypeNames {
     canClaimRewards: 'Int'
     getCard: 'Card'
     getCharacter: 'Character'
+    getGTSTimeLeaderboard: 'GTSTimeLeaderboard'
     getGroup: 'Group'
     getRandomSong: 'GameSong'
     getSubgroup: 'Subgroup'
