@@ -203,6 +203,8 @@ type Query {
   getRandomSong(gender: GroupGender): GameSong
   getSubgroup(id: Int!): Subgroup
   getUserTitle(id: Int!): TitleInventory
+  getWordsRewardLeaderboard(type: Reward!): [WordsRewardLeaderboard!]!
+  getWordsTimeLeaderboard: [WordsTimeLeaderboard!]!
   inventory(character: String, group: String, next: Int, prev: Int, subgroup: String, user: Int!): [Card!]!
   inventoryPage(character: String, cursor: Int!, group: String, subgroup: String, user: Int!): InventoryPage!
   isWordValid(word: String!): Boolean!
@@ -279,4 +281,16 @@ type Words {
   totalPremiumCurrency: Int!
   totalTime: Int!
   totalWords: Int!
+}
+
+type WordsRewardLeaderboard {
+  account: Account!
+  accountId: Int!
+  value: Int!
+}
+
+type WordsTimeLeaderboard {
+  account: Account!
+  accountId: Int!
+  time: Int!
 }

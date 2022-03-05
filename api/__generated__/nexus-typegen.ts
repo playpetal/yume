@@ -179,6 +179,14 @@ export interface NexusGenObjects {
     totalTime: number; // Int!
     totalWords: number; // Int!
   }
+  WordsRewardLeaderboard: { // root type
+    accountId: number; // Int!
+    value: number; // Int!
+  }
+  WordsTimeLeaderboard: { // root type
+    accountId: number; // Int!
+    time: number; // Int!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -346,6 +354,8 @@ export interface NexusGenFieldTypes {
     getRandomSong: NexusGenRootTypes['GameSong'] | null; // GameSong
     getSubgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
     getUserTitle: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
+    getWordsRewardLeaderboard: NexusGenRootTypes['WordsRewardLeaderboard'][]; // [WordsRewardLeaderboard!]!
+    getWordsTimeLeaderboard: NexusGenRootTypes['WordsTimeLeaderboard'][]; // [WordsTimeLeaderboard!]!
     inventory: NexusGenRootTypes['Card'][]; // [Card!]!
     inventoryPage: NexusGenRootTypes['InventoryPage']; // InventoryPage!
     isWordValid: boolean; // Boolean!
@@ -407,6 +417,16 @@ export interface NexusGenFieldTypes {
     totalPremiumCurrency: number; // Int!
     totalTime: number; // Int!
     totalWords: number; // Int!
+  }
+  WordsRewardLeaderboard: { // field return type
+    account: NexusGenRootTypes['Account']; // Account!
+    accountId: number; // Int!
+    value: number; // Int!
+  }
+  WordsTimeLeaderboard: { // field return type
+    account: NexusGenRootTypes['Account']; // Account!
+    accountId: number; // Int!
+    time: number; // Int!
   }
 }
 
@@ -565,6 +585,8 @@ export interface NexusGenFieldTypeNames {
     getRandomSong: 'GameSong'
     getSubgroup: 'Subgroup'
     getUserTitle: 'TitleInventory'
+    getWordsRewardLeaderboard: 'WordsRewardLeaderboard'
+    getWordsTimeLeaderboard: 'WordsTimeLeaderboard'
     inventory: 'Card'
     inventoryPage: 'InventoryPage'
     isWordValid: 'Boolean'
@@ -626,6 +648,16 @@ export interface NexusGenFieldTypeNames {
     totalPremiumCurrency: 'Int'
     totalTime: 'Int'
     totalWords: 'Int'
+  }
+  WordsRewardLeaderboard: { // field return type name
+    account: 'Account'
+    accountId: 'Int'
+    value: 'Int'
+  }
+  WordsTimeLeaderboard: { // field return type name
+    account: 'Account'
+    accountId: 'Int'
+    time: 'Int'
   }
 }
 
@@ -778,6 +810,9 @@ export interface NexusGenArgTypes {
     }
     getUserTitle: { // args
       id: number; // Int!
+    }
+    getWordsRewardLeaderboard: { // args
+      type: NexusGenEnums['Reward']; // Reward!
     }
     inventory: { // args
       character?: string | null; // String
