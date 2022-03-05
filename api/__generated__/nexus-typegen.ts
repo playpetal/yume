@@ -115,6 +115,10 @@ export interface NexusGenObjects {
     totalPremiumCurrency: number; // Int!
     totalTime: number; // Int!
   }
+  GTSRewardLeaderboard: { // root type
+    accountId: number; // Int!
+    value: number; // Int!
+  }
   GTSTimeLeaderboard: { // root type
     accountId: number; // Int!
     time: number; // Int!
@@ -269,6 +273,11 @@ export interface NexusGenFieldTypes {
     totalPremiumCurrency: number; // Int!
     totalTime: number; // Int!
   }
+  GTSRewardLeaderboard: { // field return type
+    account: NexusGenRootTypes['Account']; // Account!
+    accountId: number; // Int!
+    value: number; // Int!
+  }
   GTSTimeLeaderboard: { // field return type
     account: NexusGenRootTypes['Account']; // Account!
     accountId: number; // Int!
@@ -331,6 +340,7 @@ export interface NexusGenFieldTypes {
     canClaimRewards: number; // Int!
     getCard: NexusGenRootTypes['Card'] | null; // Card
     getCharacter: NexusGenRootTypes['Character'] | null; // Character
+    getGTSRewardLeaderboard: NexusGenRootTypes['GTSRewardLeaderboard'][]; // [GTSRewardLeaderboard!]!
     getGTSTimeLeaderboard: NexusGenRootTypes['GTSTimeLeaderboard'][]; // [GTSTimeLeaderboard!]!
     getGroup: NexusGenRootTypes['Group'] | null; // Group
     getRandomSong: NexusGenRootTypes['GameSong'] | null; // GameSong
@@ -482,6 +492,11 @@ export interface NexusGenFieldTypeNames {
     totalPremiumCurrency: 'Int'
     totalTime: 'Int'
   }
+  GTSRewardLeaderboard: { // field return type name
+    account: 'Account'
+    accountId: 'Int'
+    value: 'Int'
+  }
   GTSTimeLeaderboard: { // field return type name
     account: 'Account'
     accountId: 'Int'
@@ -544,6 +559,7 @@ export interface NexusGenFieldTypeNames {
     canClaimRewards: 'Int'
     getCard: 'Card'
     getCharacter: 'Character'
+    getGTSRewardLeaderboard: 'GTSRewardLeaderboard'
     getGTSTimeLeaderboard: 'GTSTimeLeaderboard'
     getGroup: 'Group'
     getRandomSong: 'GameSong'
@@ -747,6 +763,9 @@ export interface NexusGenArgTypes {
     }
     getCharacter: { // args
       id: number; // Int!
+    }
+    getGTSRewardLeaderboard: { // args
+      type: NexusGenEnums['Reward']; // Reward!
     }
     getGroup: { // args
       id: number; // Int!

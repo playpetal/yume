@@ -37,3 +37,46 @@ export const GetGTSTimeLeaderboard = extendType({
     });
   },
 });
+
+export const GTSRewardLeaderboard = objectType({
+  name: "GTSRewardLeaderboard",
+  definition(t) {
+    t.field("accountId", { type: nonNull("Int") });
+    t.field("account", {
+      type: nonNull("Account"),
+      async resolve(root, _, { db }) {
+        return (await db.account.findFirst({ where: { id: root.accountId } }))!;
+      },
+    });
+    t.field("value", { type: nonNull("Int") });
+  },
+});
+
+export const GetGTSRewardLeaderboard = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("getGTSRewardLeaderboard", {
+      type: nonNull(list(nonNull("GTSRewardLeaderboard"))),
+      args: { type: nonNull("Reward") },
+      async resolve(_, { type }, { db }) {
+        const users = await db.gTS.findMany({
+          where: { totalGames: { gte: 50 } },
+        });
+
+        const mapped = users.map((u) => {
+          return {
+            accountId: u.accountId,
+            value:
+              type === "CARD"
+                ? u.totalCards
+                : type === "LILY"
+                ? u.totalPremiumCurrency
+                : u.totalCurrency,
+          };
+        });
+
+        return mapped.sort((a, b) => b.value - a.value).slice(0, 10);
+      },
+    });
+  },
+});

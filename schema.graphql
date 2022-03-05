@@ -100,6 +100,12 @@ type GTS {
   totalTime: Int!
 }
 
+type GTSRewardLeaderboard {
+  account: Account!
+  accountId: Int!
+  value: Int!
+}
+
 type GTSTimeLeaderboard {
   account: Account!
   accountId: Int!
@@ -191,6 +197,7 @@ type Query {
   canClaimRewards: Int!
   getCard(id: Int!): Card
   getCharacter(id: Int!): Character
+  getGTSRewardLeaderboard(type: Reward!): [GTSRewardLeaderboard!]!
   getGTSTimeLeaderboard: [GTSTimeLeaderboard!]!
   getGroup(id: Int!): Group
   getRandomSong(gender: GroupGender): GameSong
