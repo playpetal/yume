@@ -102,7 +102,7 @@ export const GetWordsTimeLeaderboard = extendType({
       type: nonNull(list(nonNull("WordsTimeLeaderboard"))),
       async resolve(_, __, { db }) {
         const users = await db.words.findMany({
-          where: { totalGames: { gte: 50 } },
+          where: { totalGames: { gte: 25 } },
         });
 
         return users
@@ -141,7 +141,7 @@ export const GetWordsRewardLeaderboard = extendType({
       args: { type: nonNull("Reward") },
       async resolve(_, { type }, { db }) {
         const users = await db.words.findMany({
-          where: { totalGames: { gte: 50 } },
+          where: { totalGames: { gte: 25 } },
         });
 
         const mapped = users.map((u) => {
