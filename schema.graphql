@@ -165,12 +165,17 @@ type Mutation {
   createPrefab(characterId: Int!, groupId: Int, maxCards: Int, rarity: Int, releaseId: Int, subgroupId: Int): CardPrefab!
   createRelease: Release!
   createSubgroup(creation: DateTime, name: String!): Subgroup!
+  createTitle(description: String, title: String!): Title!
   createUserGroup(name: String!): UserGroup!
   deleteAlias(id: Int!): Int!
   deleteCharacter(id: Int!): Int!
   deleteGroup(id: Int!): Int!
   deleteSubgroup(id: Int!): Int!
   gift(cardIds: [Int!], lilies: Int, petals: Int, recipientId: Int!): Boolean!
+  grantAllTitle(titleId: Int!): Int!
+  grantTitle(accountId: Int!, titleId: Int!): TitleInventory!
+  revokeAllTitle(titleId: Int!): Int!
+  revokeTitle(accountId: Int!, titleId: Int!): Int!
   rollCards(amount: Int!, gender: Gender): [Card!]!
   setBio(bio: String): Account!
   setUserTitle(id: Int!): Account!
@@ -217,7 +222,7 @@ type Query {
   searchPrefabs(search: String!): [CardPrefab!]!
   searchSubgroups(search: String!): [Subgroup!]!
   searchTitles(search: String!): [Title!]!
-  title(id: Int!): Title
+  title(id: Int, title: String): Title
   user(discordId: String, id: Int, username: String): Account
   userGroups(exact: String, search: String): [UserGroup!]!
   userTitles(accountId: Int!, search: String): [TitleInventory!]!

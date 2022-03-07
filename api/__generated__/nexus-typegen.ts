@@ -325,12 +325,17 @@ export interface NexusGenFieldTypes {
     createPrefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
     createRelease: NexusGenRootTypes['Release']; // Release!
     createSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
+    createTitle: NexusGenRootTypes['Title']; // Title!
     createUserGroup: NexusGenRootTypes['UserGroup']; // UserGroup!
     deleteAlias: number; // Int!
     deleteCharacter: number; // Int!
     deleteGroup: number; // Int!
     deleteSubgroup: number; // Int!
     gift: boolean; // Boolean!
+    grantAllTitle: number; // Int!
+    grantTitle: NexusGenRootTypes['TitleInventory']; // TitleInventory!
+    revokeAllTitle: number; // Int!
+    revokeTitle: number; // Int!
     rollCards: NexusGenRootTypes['Card'][]; // [Card!]!
     setBio: NexusGenRootTypes['Account']; // Account!
     setUserTitle: NexusGenRootTypes['Account']; // Account!
@@ -556,12 +561,17 @@ export interface NexusGenFieldTypeNames {
     createPrefab: 'CardPrefab'
     createRelease: 'Release'
     createSubgroup: 'Subgroup'
+    createTitle: 'Title'
     createUserGroup: 'UserGroup'
     deleteAlias: 'Int'
     deleteCharacter: 'Int'
     deleteGroup: 'Int'
     deleteSubgroup: 'Int'
     gift: 'Boolean'
+    grantAllTitle: 'Int'
+    grantTitle: 'TitleInventory'
+    revokeAllTitle: 'Int'
+    revokeTitle: 'Int'
     rollCards: 'Card'
     setBio: 'Account'
     setUserTitle: 'Account'
@@ -713,6 +723,10 @@ export interface NexusGenArgTypes {
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
       name: string; // String!
     }
+    createTitle: { // args
+      description?: string | null; // String
+      title: string; // String!
+    }
     createUserGroup: { // args
       name: string; // String!
     }
@@ -733,6 +747,20 @@ export interface NexusGenArgTypes {
       lilies?: number | null; // Int
       petals?: number | null; // Int
       recipientId: number; // Int!
+    }
+    grantAllTitle: { // args
+      titleId: number; // Int!
+    }
+    grantTitle: { // args
+      accountId: number; // Int!
+      titleId: number; // Int!
+    }
+    revokeAllTitle: { // args
+      titleId: number; // Int!
+    }
+    revokeTitle: { // args
+      accountId: number; // Int!
+      titleId: number; // Int!
     }
     rollCards: { // args
       amount: number; // Int!
@@ -858,7 +886,8 @@ export interface NexusGenArgTypes {
       search: string; // String!
     }
     title: { // args
-      id: number; // Int!
+      id?: number | null; // Int
+      title?: string | null; // String
     }
     user: { // args
       discordId?: string | null; // String
