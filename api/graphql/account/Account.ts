@@ -173,7 +173,9 @@ export const GetUserQuery = extendType({
 
         return ctx.db.account.findFirst({
           where: {
-            username: args.username ?? undefined,
+            username: args.username
+              ? { equals: args.username, mode: "insensitive" }
+              : undefined,
             id: args.id ?? undefined,
             discordId: args.discordId ?? undefined,
           },
