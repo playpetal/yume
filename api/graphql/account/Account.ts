@@ -145,7 +145,7 @@ export const CreateAccountMutation = extendType({
           throw new UserInputError("You already have an account.");
 
         const usernameExists = await ctx.db.account.findFirst({
-          where: { username: args.username },
+          where: { username: { equals: args.username, mode: "insensitive" } },
         });
 
         if (usernameExists)
