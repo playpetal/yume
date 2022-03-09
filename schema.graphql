@@ -157,6 +157,7 @@ type Mutation {
   claimMinigameLilyReward: Account!
   claimMinigamePetalReward: Account!
   completeGts(guesses: Int!, reward: Reward!, time: Int!): Boolean!
+  completeTransaction(token: String!): Boolean!
   completeWords(reward: Reward!, time: Int!, words: Int!): Boolean!
   createAccount(username: String!): Account!
   createAlias(alias: String!, groupId: Int!): Alias!
@@ -174,6 +175,7 @@ type Mutation {
   gift(cardIds: [Int!], lilies: Int, petals: Int, recipientId: Int!): Boolean!
   grantAllTitle(titleId: Int!): Int!
   grantTitle(accountId: Int!, titleId: Int!): TitleInventory!
+  newTransaction(productId: Int!): Payment!
   revokeAllTitle(titleId: Int!): Int!
   revokeTitle(accountId: Int!, titleId: Int!): Int!
   rollCards(amount: Int!, gender: Gender): [Card!]!
@@ -186,6 +188,28 @@ type Mutation {
   updatePrefab(characterId: Int, groupId: Int, maxCards: Int, prefabId: Int!, rarity: Int, releaseId: Int, subgroupId: Int): CardPrefab!
   updateRelease(droppable: Boolean, id: Int!): Release!
   updateSubgroup(creation: DateTime, id: Int!, name: String): Subgroup!
+}
+
+type Payment {
+  accountId: Int!
+  cost: Int!
+  id: Int!
+  paymentId: String!
+  productId: Int!
+  success: Boolean!
+  url: String!
+}
+
+type Product {
+  available: Boolean!
+  id: Int!
+  name: String!
+  price: Int!
+  type: ProductType
+}
+
+enum ProductType {
+  PAID_CURRENCY
 }
 
 enum Quality {
@@ -214,7 +238,9 @@ type Query {
   inventoryPage(character: String, cursor: Int!, group: String, subgroup: String, user: Int!): InventoryPage!
   isWordValid(word: String!): Boolean!
   lastRelease: Release
+  payment(paymentId: String!): Payment
   prefab(id: Int!): CardPrefab
+  products: [Product!]!
   release(id: Int!): Release
   searchCards(ownerId: Int!, search: String!): [Card!]!
   searchCharacters(search: String!): [Character!]!

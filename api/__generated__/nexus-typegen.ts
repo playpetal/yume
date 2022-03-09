@@ -34,6 +34,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   Gender: "FEMALE" | "MALE" | "NONBINARY"
   GroupGender: "COED" | "FEMALE" | "MALE"
+  ProductType: "PAID_CURRENCY"
   Quality: "BLOOM" | "BUD" | "FLOWER" | "SEED" | "SPROUT"
   Reward: "CARD" | "LILY" | "PETAL"
 }
@@ -141,6 +142,22 @@ export interface NexusGenObjects {
     max: number; // Int!
   }
   Mutation: {};
+  Payment: { // root type
+    accountId: number; // Int!
+    cost: number; // Int!
+    id: number; // Int!
+    paymentId: string; // String!
+    productId: number; // Int!
+    success: boolean; // Boolean!
+    url: string; // String!
+  }
+  Product: { // root type
+    available: boolean; // Boolean!
+    id: number; // Int!
+    name: string; // String!
+    price: number; // Int!
+    type?: NexusGenEnums['ProductType'] | null; // ProductType
+  }
   Query: {};
   Release: { // root type
     droppable: boolean; // Boolean!
@@ -317,6 +334,7 @@ export interface NexusGenFieldTypes {
     claimMinigameLilyReward: NexusGenRootTypes['Account']; // Account!
     claimMinigamePetalReward: NexusGenRootTypes['Account']; // Account!
     completeGts: boolean; // Boolean!
+    completeTransaction: boolean; // Boolean!
     completeWords: boolean; // Boolean!
     createAccount: NexusGenRootTypes['Account']; // Account!
     createAlias: NexusGenRootTypes['Alias']; // Alias!
@@ -334,6 +352,7 @@ export interface NexusGenFieldTypes {
     gift: boolean; // Boolean!
     grantAllTitle: number; // Int!
     grantTitle: NexusGenRootTypes['TitleInventory']; // TitleInventory!
+    newTransaction: NexusGenRootTypes['Payment']; // Payment!
     revokeAllTitle: number; // Int!
     revokeTitle: number; // Int!
     rollCards: NexusGenRootTypes['Card'][]; // [Card!]!
@@ -346,6 +365,22 @@ export interface NexusGenFieldTypes {
     updatePrefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
     updateRelease: NexusGenRootTypes['Release']; // Release!
     updateSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
+  }
+  Payment: { // field return type
+    accountId: number; // Int!
+    cost: number; // Int!
+    id: number; // Int!
+    paymentId: string; // String!
+    productId: number; // Int!
+    success: boolean; // Boolean!
+    url: string; // String!
+  }
+  Product: { // field return type
+    available: boolean; // Boolean!
+    id: number; // Int!
+    name: string; // String!
+    price: number; // Int!
+    type: NexusGenEnums['ProductType'] | null; // ProductType
   }
   Query: { // field return type
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
@@ -365,7 +400,9 @@ export interface NexusGenFieldTypes {
     inventoryPage: NexusGenRootTypes['InventoryPage']; // InventoryPage!
     isWordValid: boolean; // Boolean!
     lastRelease: NexusGenRootTypes['Release'] | null; // Release
+    payment: NexusGenRootTypes['Payment'] | null; // Payment
     prefab: NexusGenRootTypes['CardPrefab'] | null; // CardPrefab
+    products: NexusGenRootTypes['Product'][]; // [Product!]!
     release: NexusGenRootTypes['Release'] | null; // Release
     searchCards: NexusGenRootTypes['Card'][]; // [Card!]!
     searchCharacters: NexusGenRootTypes['Character'][]; // [Character!]!
@@ -553,6 +590,7 @@ export interface NexusGenFieldTypeNames {
     claimMinigameLilyReward: 'Account'
     claimMinigamePetalReward: 'Account'
     completeGts: 'Boolean'
+    completeTransaction: 'Boolean'
     completeWords: 'Boolean'
     createAccount: 'Account'
     createAlias: 'Alias'
@@ -570,6 +608,7 @@ export interface NexusGenFieldTypeNames {
     gift: 'Boolean'
     grantAllTitle: 'Int'
     grantTitle: 'TitleInventory'
+    newTransaction: 'Payment'
     revokeAllTitle: 'Int'
     revokeTitle: 'Int'
     rollCards: 'Card'
@@ -582,6 +621,22 @@ export interface NexusGenFieldTypeNames {
     updatePrefab: 'CardPrefab'
     updateRelease: 'Release'
     updateSubgroup: 'Subgroup'
+  }
+  Payment: { // field return type name
+    accountId: 'Int'
+    cost: 'Int'
+    id: 'Int'
+    paymentId: 'String'
+    productId: 'Int'
+    success: 'Boolean'
+    url: 'String'
+  }
+  Product: { // field return type name
+    available: 'Boolean'
+    id: 'Int'
+    name: 'String'
+    price: 'Int'
+    type: 'ProductType'
   }
   Query: { // field return type name
     aliases: 'Alias'
@@ -601,7 +656,9 @@ export interface NexusGenFieldTypeNames {
     inventoryPage: 'InventoryPage'
     isWordValid: 'Boolean'
     lastRelease: 'Release'
+    payment: 'Payment'
     prefab: 'CardPrefab'
+    products: 'Product'
     release: 'Release'
     searchCards: 'Card'
     searchCharacters: 'Character'
@@ -689,6 +746,9 @@ export interface NexusGenArgTypes {
       reward: NexusGenEnums['Reward']; // Reward!
       time: number; // Int!
     }
+    completeTransaction: { // args
+      token: string; // String!
+    }
     completeWords: { // args
       reward: NexusGenEnums['Reward']; // Reward!
       time: number; // Int!
@@ -754,6 +814,9 @@ export interface NexusGenArgTypes {
     grantTitle: { // args
       accountId: number; // Int!
       titleId: number; // Int!
+    }
+    newTransaction: { // args
+      productId: number; // Int!
     }
     revokeAllTitle: { // args
       titleId: number; // Int!
@@ -859,6 +922,9 @@ export interface NexusGenArgTypes {
     }
     isWordValid: { // args
       word: string; // String!
+    }
+    payment: { // args
+      paymentId: string; // String!
     }
     prefab: { // args
       id: number; // Int!

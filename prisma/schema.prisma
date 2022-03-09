@@ -33,12 +33,14 @@ model Account {
 
   currency        Int @default(0)
   premiumCurrency Int @default(0)
+  paidCurrency    Int @default(0)
 
   cards     Card[]
   rolls     RollLog[]
   gts       GTS[]
   minigames Minigame[]
   Words     Words[]
+  Payment   Payment[]
 }
 
 model UserGroup {
@@ -251,4 +253,34 @@ model RollLog {
   gender Gender?
 
   createdAt DateTime @default(now())
+}
+
+enum ProductType {
+  PAID_CURRENCY
+}
+
+model Product {
+  id        Int         @id @default(autoincrement())
+  name      String
+  type      ProductType
+  amount    Int
+  price     Int
+  available Boolean     @default(false)
+  purchases Payment[]
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+
+  paymentId String
+
+  cost    Int
+  success Boolean @default(false)
+  url     String
 }
