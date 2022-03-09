@@ -97,3 +97,13 @@ export async function validatePayment(orderId: string): Promise<boolean> {
 
   return false;
 }
+
+export async function completePayment(orderId: string): Promise<boolean> {
+  const request = new paypal.orders.OrdersCaptureRequest(orderId);
+
+  const order = await client.execute(request);
+
+  const result = order.result as { id: string; status: string };
+
+  return result.status === "COMPLETED";
+}

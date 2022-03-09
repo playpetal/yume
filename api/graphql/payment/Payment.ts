@@ -2,7 +2,11 @@ import { AuthenticationError, UserInputError } from "apollo-server";
 import { enumType, extendType, list, nonNull, objectType } from "nexus";
 import { Payment, Product } from "nexus-prisma";
 import { checkAuth } from "../../lib/Auth";
-import { createTransaction, validatePayment } from "../../lib/payment";
+import {
+  completePayment,
+  createTransaction,
+  validatePayment,
+} from "../../lib/payment";
 
 export const ProductObject = objectType({
   name: Product.$name,
@@ -135,6 +139,10 @@ export const CompleteTransaction = extendType({
         const valid = await validatePayment(token);
 
         if (!valid) throw new AuthenticationError("invalid transaction");
+
+        const final = await completePayment(token);
+
+        if (!final) throw new AuthenticationError("unable to capture funds");
 
         await ctx.db.payment.update({
           where: { id: payment.id },
