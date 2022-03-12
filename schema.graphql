@@ -143,10 +143,25 @@ enum GroupGender {
   MALE
 }
 
+"""Inventory ordering type"""
+enum InventoryOrder {
+  ASC
+  DESC
+}
+
 type InventoryPage {
   cards: Int!
-  current: Int!
   max: Int!
+}
+
+"""Inventory sorting type"""
+enum InventorySort {
+  CHARACTER
+  CODE
+  GROUP
+  ISSUE
+  STAGE
+  SUBGROUP
 }
 
 type Mutation {
@@ -234,8 +249,8 @@ type Query {
   getUserTitle(id: Int!): TitleInventory
   getWordsRewardLeaderboard(type: Reward!): [WordsRewardLeaderboard!]!
   getWordsTimeLeaderboard: [WordsTimeLeaderboard!]!
-  inventory(character: String, group: String, next: Int, prev: Int, subgroup: String, user: Int!): [Card!]!
-  inventoryPage(character: String, cursor: Int!, group: String, subgroup: String, user: Int!): InventoryPage!
+  inventory(character: String, group: String, order: InventoryOrder, page: Int!, sort: InventorySort, subgroup: String, userId: Int!): [Card!]!
+  inventoryPage(character: String, group: String, subgroup: String, user: Int!): InventoryPage!
   isWordValid(word: String!): Boolean!
   lastRelease: Release
   payment(paymentId: String!): Payment

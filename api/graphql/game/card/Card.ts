@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { AuthenticationError, UserInputError } from "apollo-server";
 import { enumType, extendType, list, nonNull, objectType } from "nexus";
 import { Card, Quality as NexusQuality } from "nexus-prisma";
@@ -50,26 +51,73 @@ export const GetCardQuery = extendType({
   },
 });
 
+export const Sort = enumType({
+  name: "InventorySort",
+  description: "Inventory sorting type",
+  members: ["ISSUE", "CODE", "GROUP", "SUBGROUP", "CHARACTER", "STAGE"],
+});
+
+export const Order = enumType({
+  name: "InventoryOrder",
+  description: "Inventory ordering type",
+  members: ["ASC", "DESC"],
+});
+
 export const Inventory = extendType({
   type: "Query",
   definition(t) {
     t.field("inventory", {
       type: nonNull(list(nonNull("Card"))),
       args: {
-        user: nonNull("Int"),
+        userId: nonNull("Int"),
         group: "String",
         subgroup: "String",
         character: "String",
-        next: "Int",
-        prev: "Int",
+        page: nonNull("Int"),
+        sort: "InventorySort",
+        order: "InventoryOrder",
       },
-      async resolve(_, { user, next, prev, character, subgroup, group }, ctx) {
-        return ctx.db.card.findMany({
-          take: 10,
-          orderBy: next || prev ? { id: next ? "asc" : "desc" } : undefined,
+      async resolve(
+        _,
+        { userId, page, character, subgroup, group, sort, order },
+        ctx
+      ) {
+        const orderBy: Prisma.Enumerable<Prisma.CardOrderByWithRelationInput> =
+          [];
+
+        if (sort === "ISSUE") {
+          orderBy.push({ issue: order === "DESC" ? "desc" : "asc" });
+        } else if (sort === "CODE") {
+          orderBy.push({ id: order === "DESC" ? "desc" : "asc" });
+        } else if (sort === "GROUP") {
+          orderBy.push({
+            prefab: {
+              group: { name: order === "DESC" ? "desc" : "asc" },
+            },
+          });
+        } else if (sort === "SUBGROUP") {
+          orderBy.push({
+            prefab: {
+              subgroup: { name: order === "DESC" ? "desc" : "asc" },
+            },
+          });
+        } else if (sort === "CHARACTER") {
+          orderBy.push({
+            prefab: {
+              character: { name: order === "DESC" ? "desc" : "asc" },
+            },
+          });
+        } else if (sort === "STAGE") {
+          orderBy.push({ quality: order === "DESC" ? "desc" : "asc" });
+        }
+
+        if (sort !== "CODE") {
+          orderBy.push({ id: "desc" });
+        }
+
+        const cards = await ctx.db.card.findMany({
           where: {
-            owner: { id: user },
-            id: next ? { gt: next } : prev ? { lt: prev } : undefined,
+            ownerId: userId,
             prefab: {
               character: character
                 ? { name: { contains: character, mode: "insensitive" } }
@@ -82,7 +130,12 @@ export const Inventory = extendType({
                 : undefined,
             },
           },
+          orderBy,
+          skip: page * 10 - 10,
+          take: 10,
         });
+
+        return cards;
       },
     });
   },
@@ -91,7 +144,6 @@ export const Inventory = extendType({
 export const InventoryPageObject = objectType({
   name: "InventoryPage",
   definition(t) {
-    t.field("current", { type: nonNull("Int") });
     t.field("max", { type: nonNull("Int") });
     t.field("cards", { type: nonNull("Int") });
   },
@@ -103,13 +155,12 @@ export const InventoryPage = extendType({
     t.field("inventoryPage", {
       type: nonNull("InventoryPage"),
       args: {
-        cursor: nonNull("Int"),
         user: nonNull("Int"),
         group: "String",
         subgroup: "String",
         character: "String",
       },
-      async resolve(_, { cursor, user, group, subgroup, character }, ctx) {
+      async resolve(_, { user, group, subgroup, character }, ctx) {
         const total = await ctx.db.card.count({
           where: {
             owner: { id: user },
@@ -127,26 +178,7 @@ export const InventoryPage = extendType({
           },
         });
 
-        const current = await ctx.db.card.count({
-          where: {
-            owner: { id: user },
-            id: { lte: cursor },
-            prefab: {
-              character: character
-                ? { name: { contains: character, mode: "insensitive" } }
-                : undefined,
-              group: group
-                ? { name: { contains: group, mode: "insensitive" } }
-                : undefined,
-              subgroup: subgroup
-                ? { name: { contains: subgroup, mode: "insensitive" } }
-                : undefined,
-            },
-          },
-        });
-
         return {
-          current: Math.floor(current / 10) + 1,
           max: Math.ceil(total / 10),
           cards: total,
         };

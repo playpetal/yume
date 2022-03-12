@@ -34,6 +34,8 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   Gender: "FEMALE" | "MALE" | "NONBINARY"
   GroupGender: "COED" | "FEMALE" | "MALE"
+  InventoryOrder: "ASC" | "DESC"
+  InventorySort: "CHARACTER" | "CODE" | "GROUP" | "ISSUE" | "STAGE" | "SUBGROUP"
   ProductType: "PAID_CURRENCY"
   Quality: "BLOOM" | "BUD" | "FLOWER" | "SEED" | "SPROUT"
   Reward: "CARD" | "LILY" | "PETAL"
@@ -138,7 +140,6 @@ export interface NexusGenObjects {
   }
   InventoryPage: { // root type
     cards: number; // Int!
-    current: number; // Int!
     max: number; // Int!
   }
   Mutation: {};
@@ -323,7 +324,6 @@ export interface NexusGenFieldTypes {
   }
   InventoryPage: { // field return type
     cards: number; // Int!
-    current: number; // Int!
     max: number; // Int!
   }
   Mutation: { // field return type
@@ -579,7 +579,6 @@ export interface NexusGenFieldTypeNames {
   }
   InventoryPage: { // field return type name
     cards: 'Int'
-    current: 'Int'
     max: 'Int'
   }
   Mutation: { // field return type name
@@ -908,14 +907,14 @@ export interface NexusGenArgTypes {
     inventory: { // args
       character?: string | null; // String
       group?: string | null; // String
-      next?: number | null; // Int
-      prev?: number | null; // Int
+      order?: NexusGenEnums['InventoryOrder'] | null; // InventoryOrder
+      page: number; // Int!
+      sort?: NexusGenEnums['InventorySort'] | null; // InventorySort
       subgroup?: string | null; // String
-      user: number; // Int!
+      userId: number; // Int!
     }
     inventoryPage: { // args
       character?: string | null; // String
-      cursor: number; // Int!
       group?: string | null; // String
       subgroup?: string | null; // String
       user: number; // Int!
