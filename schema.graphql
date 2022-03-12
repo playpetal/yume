@@ -100,18 +100,6 @@ type GTS {
   totalTime: Int!
 }
 
-type GTSRewardLeaderboard {
-  account: Account!
-  accountId: Int!
-  value: Int!
-}
-
-type GTSTimeLeaderboard {
-  account: Account!
-  accountId: Int!
-  time: Int!
-}
-
 """Game song"""
 type GameSong {
   group: String
@@ -162,6 +150,12 @@ enum InventorySort {
   ISSUE
   STAGE
   SUBGROUP
+}
+
+type Leaderboard {
+  account: Account!
+  accountId: Int!
+  value: Float!
 }
 
 type Mutation {
@@ -241,14 +235,15 @@ type Query {
   canClaimRewards: Int!
   getCard(id: Int!): Card
   getCharacter(id: Int!): Character
-  getGTSRewardLeaderboard(type: Reward!): [GTSRewardLeaderboard!]!
-  getGTSTimeLeaderboard: [GTSTimeLeaderboard!]!
+  getGTSRewardLeaderboard(type: Reward!): [Leaderboard!]!
+  getGTSTimeLeaderboard: [Leaderboard!]!
   getGroup(id: Int!): Group
   getRandomSong(gender: GroupGender): GameSong
   getSubgroup(id: Int!): Subgroup
+  getSupporterLeaderboard: [Leaderboard!]!
   getUserTitle(id: Int!): TitleInventory
-  getWordsRewardLeaderboard(type: Reward!): [WordsRewardLeaderboard!]!
-  getWordsTimeLeaderboard: [WordsTimeLeaderboard!]!
+  getWordsRewardLeaderboard(type: Reward!): [Leaderboard!]!
+  getWordsTimeLeaderboard: [Leaderboard!]!
   inventory(character: String, group: String, order: InventoryOrder, page: Int!, sort: InventorySort, subgroup: String, userId: Int!): [Card!]!
   inventoryPage(character: String, group: String, subgroup: String, user: Int!): InventoryPage!
   isWordValid(word: String!): Boolean!
@@ -327,16 +322,4 @@ type Words {
   totalPremiumCurrency: Int!
   totalTime: Int!
   totalWords: Int!
-}
-
-type WordsRewardLeaderboard {
-  account: Account!
-  accountId: Int!
-  value: Int!
-}
-
-type WordsTimeLeaderboard {
-  account: Account!
-  accountId: Int!
-  time: Int!
 }

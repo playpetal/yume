@@ -118,14 +118,6 @@ export interface NexusGenObjects {
     totalPremiumCurrency: number; // Int!
     totalTime: number; // Int!
   }
-  GTSRewardLeaderboard: { // root type
-    accountId: number; // Int!
-    value: number; // Int!
-  }
-  GTSTimeLeaderboard: { // root type
-    accountId: number; // Int!
-    time: number; // Int!
-  }
   GameSong: { // root type
     group?: string | null; // String
     id: number; // Int!
@@ -141,6 +133,10 @@ export interface NexusGenObjects {
   InventoryPage: { // root type
     cards: number; // Int!
     max: number; // Int!
+  }
+  Leaderboard: { // root type
+    accountId: number; // Int!
+    value: number; // Float!
   }
   Mutation: {};
   Payment: { // root type
@@ -196,14 +192,6 @@ export interface NexusGenObjects {
     totalPremiumCurrency: number; // Int!
     totalTime: number; // Int!
     totalWords: number; // Int!
-  }
-  WordsRewardLeaderboard: { // root type
-    accountId: number; // Int!
-    value: number; // Int!
-  }
-  WordsTimeLeaderboard: { // root type
-    accountId: number; // Int!
-    time: number; // Int!
   }
 }
 
@@ -299,16 +287,6 @@ export interface NexusGenFieldTypes {
     totalPremiumCurrency: number; // Int!
     totalTime: number; // Int!
   }
-  GTSRewardLeaderboard: { // field return type
-    account: NexusGenRootTypes['Account']; // Account!
-    accountId: number; // Int!
-    value: number; // Int!
-  }
-  GTSTimeLeaderboard: { // field return type
-    account: NexusGenRootTypes['Account']; // Account!
-    accountId: number; // Int!
-    time: number; // Int!
-  }
   GameSong: { // field return type
     group: string | null; // String
     id: number; // Int!
@@ -325,6 +303,11 @@ export interface NexusGenFieldTypes {
   InventoryPage: { // field return type
     cards: number; // Int!
     max: number; // Int!
+  }
+  Leaderboard: { // field return type
+    account: NexusGenRootTypes['Account']; // Account!
+    accountId: number; // Int!
+    value: number; // Float!
   }
   Mutation: { // field return type
     assignGroup: NexusGenRootTypes['AccountUserGroup']; // AccountUserGroup!
@@ -388,14 +371,15 @@ export interface NexusGenFieldTypes {
     canClaimRewards: number; // Int!
     getCard: NexusGenRootTypes['Card'] | null; // Card
     getCharacter: NexusGenRootTypes['Character'] | null; // Character
-    getGTSRewardLeaderboard: NexusGenRootTypes['GTSRewardLeaderboard'][]; // [GTSRewardLeaderboard!]!
-    getGTSTimeLeaderboard: NexusGenRootTypes['GTSTimeLeaderboard'][]; // [GTSTimeLeaderboard!]!
+    getGTSRewardLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
+    getGTSTimeLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
     getGroup: NexusGenRootTypes['Group'] | null; // Group
     getRandomSong: NexusGenRootTypes['GameSong'] | null; // GameSong
     getSubgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
+    getSupporterLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
     getUserTitle: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
-    getWordsRewardLeaderboard: NexusGenRootTypes['WordsRewardLeaderboard'][]; // [WordsRewardLeaderboard!]!
-    getWordsTimeLeaderboard: NexusGenRootTypes['WordsTimeLeaderboard'][]; // [WordsTimeLeaderboard!]!
+    getWordsRewardLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
+    getWordsTimeLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
     inventory: NexusGenRootTypes['Card'][]; // [Card!]!
     inventoryPage: NexusGenRootTypes['InventoryPage']; // InventoryPage!
     isWordValid: boolean; // Boolean!
@@ -459,16 +443,6 @@ export interface NexusGenFieldTypes {
     totalPremiumCurrency: number; // Int!
     totalTime: number; // Int!
     totalWords: number; // Int!
-  }
-  WordsRewardLeaderboard: { // field return type
-    account: NexusGenRootTypes['Account']; // Account!
-    accountId: number; // Int!
-    value: number; // Int!
-  }
-  WordsTimeLeaderboard: { // field return type
-    account: NexusGenRootTypes['Account']; // Account!
-    accountId: number; // Int!
-    time: number; // Int!
   }
 }
 
@@ -554,16 +528,6 @@ export interface NexusGenFieldTypeNames {
     totalPremiumCurrency: 'Int'
     totalTime: 'Int'
   }
-  GTSRewardLeaderboard: { // field return type name
-    account: 'Account'
-    accountId: 'Int'
-    value: 'Int'
-  }
-  GTSTimeLeaderboard: { // field return type name
-    account: 'Account'
-    accountId: 'Int'
-    time: 'Int'
-  }
   GameSong: { // field return type name
     group: 'String'
     id: 'Int'
@@ -580,6 +544,11 @@ export interface NexusGenFieldTypeNames {
   InventoryPage: { // field return type name
     cards: 'Int'
     max: 'Int'
+  }
+  Leaderboard: { // field return type name
+    account: 'Account'
+    accountId: 'Int'
+    value: 'Float'
   }
   Mutation: { // field return type name
     assignGroup: 'AccountUserGroup'
@@ -643,14 +612,15 @@ export interface NexusGenFieldTypeNames {
     canClaimRewards: 'Int'
     getCard: 'Card'
     getCharacter: 'Character'
-    getGTSRewardLeaderboard: 'GTSRewardLeaderboard'
-    getGTSTimeLeaderboard: 'GTSTimeLeaderboard'
+    getGTSRewardLeaderboard: 'Leaderboard'
+    getGTSTimeLeaderboard: 'Leaderboard'
     getGroup: 'Group'
     getRandomSong: 'GameSong'
     getSubgroup: 'Subgroup'
+    getSupporterLeaderboard: 'Leaderboard'
     getUserTitle: 'TitleInventory'
-    getWordsRewardLeaderboard: 'WordsRewardLeaderboard'
-    getWordsTimeLeaderboard: 'WordsTimeLeaderboard'
+    getWordsRewardLeaderboard: 'Leaderboard'
+    getWordsTimeLeaderboard: 'Leaderboard'
     inventory: 'Card'
     inventoryPage: 'InventoryPage'
     isWordValid: 'Boolean'
@@ -714,16 +684,6 @@ export interface NexusGenFieldTypeNames {
     totalPremiumCurrency: 'Int'
     totalTime: 'Int'
     totalWords: 'Int'
-  }
-  WordsRewardLeaderboard: { // field return type name
-    account: 'Account'
-    accountId: 'Int'
-    value: 'Int'
-  }
-  WordsTimeLeaderboard: { // field return type name
-    account: 'Account'
-    accountId: 'Int'
-    time: 'Int'
   }
 }
 

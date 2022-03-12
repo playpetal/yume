@@ -1,7 +1,7 @@
 import { extendType, list, nonNull, objectType } from "nexus";
 
-export const GTSTimeLeaderboard = objectType({
-  name: "GTSTimeLeaderboard",
+export const Leaderboard = objectType({
+  name: "Leaderboard",
   definition(t) {
     t.field("accountId", { type: nonNull("Int") });
     t.field("account", {
@@ -10,7 +10,7 @@ export const GTSTimeLeaderboard = objectType({
         return (await db.account.findFirst({ where: { id: root.accountId } }))!;
       },
     });
-    t.field("time", { type: nonNull("Int") });
+    t.field("value", { type: nonNull("Float") });
   },
 });
 
@@ -18,37 +18,23 @@ export const GetGTSTimeLeaderboard = extendType({
   type: "Query",
   definition(t) {
     t.field("getGTSTimeLeaderboard", {
-      type: nonNull(list(nonNull("GTSTimeLeaderboard"))),
+      type: nonNull(list(nonNull("Leaderboard"))),
       async resolve(_, __, { db }) {
         const users = await db.gTS.findMany({
-          where: { totalGames: { gte: 50 } },
+          where: { totalGames: { gte: 25 } },
         });
 
         return users
           .map((u) => {
             return {
               accountId: u.accountId,
-              time: Math.ceil(u.totalTime / u.totalGames),
+              value: Math.ceil(u.totalTime / u.totalGames),
             };
           })
-          .sort((a, b) => a.time - b.time)
+          .sort((a, b) => a.value - b.value)
           .slice(0, 10);
       },
     });
-  },
-});
-
-export const GTSRewardLeaderboard = objectType({
-  name: "GTSRewardLeaderboard",
-  definition(t) {
-    t.field("accountId", { type: nonNull("Int") });
-    t.field("account", {
-      type: nonNull("Account"),
-      async resolve(root, _, { db }) {
-        return (await db.account.findFirst({ where: { id: root.accountId } }))!;
-      },
-    });
-    t.field("value", { type: nonNull("Int") });
   },
 });
 
@@ -56,11 +42,11 @@ export const GetGTSRewardLeaderboard = extendType({
   type: "Query",
   definition(t) {
     t.field("getGTSRewardLeaderboard", {
-      type: nonNull(list(nonNull("GTSRewardLeaderboard"))),
+      type: nonNull(list(nonNull("Leaderboard"))),
       args: { type: nonNull("Reward") },
       async resolve(_, { type }, { db }) {
         const users = await db.gTS.findMany({
-          where: { totalGames: { gte: 50 } },
+          where: { totalGames: { gte: 25 } },
         });
 
         const mapped = users.map((u) => {
@@ -81,25 +67,11 @@ export const GetGTSRewardLeaderboard = extendType({
   },
 });
 
-export const WordsTimeLeaderboard = objectType({
-  name: "WordsTimeLeaderboard",
-  definition(t) {
-    t.field("accountId", { type: nonNull("Int") });
-    t.field("account", {
-      type: nonNull("Account"),
-      async resolve(root, _, { db }) {
-        return (await db.account.findFirst({ where: { id: root.accountId } }))!;
-      },
-    });
-    t.field("time", { type: nonNull("Int") });
-  },
-});
-
 export const GetWordsTimeLeaderboard = extendType({
   type: "Query",
   definition(t) {
     t.field("getWordsTimeLeaderboard", {
-      type: nonNull(list(nonNull("WordsTimeLeaderboard"))),
+      type: nonNull(list(nonNull("Leaderboard"))),
       async resolve(_, __, { db }) {
         const users = await db.words.findMany({
           where: { totalGames: { gte: 25 } },
@@ -109,27 +81,13 @@ export const GetWordsTimeLeaderboard = extendType({
           .map((u) => {
             return {
               accountId: u.accountId,
-              time: Math.ceil(u.totalTime / u.totalGames),
+              value: Math.ceil(u.totalTime / u.totalGames),
             };
           })
-          .sort((a, b) => a.time - b.time)
+          .sort((a, b) => a.value - b.value)
           .slice(0, 10);
       },
     });
-  },
-});
-
-export const WordsRewardLeaderboard = objectType({
-  name: "WordsRewardLeaderboard",
-  definition(t) {
-    t.field("accountId", { type: nonNull("Int") });
-    t.field("account", {
-      type: nonNull("Account"),
-      async resolve(root, _, { db }) {
-        return (await db.account.findFirst({ where: { id: root.accountId } }))!;
-      },
-    });
-    t.field("value", { type: nonNull("Int") });
   },
 });
 
@@ -137,7 +95,7 @@ export const GetWordsRewardLeaderboard = extendType({
   type: "Query",
   definition(t) {
     t.field("getWordsRewardLeaderboard", {
-      type: nonNull(list(nonNull("WordsRewardLeaderboard"))),
+      type: nonNull(list(nonNull("Leaderboard"))),
       args: { type: nonNull("Reward") },
       async resolve(_, { type }, { db }) {
         const users = await db.words.findMany({
@@ -157,6 +115,45 @@ export const GetWordsRewardLeaderboard = extendType({
         });
 
         return mapped.sort((a, b) => b.value - a.value).slice(0, 10);
+      },
+    });
+  },
+});
+
+export const GetSupporterLeaderboard = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("getSupporterLeaderboard", {
+      type: nonNull(list(nonNull("Leaderboard"))),
+      async resolve(_, __, { db }) {
+        const payments = await db.payment.findMany({
+          where: { success: true },
+        });
+
+        let supporters: { accountId: number; value: number }[] = [];
+
+        for (let payment of payments) {
+          const exists = supporters.find(
+            (d) => d.accountId === payment.accountId
+          );
+          if (exists) {
+            exists.value += payment.cost;
+          } else
+            supporters.push({
+              accountId: payment.accountId,
+              value: payment.cost,
+            });
+        }
+
+        return supporters
+          .map((d) => {
+            return {
+              accountId: d.accountId,
+              value: Number((d.value / (83 / 730)).toFixed(2)),
+            };
+          })
+          .sort((a, b) => b.value - a.value)
+          .slice(0, 10);
       },
     });
   },
