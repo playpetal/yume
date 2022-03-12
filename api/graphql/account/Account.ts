@@ -15,6 +15,7 @@ export const AccountObject = objectType({
     t.field(Account.discordId);
     t.field(Account.username);
     t.field(Account.createdAt);
+    t.field(Account.flags);
     t.field(Account.activeTitleId);
     t.field(Account.bio);
     t.field(Account.currency);
@@ -56,6 +57,23 @@ export const AccountObject = objectType({
         return ctx.db.accountUserGroup.findMany({
           where: { accountId: root.id },
         });
+      },
+    });
+    t.field("supporterTime", {
+      type: "Float",
+      async resolve(root, _, { db }) {
+        const flags = Number(root.flags.toString(2));
+        if (!(flags & 1)) return null;
+
+        const payments = await db.payment.findMany({
+          where: { accountId: root.id, success: true },
+        });
+
+        const hours = Number(
+          (payments.reduce((a, b) => (a += b.cost), 0) / (83 / 730)).toFixed(2)
+        );
+
+        return hours;
       },
     });
   },
@@ -340,6 +358,25 @@ export const CanClaimPremiumRewards = extendType({
       async resolve(_, __, ctx) {
         const account = await checkAuth(ctx);
         return await canClaimPremiumCurrency(account, ctx);
+      },
+    });
+  },
+});
+
+export const UpdateFlags = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("updateFlags", {
+      type: nonNull("Int"),
+      args: { flags: nonNull("Int") },
+      async resolve(_, { flags }, ctx) {
+        const account = await checkAuth(ctx);
+
+        const _account = await ctx.db.account.update({
+          data: { flags },
+          where: { id: account.id },
+        });
+        return _account.flags;
       },
     });
   },

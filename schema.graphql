@@ -8,11 +8,13 @@ type Account {
   createdAt: DateTime!
   currency: Int!
   discordId: String!
+  flags: Int!
   groups: [AccountUserGroup!]!
   gts: GTS
   id: Int!
   premiumCurrency: Int!
   stats: AccountStats
+  supporterTime: Float
   title: Title
   username: String!
   words: Words
@@ -193,6 +195,7 @@ type Mutation {
   unassignGroup(accountId: Int!, groupId: Int!): Int!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
+  updateFlags(flags: Int!): Int!
   updateGroup(creation: DateTime, gender: GroupGender, id: Int!, name: String): Group!
   updatePrefab(characterId: Int, groupId: Int, maxCards: Int, prefabId: Int!, rarity: Int, releaseId: Int, subgroupId: Int): CardPrefab!
   updateRelease(droppable: Boolean, id: Int!): Release!

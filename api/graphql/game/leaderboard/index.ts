@@ -128,11 +128,15 @@ export const GetSupporterLeaderboard = extendType({
       async resolve(_, __, { db }) {
         const payments = await db.payment.findMany({
           where: { success: true },
+          include: { account: { select: { flags: true } } },
         });
 
         let supporters: { accountId: number; value: number }[] = [];
 
         for (let payment of payments) {
+          const flags = Number(payment.account.flags.toString(2));
+          if (!(flags & (flags << 0))) continue;
+
           const exists = supporters.find(
             (d) => d.accountId === payment.accountId
           );

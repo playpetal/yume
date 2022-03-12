@@ -57,6 +57,7 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     currency: number; // Int!
     discordId: string; // String!
+    flags: number; // Int!
     id: number; // Int!
     premiumCurrency: number; // Int!
     username: string; // String!
@@ -212,11 +213,13 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     currency: number; // Int!
     discordId: string; // String!
+    flags: number; // Int!
     groups: NexusGenRootTypes['AccountUserGroup'][]; // [AccountUserGroup!]!
     gts: NexusGenRootTypes['GTS'] | null; // GTS
     id: number; // Int!
     premiumCurrency: number; // Int!
     stats: NexusGenRootTypes['AccountStats'] | null; // AccountStats
+    supporterTime: number | null; // Float
     title: NexusGenRootTypes['Title'] | null; // Title
     username: string; // String!
     words: NexusGenRootTypes['Words'] | null; // Words
@@ -344,6 +347,7 @@ export interface NexusGenFieldTypes {
     unassignGroup: number; // Int!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
     updateCharacter: NexusGenRootTypes['Character']; // Character!
+    updateFlags: number; // Int!
     updateGroup: NexusGenRootTypes['Group']; // Group!
     updatePrefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
     updateRelease: NexusGenRootTypes['Release']; // Release!
@@ -453,11 +457,13 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     currency: 'Int'
     discordId: 'String'
+    flags: 'Int'
     groups: 'AccountUserGroup'
     gts: 'GTS'
     id: 'Int'
     premiumCurrency: 'Int'
     stats: 'AccountStats'
+    supporterTime: 'Float'
     title: 'Title'
     username: 'String'
     words: 'Words'
@@ -585,6 +591,7 @@ export interface NexusGenFieldTypeNames {
     unassignGroup: 'Int'
     updateAlias: 'Alias'
     updateCharacter: 'Character'
+    updateFlags: 'Int'
     updateGroup: 'Group'
     updatePrefab: 'CardPrefab'
     updateRelease: 'Release'
@@ -808,6 +815,9 @@ export interface NexusGenArgTypes {
       gender?: NexusGenEnums['Gender'] | null; // Gender
       id: number; // Int!
       name?: string | null; // String
+    }
+    updateFlags: { // args
+      flags: number; // Int!
     }
     updateGroup: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
