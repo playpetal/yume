@@ -140,6 +140,19 @@ export const CompleteTransaction = extendType({
 
         if (!valid) throw new AuthenticationError("invalid transaction");
 
+        const count = await ctx.db.payment.count({
+          where: {
+            productId: payment.productId,
+            success: true,
+            accountId: payment.accountId,
+          },
+        });
+
+        if (payment.product.limit && count > payment.product.limit)
+          throw new AuthenticationError(
+            "you've reached the limit for that product"
+          );
+
         const final = await completePayment(token);
 
         if (!final) throw new AuthenticationError("unable to capture funds");
@@ -171,6 +184,37 @@ export const CompleteTransaction = extendType({
         }
 
         return true;
+      },
+    });
+  },
+});
+
+export const ReachedPurchaseLimit = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("reachedPurchaseLimit", {
+      type: nonNull("Boolean"),
+      args: { productId: nonNull("Int") },
+      async resolve(_, { productId }, ctx) {
+        const account = await checkAuth(ctx);
+
+        const product = await ctx.db.product.findFirst({
+          where: { id: productId },
+        });
+
+        if (!product) throw new UserInputError("invalid product");
+
+        if (!product.limit) return false;
+
+        const count = await ctx.db.payment.count({
+          where: {
+            accountId: account.id,
+            productId: product.id,
+            success: true,
+          },
+        });
+
+        return count >= product.limit;
       },
     });
   },

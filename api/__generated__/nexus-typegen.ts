@@ -394,6 +394,7 @@ export interface NexusGenFieldTypes {
     payment: NexusGenRootTypes['Payment'] | null; // Payment
     prefab: NexusGenRootTypes['CardPrefab'] | null; // CardPrefab
     products: NexusGenRootTypes['Product'][]; // [Product!]!
+    reachedPurchaseLimit: boolean; // Boolean!
     release: NexusGenRootTypes['Release'] | null; // Release
     searchCards: NexusGenRootTypes['Card'][]; // [Card!]!
     searchCharacters: NexusGenRootTypes['Character'][]; // [Character!]!
@@ -641,6 +642,7 @@ export interface NexusGenFieldTypeNames {
     payment: 'Payment'
     prefab: 'CardPrefab'
     products: 'Product'
+    reachedPurchaseLimit: 'Boolean'
     release: 'Release'
     searchCards: 'Card'
     searchCharacters: 'Character'
@@ -905,6 +907,9 @@ export interface NexusGenArgTypes {
     }
     prefab: { // args
       id: number; // Int!
+    }
+    reachedPurchaseLimit: { // args
+      productId: number; // Int!
     }
     release: { // args
       id: number; // Int!

@@ -258,6 +258,7 @@ type Query {
   payment(paymentId: String!): Payment
   prefab(id: Int!): CardPrefab
   products: [Product!]!
+  reachedPurchaseLimit(productId: Int!): Boolean!
   release(id: Int!): Release
   searchCards(ownerId: Int!, search: String!): [Card!]!
   searchCharacters(search: String!): [Character!]!
