@@ -2,7 +2,12 @@ import axios from "axios";
 import { GroupGender } from "@prisma/client";
 import { Context } from "../../context";
 
-type Song = { id: number; title: string; group?: { name: string } | null };
+type Song = {
+  id: number;
+  title: string;
+  group?: { name: string } | null;
+  soloist?: { name: string } | null;
+};
 type RedisSong = Song & { video: string };
 
 class GTSManager {
@@ -57,7 +62,10 @@ class GTSManager {
         id: { notIn: this.badSongs },
         group: gender ? { gender } : undefined,
       },
-      include: { group: { select: { name: true } } },
+      include: {
+        group: { select: { name: true } },
+        soloist: { select: { name: true } },
+      },
     });
 
     if (!song) return;

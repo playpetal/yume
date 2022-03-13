@@ -106,6 +106,7 @@ type GTS {
 type GameSong {
   group: String
   id: Int!
+  soloist: String
   title: String!
   video: String!
 }
@@ -284,6 +285,8 @@ type Song {
   group: Group
   groupId: Int
   id: Int!
+  soloist: Character
+  soloistId: Int
   title: String!
 }
 

@@ -122,6 +122,7 @@ export interface NexusGenObjects {
   GameSong: { // root type
     group?: string | null; // String
     id: number; // Int!
+    soloist?: string | null; // String
     title: string; // String!
     video: string; // String!
   }
@@ -164,6 +165,7 @@ export interface NexusGenObjects {
   Song: { // root type
     groupId?: number | null; // Int
     id: number; // Int!
+    soloistId?: number | null; // Int
     title: string; // String!
   }
   Subgroup: { // root type
@@ -293,6 +295,7 @@ export interface NexusGenFieldTypes {
   GameSong: { // field return type
     group: string | null; // String
     id: number; // Int!
+    soloist: string | null; // String
     title: string; // String!
     video: string; // String!
   }
@@ -413,6 +416,8 @@ export interface NexusGenFieldTypes {
     group: NexusGenRootTypes['Group'] | null; // Group
     groupId: number | null; // Int
     id: number; // Int!
+    soloist: NexusGenRootTypes['Character'] | null; // Character
+    soloistId: number | null; // Int
     title: string; // String!
   }
   Subgroup: { // field return type
@@ -537,6 +542,7 @@ export interface NexusGenFieldTypeNames {
   GameSong: { // field return type name
     group: 'String'
     id: 'Int'
+    soloist: 'String'
     title: 'String'
     video: 'String'
   }
@@ -657,6 +663,8 @@ export interface NexusGenFieldTypeNames {
     group: 'Group'
     groupId: 'Int'
     id: 'Int'
+    soloist: 'Character'
+    soloistId: 'Int'
     title: 'String'
   }
   Subgroup: { // field return type name

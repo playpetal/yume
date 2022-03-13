@@ -22,6 +22,14 @@ export const SongObject = objectType({
         }))!;
       },
     });
+    t.field(Song.soloistId);
+    t.field("soloist", {
+      type: "Character",
+      async resolve({ soloistId }, _, { db }) {
+        if (!soloistId) return null;
+        return await db.character.findFirst({ where: { id: soloistId } });
+      },
+    });
   },
 });
 
@@ -33,6 +41,7 @@ export const GameSongObject = objectType({
     t.field("video", { type: nonNull("String") });
     t.field("title", { type: nonNull("String") });
     t.field("group", { type: "String" });
+    t.field("soloist", { type: "String" });
   },
 });
 
@@ -68,6 +77,7 @@ export const GetRandomSongQuery = extendType({
         return {
           ...song,
           group: song.group?.name,
+          soloist: song.soloist?.name,
         };
       },
     });
