@@ -261,6 +261,9 @@ model RollLog {
 
 enum ProductType {
   PAID_CURRENCY
+  ALPHA_TITLE
+  BETA_TITLE
+  SIGMA_TITLE
 }
 
 model Product {
@@ -270,6 +273,7 @@ model Product {
   amount    Int
   price     Int
   available Boolean     @default(false)
+  limit     Int?
   purchases Payment[]
 }
 

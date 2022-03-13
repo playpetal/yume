@@ -38,7 +38,7 @@ export const PaymentObject = objectType({
 
 export const ProductType = enumType({
   name: "ProductType",
-  members: ["PAID_CURRENCY"],
+  members: ["PAID_CURRENCY", "ALPHA_TITLE", "BETA_TITLE", "SIGMA_TITLE"],
 });
 
 export const GetPayment = extendType({
@@ -155,6 +155,19 @@ export const CompleteTransaction = extendType({
             data: { paidCurrency: { increment: payment.product.amount } },
           });
           return true;
+        } else if (payment.product.type === "ALPHA_TITLE") {
+          await ctx.db.titleInventory.create({
+            data: { accountId: payment.accountId, titleId: 3 },
+          });
+          return true;
+        } else if (payment.product.type === "BETA_TITLE") {
+          await ctx.db.titleInventory.create({
+            data: { accountId: payment.accountId, titleId: 4 },
+          });
+        } else if (payment.product.type === "SIGMA_TITLE") {
+          await ctx.db.titleInventory.create({
+            data: { accountId: payment.accountId, titleId: 5 },
+          });
         }
 
         return true;

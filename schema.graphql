@@ -222,7 +222,10 @@ type Product {
 }
 
 enum ProductType {
+  ALPHA_TITLE
+  BETA_TITLE
   PAID_CURRENCY
+  SIGMA_TITLE
 }
 
 enum Quality {
