@@ -2,7 +2,7 @@ import { extendType, list, nonNull, objectType } from "nexus";
 import { Account } from "nexus-prisma";
 import { UserInputError, AuthenticationError } from "apollo-server";
 import jwt from "jsonwebtoken";
-import { checkAuth } from "../../lib/Auth";
+import { auth } from "../../lib/Auth";
 import { getAccountStats } from "../../lib/account";
 import { Card } from "@prisma/client";
 import { canClaimPremiumCurrency, canClaimRewards } from "../../lib/game";
@@ -241,10 +241,10 @@ export const SetUserTitle = extendType({
       type: nonNull("Account"),
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
-        const auth = await checkAuth(ctx);
+        const account = await auth(ctx);
 
         return ctx.db.account.update({
-          where: { id: auth.id },
+          where: { id: account.id },
           data: { activeTitleId: args.id },
         });
       },
@@ -264,7 +264,7 @@ export const Gift = extendType({
         lilies: "Int",
       },
       async resolve(_, { recipientId, cardIds, petals, lilies }, ctx) {
-        const account = await checkAuth(ctx);
+        const account = await auth(ctx);
         const recipient = await ctx.db.account.findFirst({
           where: { id: recipientId },
         });
@@ -356,7 +356,7 @@ export const CanClaimPremiumRewards = extendType({
     t.field("canClaimPremiumRewards", {
       type: nonNull("Int"),
       async resolve(_, __, ctx) {
-        const account = await checkAuth(ctx);
+        const account = await auth(ctx);
         return await canClaimPremiumCurrency(account, ctx);
       },
     });
@@ -370,7 +370,7 @@ export const UpdateFlags = extendType({
       type: nonNull("Int"),
       args: { flags: nonNull("Int") },
       async resolve(_, { flags }, ctx) {
-        const account = await checkAuth(ctx);
+        const account = await auth(ctx);
 
         const _account = await ctx.db.account.update({
           data: { flags },

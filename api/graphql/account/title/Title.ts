@@ -1,8 +1,7 @@
 import { UserInputError } from "apollo-server";
 import { extendType, list, nonNull, objectType } from "nexus";
 import { Title, TitleInventory } from "nexus-prisma";
-import { checkAuth } from "../../../lib/Auth";
-import { userInGroup } from "../../../lib/Permissions";
+import { auth } from "../../../lib/Auth";
 
 export const TitleObject = objectType({
   name: Title.$name,
@@ -121,8 +120,7 @@ export const CreateTitle = extendType({
       type: nonNull("Title"),
       args: { title: nonNull("String"), description: "String" },
       async resolve(_, { title, description }, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Developer"]);
+        await auth(ctx, { requiredGroups: ["Developer"] });
 
         const titleExists = await ctx.db.title.findFirst({ where: { title } });
         if (titleExists) throw new UserInputError("that title already exists.");
@@ -140,8 +138,7 @@ export const GrantTitle = extendType({
       type: nonNull("TitleInventory"),
       args: { accountId: nonNull("Int"), titleId: nonNull("Int") },
       async resolve(_, { accountId, titleId }, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Developer"]);
+        await auth(ctx, { requiredGroups: ["Developer"] });
 
         return await ctx.db.titleInventory.create({
           data: { accountId: accountId, titleId },
@@ -158,8 +155,7 @@ export const GrantAllTitle = extendType({
       type: nonNull("Int"),
       args: { titleId: nonNull("Int") },
       async resolve(_, { titleId }, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Developer"]);
+        await auth(ctx, { requiredGroups: ["Developer"] });
 
         const ids = await ctx.db.account.findMany({
           where: { titles: { none: { titleId } } },
@@ -185,8 +181,7 @@ export const RevokeTitle = extendType({
       type: nonNull("Int"),
       args: { accountId: nonNull("Int"), titleId: nonNull("Int") },
       async resolve(_, { accountId, titleId }, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Developer"]);
+        await auth(ctx, { requiredGroups: ["Developer"] });
 
         const title = await ctx.db.titleInventory.findFirst({
           where: { accountId, titleId },
@@ -212,8 +207,7 @@ export const RevokeAllTitle = extendType({
       type: nonNull("Int"),
       args: { titleId: nonNull("Int") },
       async resolve(_, { titleId }, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Developer"]);
+        await auth(ctx, { requiredGroups: ["Developer"] });
 
         const data = await ctx.db.titleInventory.findMany({
           where: { titleId },

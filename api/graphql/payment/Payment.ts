@@ -1,7 +1,7 @@
 import { AuthenticationError, UserInputError } from "apollo-server";
 import { enumType, extendType, list, nonNull, objectType } from "nexus";
 import { Payment, Product } from "nexus-prisma";
-import { checkAuth } from "../../lib/Auth";
+import { auth } from "../../lib/Auth";
 import {
   completePayment,
   createTransaction,
@@ -50,7 +50,7 @@ export const GetPayment = extendType({
         paymentId: nonNull("String"),
       },
       async resolve(_, { paymentId }, ctx) {
-        const account = await checkAuth(ctx);
+        const account = await auth(ctx);
 
         const payment = await ctx.db.payment.findFirst({
           where: { accountId: account.id, paymentId },
@@ -85,7 +85,7 @@ export const NewTransaction = extendType({
       type: nonNull("Payment"),
       args: { productId: nonNull("Int") },
       async resolve(_, { productId }, ctx) {
-        const account = await checkAuth(ctx);
+        const account = await auth(ctx);
 
         const product = await ctx.db.product.findFirst({
           where: { id: productId },
@@ -196,7 +196,7 @@ export const ReachedPurchaseLimit = extendType({
       type: nonNull("Boolean"),
       args: { productId: nonNull("Int") },
       async resolve(_, { productId }, ctx) {
-        const account = await checkAuth(ctx);
+        const account = await auth(ctx);
 
         const product = await ctx.db.product.findFirst({
           where: { id: productId },

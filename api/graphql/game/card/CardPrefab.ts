@@ -1,7 +1,6 @@
 import { extendType, list, nonNull, objectType } from "nexus";
 import { CardPrefab } from "nexus-prisma";
-import { checkAuth } from "../../../lib/Auth";
-import { userInGroup } from "../../../lib/Permissions";
+import { auth } from "../../../lib/Auth";
 
 export const CardPrefabObject = objectType({
   name: CardPrefab.$name,
@@ -61,8 +60,7 @@ export const CreatePrefabMutation = extendType({
         rarity: "Int",
       },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
         let releaseId = args.releaseId;
 
@@ -118,8 +116,7 @@ export const UpdatePrefabMutation = extendType({
         },
         ctx
       ) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
         return ctx.db.cardPrefab.update({
           where: { id: prefabId },

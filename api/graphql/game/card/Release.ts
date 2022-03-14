@@ -1,7 +1,6 @@
 import { extendType, list, nonNull, objectType } from "nexus";
 import { Release } from "nexus-prisma";
-import { checkAuth } from "../../../lib/Auth";
-import { userInGroup } from "../../../lib/Permissions";
+import { auth } from "../../../lib/Auth";
 
 export const ReleaseObject = objectType({
   name: Release.$name,
@@ -24,10 +23,11 @@ export const CreateReleaseMutation = extendType({
     t.field("createRelease", {
       type: nonNull("Release"),
       async resolve(_, __, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        return ctx.db.release.create({ data: {} });
+        const release = await ctx.db.release.create({ data: {} });
+
+        return release;
       },
     });
   },
@@ -43,13 +43,14 @@ export const UpdateReleaseMutation = extendType({
         droppable: "Boolean",
       },
       async resolve(_, { id, droppable }, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        return ctx.db.release.update({
+        const release = await ctx.db.release.update({
           where: { id },
           data: { droppable: droppable ?? undefined },
         });
+
+        return release;
       },
     });
   },
@@ -62,7 +63,9 @@ export const ReleaseQuery = extendType({
       type: "Release",
       args: { id: nonNull("Int") },
       async resolve(_, { id }, ctx) {
-        return ctx.db.release.findFirst({ where: { id } });
+        const release = await ctx.db.release.findFirst({ where: { id } });
+
+        return release;
       },
     });
   },
@@ -74,10 +77,12 @@ export const LastReleaseQuery = extendType({
     t.field("lastRelease", {
       type: "Release",
       async resolve(_, __, ctx) {
-        return ctx.db.release.findFirst({
+        const release = await ctx.db.release.findFirst({
           where: { droppable: false },
           orderBy: { id: "desc" },
         });
+
+        return release;
       },
     });
   },

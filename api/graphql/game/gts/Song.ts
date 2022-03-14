@@ -1,7 +1,7 @@
 import { UserInputError } from "apollo-server";
 import { enumType, extendType, list, nonNull, objectType } from "nexus";
 import { Song } from "nexus-prisma";
-import { checkAuth } from "../../../lib/Auth";
+import { auth } from "../../../lib/Auth";
 import { roll } from "../../../lib/card";
 import { canClaimPremiumCurrency, canClaimRewards } from "../../../lib/game";
 import { gts } from "../../../lib/gts";
@@ -95,7 +95,7 @@ export const ClaimMinigamePetalReward = extendType({
     t.field("claimMinigamePetalReward", {
       type: nonNull("Account"),
       async resolve(_, __, ctx) {
-        const account = await checkAuth(ctx);
+        const account = await auth(ctx);
 
         const canClaim = await canClaimRewards(ctx);
         if (!canClaim) throw new UserInputError("you cannot claim rewards");
@@ -126,7 +126,7 @@ export const ClaimMinigameLilyReward = extendType({
     t.field("claimMinigameLilyReward", {
       type: nonNull("Account"),
       async resolve(_, __, ctx) {
-        const account = await checkAuth(ctx);
+        const account = await auth(ctx);
 
         const canClaim = await canClaimRewards(ctx);
         if (!canClaim) throw new UserInputError("you cannot claim rewards");
@@ -161,7 +161,7 @@ export const ClaimMinigameCardReward = extendType({
     t.field("claimMinigameCardReward", {
       type: nonNull(list(nonNull("Card"))),
       async resolve(_, __, ctx) {
-        const account = await checkAuth(ctx);
+        const account = await auth(ctx);
 
         const canClaim = await canClaimRewards(ctx);
         if (!canClaim) throw new UserInputError("you cannot claim rewards");
@@ -194,7 +194,7 @@ export const CompleteGTS = extendType({
         time: nonNull("Int"),
       },
       async resolve(_, { reward, guesses, time }, ctx) {
-        const account = await checkAuth(ctx);
+        const account = await auth(ctx);
 
         await ctx.db.gTS.upsert({
           where: { accountId: account.id },

@@ -1,7 +1,6 @@
 import { extendType, list, nonNull, objectType } from "nexus";
 import { Character } from "nexus-prisma";
-import { checkAuth } from "../../lib/Auth";
-import { userInGroup } from "../../lib/Permissions";
+import { auth } from "../../lib/Auth";
 
 export const CharacterObject = objectType({
   name: Character.$name,
@@ -21,16 +20,17 @@ export const CreateCharacterMutation = extendType({
       type: nonNull("Character"),
       args: { name: nonNull("String"), birthday: "DateTime", gender: "Gender" },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        return ctx.db.character.create({
+        const character = await ctx.db.character.create({
           data: {
             name: args.name,
             birthday: args.birthday,
             gender: args.gender,
           },
         });
+
+        return character;
       },
     });
   },
@@ -43,12 +43,13 @@ export const DeleteCharacterMutation = extendType({
       type: nonNull("Int"),
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        await ctx.db.character.delete({ where: { id: args.id } });
+        const character = await ctx.db.character.delete({
+          where: { id: args.id },
+        });
 
-        return args.id;
+        return character.id;
       },
     });
   },
@@ -66,10 +67,9 @@ export const UpdateCharacterMutation = extendType({
         gender: "Gender",
       },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        return ctx.db.character.update({
+        const character = await ctx.db.character.update({
           where: { id: args.id },
           data: {
             name: args.name || undefined,
@@ -77,6 +77,8 @@ export const UpdateCharacterMutation = extendType({
             gender: args.gender,
           },
         });
+
+        return character;
       },
     });
   },

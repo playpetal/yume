@@ -1,7 +1,6 @@
 import { extendType, list, nonNull, objectType } from "nexus";
 import { Alias } from "nexus-prisma";
-import { checkAuth } from "../../lib/Auth";
-import { userInGroup } from "../../lib/Permissions";
+import { auth } from "../../lib/Auth";
 
 export const AliasObject = objectType({
   name: Alias.$name,
@@ -12,9 +11,11 @@ export const AliasObject = objectType({
     t.field("group", {
       type: nonNull("Group"),
       async resolve(alias, _, ctx) {
-        return (await ctx.db.group.findFirst({
+        const group = await ctx.db.group.findFirst({
           where: { id: alias.groupId },
-        }))!;
+        });
+
+        return group!;
       },
     });
     t.field(Alias.alias);
@@ -31,10 +32,11 @@ export const CreateAliasMutation = extendType({
         alias: nonNull("String"),
       },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        return ctx.db.alias.create({ data: args });
+        const alias = await ctx.db.alias.create({ data: args });
+
+        return alias;
       },
     });
   },
@@ -47,12 +49,11 @@ export const DeleteAliasMutation = extendType({
       type: nonNull("Int"),
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        await ctx.db.alias.delete({ where: args });
+        const alias = await ctx.db.alias.delete({ where: args });
 
-        return args.id;
+        return alias.id;
       },
     });
   },
@@ -65,16 +66,17 @@ export const UpdateAliasMutation = extendType({
       type: nonNull("Alias"),
       args: { id: nonNull("Int"), groupId: "Int", alias: "String" },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        return ctx.db.alias.update({
+        const alias = await ctx.db.alias.update({
           where: { id: args.id },
           data: {
             groupId: args.groupId || undefined,
             alias: args.alias || undefined,
           },
         });
+
+        return alias;
       },
     });
   },
@@ -87,13 +89,15 @@ export const AliasesQuery = extendType({
       type: nonNull(list(nonNull("Alias"))),
       args: { id: "Int", groupId: "Int", alias: "String" },
       async resolve(_, args, ctx) {
-        return ctx.db.alias.findMany({
+        const aliases = await ctx.db.alias.findMany({
           where: {
             id: args.id ?? undefined,
             groupId: args.groupId ?? undefined,
             alias: args.alias ?? undefined,
           },
         });
+
+        return aliases;
       },
     });
   },

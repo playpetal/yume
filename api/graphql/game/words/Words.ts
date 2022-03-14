@@ -1,5 +1,5 @@
 import { extendType, nonNull } from "nexus";
-import { checkAuth } from "../../../lib/Auth";
+import { auth } from "../../../lib/Auth";
 import { getWord, wordIsValid } from "../../../lib/game/words";
 
 export const GetWord = extendType({
@@ -8,7 +8,7 @@ export const GetWord = extendType({
     t.field("word", {
       type: nonNull("String"),
       async resolve(_, __, ctx) {
-        await checkAuth(ctx);
+        await auth(ctx);
         return getWord();
       },
     });
@@ -41,7 +41,7 @@ export const CompleteWords = extendType({
         time: nonNull("Int"),
       },
       async resolve(_, { reward, words, time }, ctx) {
-        const account = await checkAuth(ctx);
+        const account = await auth(ctx);
 
         await ctx.db.words.upsert({
           where: { accountId: account.id },

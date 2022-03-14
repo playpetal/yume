@@ -1,7 +1,6 @@
 import { extendType, list, nonNull, objectType } from "nexus";
 import { Group } from "nexus-prisma";
-import { checkAuth } from "../../lib/Auth";
-import { userInGroup } from "../../lib/Permissions";
+import { auth } from "../../lib/Auth";
 
 export const GroupObject = objectType({
   name: Group.$name,
@@ -14,7 +13,11 @@ export const GroupObject = objectType({
     t.field("aliases", {
       type: nonNull(list(nonNull("Alias"))),
       async resolve(group, __, ctx) {
-        return ctx.db.alias.findMany({ where: { groupId: group.id } });
+        const aliases = await ctx.db.alias.findMany({
+          where: { groupId: group.id },
+        });
+
+        return aliases;
       },
     });
   },
@@ -31,16 +34,17 @@ export const CreateGroupMutation = extendType({
         gender: "GroupGender",
       },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        return ctx.db.group.create({
+        const group = await ctx.db.group.create({
           data: {
             name: args.name,
             creation: args.creation,
             gender: args.gender,
           },
         });
+
+        return group;
       },
     });
   },
@@ -53,12 +57,11 @@ export const DeleteGroupMutation = extendType({
       type: nonNull("Int"),
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        await ctx.db.group.delete({ where: { id: args.id } });
+        const group = await ctx.db.group.delete({ where: { id: args.id } });
 
-        return args.id;
+        return group.id;
       },
     });
   },
@@ -76,10 +79,9 @@ export const UpdateGroupMutation = extendType({
         gender: "GroupGender",
       },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        return ctx.db.group.update({
+        const group = await ctx.db.group.update({
           where: { id: args.id },
           data: {
             name: args.name || undefined,
@@ -87,6 +89,8 @@ export const UpdateGroupMutation = extendType({
             gender: args.gender,
           },
         });
+
+        return group;
       },
     });
   },

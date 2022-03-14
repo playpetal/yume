@@ -1,8 +1,7 @@
 import { UserInputError } from "apollo-server";
 import { extendType, list, nonNull, objectType } from "nexus";
 import { AccountUserGroup, UserGroup } from "nexus-prisma";
-import { checkAuth } from "../../lib/Auth";
-import { userInGroup } from "../../lib/Permissions";
+import { auth } from "../../lib/Auth";
 
 export const UserGroupObject = objectType({
   name: UserGroup.$name,
@@ -52,8 +51,7 @@ export const CreateUserGroupMutation = extendType({
         name: nonNull("String"),
       },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Developer"]);
+        await auth(ctx, { requiredGroups: ["Developer"] });
 
         const groupExists = await ctx.db.userGroup.findFirst({
           where: { name: args.name },
@@ -78,8 +76,7 @@ export const AssignGroupMutation = extendType({
         groupId: nonNull("Int"),
       },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Developer"]);
+        await auth(ctx, { requiredGroups: ["Developer"] });
 
         const targetAccount = await ctx.db.account.findFirst({
           where: { id: args.accountId },
@@ -120,8 +117,7 @@ export const UnassignGroupMutation = extendType({
         groupId: nonNull("Int"),
       },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Developer"]);
+        await auth(ctx, { requiredGroups: ["Developer"] });
 
         const targetAccount = await ctx.db.account.findFirst({
           where: { id: args.accountId },

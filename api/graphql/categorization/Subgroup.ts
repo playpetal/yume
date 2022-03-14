@@ -1,7 +1,6 @@
 import { extendType, list, nonNull, objectType } from "nexus";
 import { Subgroup } from "nexus-prisma";
-import { checkAuth } from "../../lib/Auth";
-import { userInGroup } from "../../lib/Permissions";
+import { auth } from "../../lib/Auth";
 
 export const SubgroupObject = objectType({
   name: Subgroup.$name,
@@ -20,10 +19,11 @@ export const CreateSubgroupMutation = extendType({
       type: nonNull("Subgroup"),
       args: { name: nonNull("String"), creation: "DateTime" },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        return ctx.db.subgroup.create({ data: args });
+        const subgroup = await ctx.db.subgroup.create({ data: args });
+
+        return subgroup;
       },
     });
   },
@@ -36,12 +36,11 @@ export const DeleteSubgroupMutation = extendType({
       type: nonNull("Int"),
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        await ctx.db.subgroup.delete({ where: args });
+        const subgroup = await ctx.db.subgroup.delete({ where: args });
 
-        return args.id;
+        return subgroup.id;
       },
     });
   },
@@ -54,13 +53,14 @@ export const UpdateSubgroupMutation = extendType({
       type: nonNull("Subgroup"),
       args: { id: nonNull("Int"), name: "String", creation: "DateTime" },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
-        await userInGroup(ctx, account.discordId, ["Release Manager"]);
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        return ctx.db.subgroup.update({
+        const subgroup = await ctx.db.subgroup.update({
           where: { id: args.id },
           data: { name: args.name ?? undefined, creation: args.creation },
         });
+
+        return subgroup;
       },
     });
   },

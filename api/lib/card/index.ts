@@ -1,6 +1,6 @@
 import { CardPrefab, Gender, Quality } from "@prisma/client";
 import { Context } from "../../context";
-import { checkAuth } from "../Auth";
+import { auth } from "../Auth";
 import { getRandomColor } from "../Color";
 
 export async function incrementIssue(
@@ -26,7 +26,7 @@ export async function roll(
     free?: boolean;
   }
 ) {
-  const account = await checkAuth(ctx);
+  const account = await auth(ctx);
 
   if (!free) {
     const cost = (gender ? 15 : 10) * amount;

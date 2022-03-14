@@ -9,7 +9,9 @@
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": ["src/types", "./node_modules/@types"],
+    "types": ["node", "./types"]
   },
-  "exclude": ["./node_modules", "./tests"]
+  "exclude": ["./node_modules", "./tests", "./types"]
 }

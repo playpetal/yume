@@ -2,7 +2,7 @@ import { Prisma } from "@prisma/client";
 import { AuthenticationError, UserInputError } from "apollo-server";
 import { enumType, extendType, list, nonNull, objectType } from "nexus";
 import { Card, Quality as NexusQuality } from "nexus-prisma";
-import { checkAuth } from "../../../lib/Auth";
+import { auth } from "../../../lib/Auth";
 import { roll } from "../../../lib/card";
 
 export const CardObject = objectType({
@@ -246,7 +246,7 @@ export const BurnCard = extendType({
         cardId: nonNull("Int"),
       },
       async resolve(_, args, ctx) {
-        const account = await checkAuth(ctx);
+        const account = await auth(ctx);
 
         const card = await ctx.db.card.findFirst({
           where: { id: args.cardId },
@@ -287,7 +287,7 @@ export const ChangeCardColor = extendType({
         color: nonNull("Int"),
       },
       async resolve(_, { cardId, color }, ctx) {
-        const account = await checkAuth(ctx);
+        const account = await auth(ctx);
 
         const card = await ctx.db.card.findFirst({ where: { id: cardId } });
         if (!card) throw new UserInputError("card not found");
