@@ -289,6 +289,8 @@ type Song {
   group: Group
   groupId: Int
   id: Int!
+  release: Release!
+  releaseId: Int!
   soloist: Character
   soloistId: Int
   title: String!

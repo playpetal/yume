@@ -165,6 +165,7 @@ export interface NexusGenObjects {
   Song: { // root type
     groupId?: number | null; // Int
     id: number; // Int!
+    releaseId: number; // Int!
     soloistId?: number | null; // Int
     title: string; // String!
   }
@@ -417,6 +418,8 @@ export interface NexusGenFieldTypes {
     group: NexusGenRootTypes['Group'] | null; // Group
     groupId: number | null; // Int
     id: number; // Int!
+    release: NexusGenRootTypes['Release']; // Release!
+    releaseId: number; // Int!
     soloist: NexusGenRootTypes['Character'] | null; // Character
     soloistId: number | null; // Int
     title: string; // String!
@@ -665,6 +668,8 @@ export interface NexusGenFieldTypeNames {
     group: 'Group'
     groupId: 'Int'
     id: 'Int'
+    release: 'Release'
+    releaseId: 'Int'
     soloist: 'Character'
     soloistId: 'Int'
     title: 'String'

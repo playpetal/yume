@@ -30,6 +30,17 @@ export const SongObject = objectType({
         return await db.character.findFirst({ where: { id: soloistId } });
       },
     });
+    t.field(Song.releaseId);
+    t.field("release", {
+      type: nonNull("Release"),
+      async resolve({ releaseId }, _, ctx) {
+        const release = await ctx.db.release.findFirst({
+          where: { id: releaseId },
+        });
+
+        return release!;
+      },
+    });
   },
 });
 

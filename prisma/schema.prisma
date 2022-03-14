@@ -150,12 +150,15 @@ model Song {
   groupId   Int?
   soloist   Character? @relation(fields: [soloistId], references: [id])
   soloistId Int?
+  release   Release    @relation(fields: [releaseId], references: [id])
+  releaseId Int
 }
 
 model Release {
   id        Int          @id @default(autoincrement())
   droppable Boolean      @default(false)
   cards     CardPrefab[]
+  songs     Song[]
 }
 
 /// Cards
