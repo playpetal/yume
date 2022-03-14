@@ -56,6 +56,86 @@ export const GameSongObject = objectType({
   },
 });
 
+export const CreateSong = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("createSong", {
+      type: nonNull("Song"),
+      args: {
+        title: nonNull("String"),
+        groupId: "Int",
+        soloistId: "Int",
+        releaseId: nonNull("Int"),
+      },
+      async resolve(_, { title, groupId, soloistId, releaseId }, ctx) {
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
+
+        const song = await ctx.db.song.create({
+          data: { title, groupId, soloistId, releaseId },
+        });
+
+        return song;
+      },
+    });
+  },
+});
+
+export const EditSong = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("editSong", {
+      type: nonNull("Song"),
+      args: {
+        songId: nonNull("Int"),
+        title: "String",
+        groupId: "Int",
+        soloistId: "Int",
+        releaseId: "Int",
+      },
+      async resolve(_, { songId, title, groupId, soloistId, releaseId }, ctx) {
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
+
+        const song = await ctx.db.song.findFirst({ where: { id: songId } });
+
+        if (!song) throw new UserInputError("song not found");
+
+        const _song = await ctx.db.song.update({
+          where: { id: songId },
+          data: {
+            title: title ?? undefined,
+            groupId,
+            soloistId,
+            releaseId: releaseId ?? undefined,
+          },
+        });
+
+        return _song;
+      },
+    });
+  },
+});
+
+export const DeleteSong = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("deleteSong", {
+      type: nonNull("Int"),
+      args: { songId: nonNull("Int") },
+      async resolve(_, { songId }, ctx) {
+        await auth(ctx, { requiredGroups: ["Release Manager"] });
+
+        const song = await ctx.db.song.findFirst({ where: { id: songId } });
+
+        if (!song) throw new UserInputError("song not found");
+
+        const _song = await ctx.db.song.delete({ where: { id: song.id } });
+
+        return _song.id;
+      },
+    });
+  },
+});
+
 export const GetRandomSongQuery = extendType({
   type: "Query",
   definition(t) {

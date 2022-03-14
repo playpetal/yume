@@ -177,13 +177,16 @@ type Mutation {
   createGroup(creation: DateTime, gender: GroupGender, name: String!): Group!
   createPrefab(characterId: Int!, groupId: Int, maxCards: Int, rarity: Int, releaseId: Int, subgroupId: Int): CardPrefab!
   createRelease: Release!
+  createSong(groupId: Int, releaseId: Int!, soloistId: Int, title: String!): Song!
   createSubgroup(creation: DateTime, name: String!): Subgroup!
   createTitle(description: String, title: String!): Title!
   createUserGroup(name: String!): UserGroup!
   deleteAlias(id: Int!): Int!
   deleteCharacter(id: Int!): Int!
   deleteGroup(id: Int!): Int!
+  deleteSong(songId: Int!): Int!
   deleteSubgroup(id: Int!): Int!
+  editSong(groupId: Int, releaseId: Int, soloistId: Int, songId: Int!, title: String): Song!
   gift(cardIds: [Int!], lilies: Int, petals: Int, recipientId: Int!): Boolean!
   grantAllTitle(titleId: Int!): Int!
   grantTitle(accountId: Int!, titleId: Int!): TitleInventory!

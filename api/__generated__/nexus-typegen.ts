@@ -332,13 +332,16 @@ export interface NexusGenFieldTypes {
     createGroup: NexusGenRootTypes['Group']; // Group!
     createPrefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
     createRelease: NexusGenRootTypes['Release']; // Release!
+    createSong: NexusGenRootTypes['Song']; // Song!
     createSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
     createTitle: NexusGenRootTypes['Title']; // Title!
     createUserGroup: NexusGenRootTypes['UserGroup']; // UserGroup!
     deleteAlias: number; // Int!
     deleteCharacter: number; // Int!
     deleteGroup: number; // Int!
+    deleteSong: number; // Int!
     deleteSubgroup: number; // Int!
+    editSong: NexusGenRootTypes['Song']; // Song!
     gift: boolean; // Boolean!
     grantAllTitle: number; // Int!
     grantTitle: NexusGenRootTypes['TitleInventory']; // TitleInventory!
@@ -582,13 +585,16 @@ export interface NexusGenFieldTypeNames {
     createGroup: 'Group'
     createPrefab: 'CardPrefab'
     createRelease: 'Release'
+    createSong: 'Song'
     createSubgroup: 'Subgroup'
     createTitle: 'Title'
     createUserGroup: 'UserGroup'
     deleteAlias: 'Int'
     deleteCharacter: 'Int'
     deleteGroup: 'Int'
+    deleteSong: 'Int'
     deleteSubgroup: 'Int'
+    editSong: 'Song'
     gift: 'Boolean'
     grantAllTitle: 'Int'
     grantTitle: 'TitleInventory'
@@ -760,6 +766,12 @@ export interface NexusGenArgTypes {
       releaseId?: number | null; // Int
       subgroupId?: number | null; // Int
     }
+    createSong: { // args
+      groupId?: number | null; // Int
+      releaseId: number; // Int!
+      soloistId?: number | null; // Int
+      title: string; // String!
+    }
     createSubgroup: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
       name: string; // String!
@@ -780,8 +792,18 @@ export interface NexusGenArgTypes {
     deleteGroup: { // args
       id: number; // Int!
     }
+    deleteSong: { // args
+      songId: number; // Int!
+    }
     deleteSubgroup: { // args
       id: number; // Int!
+    }
+    editSong: { // args
+      groupId?: number | null; // Int
+      releaseId?: number | null; // Int
+      soloistId?: number | null; // Int
+      songId: number; // Int!
+      title?: string | null; // String
     }
     gift: { // args
       cardIds?: number[] | null; // [Int!]
