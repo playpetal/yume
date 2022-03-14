@@ -65,10 +65,22 @@ export const CreateSong = extendType({
         title: nonNull("String"),
         groupId: "Int",
         soloistId: "Int",
-        releaseId: nonNull("Int"),
+        releaseId: "Int",
       },
       async resolve(_, { title, groupId, soloistId, releaseId }, ctx) {
         await auth(ctx, { requiredGroups: ["Release Manager"] });
+
+        if (!releaseId) {
+          const lastRelease = await ctx.db.release.findFirst({
+            where: { droppable: false },
+            orderBy: { id: "desc" },
+          });
+
+          if (!lastRelease) {
+            const release = await ctx.db.release.create({ data: {} });
+            releaseId = release.id;
+          } else releaseId = lastRelease.id;
+        }
 
         const song = await ctx.db.song.create({
           data: { title, groupId, soloistId, releaseId },

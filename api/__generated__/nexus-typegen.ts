@@ -768,7 +768,7 @@ export interface NexusGenArgTypes {
     }
     createSong: { // args
       groupId?: number | null; // Int
-      releaseId: number; // Int!
+      releaseId?: number | null; // Int
       soloistId?: number | null; // Int
       title: string; // String!
     }

@@ -177,7 +177,7 @@ type Mutation {
   createGroup(creation: DateTime, gender: GroupGender, name: String!): Group!
   createPrefab(characterId: Int!, groupId: Int, maxCards: Int, rarity: Int, releaseId: Int, subgroupId: Int): CardPrefab!
   createRelease: Release!
-  createSong(groupId: Int, releaseId: Int!, soloistId: Int, title: String!): Song!
+  createSong(groupId: Int, releaseId: Int, soloistId: Int, title: String!): Song!
   createSubgroup(creation: DateTime, name: String!): Subgroup!
   createTitle(description: String, title: String!): Title!
   createUserGroup(name: String!): UserGroup!
