@@ -771,6 +771,7 @@ export interface NexusGenArgTypes {
       releaseId?: number | null; // Int
       soloistId?: number | null; // Int
       title: string; // String!
+      url: string; // String!
     }
     createSubgroup: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime

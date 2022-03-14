@@ -63,30 +63,38 @@ export const CreateSong = extendType({
       type: nonNull("Song"),
       args: {
         title: nonNull("String"),
+        url: nonNull("String"),
         groupId: "Int",
         soloistId: "Int",
         releaseId: "Int",
       },
-      async resolve(_, { title, groupId, soloistId, releaseId }, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+      async resolve(_, { title, url, groupId, soloistId, releaseId }, ctx) {
+        try {
+          await auth(ctx, { requiredGroups: ["Release Manager"] });
 
-        if (!releaseId) {
-          const lastRelease = await ctx.db.release.findFirst({
-            where: { droppable: false },
-            orderBy: { id: "desc" },
+          if (!releaseId) {
+            const lastRelease = await ctx.db.release.findFirst({
+              where: { droppable: false },
+              orderBy: { id: "desc" },
+            });
+
+            if (!lastRelease) {
+              const release = await ctx.db.release.create({ data: {} });
+              releaseId = release.id;
+            } else releaseId = lastRelease.id;
+          }
+
+          const song = await ctx.db.song.create({
+            data: { title, groupId, soloistId, releaseId },
           });
 
-          if (!lastRelease) {
-            const release = await ctx.db.release.create({ data: {} });
-            releaseId = release.id;
-          } else releaseId = lastRelease.id;
+          await gts.uploadSong({ id: song.id, video: url });
+
+          return song;
+        } catch (e) {
+          console.log(e);
+          throw e;
         }
-
-        const song = await ctx.db.song.create({
-          data: { title, groupId, soloistId, releaseId },
-        });
-
-        return song;
       },
     });
   },

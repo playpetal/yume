@@ -36,6 +36,26 @@ class GTSManager {
     return requestedSong;
   }
 
+  public async uploadSong({
+    id,
+    video,
+  }: {
+    id: number;
+    video: string;
+  }): Promise<string> {
+    const {
+      data: { error, url },
+    } = (await axios.post(`${process.env.YURE_URL}/upload`, {
+      id,
+      url: video,
+    })) as {
+      data: { error: string | null; url: string | null };
+    };
+
+    if (error) throw new Error(error);
+    return url!;
+  }
+
   public async requestSong(
     { redis, db }: Context,
     addToStack: boolean = true,
