@@ -45,6 +45,7 @@ class GTSManager {
       where: {
         id: { notIn: this.badSongs },
         group: gender ? { gender } : undefined,
+        release: { droppable: true },
       },
     });
 
@@ -61,6 +62,7 @@ class GTSManager {
       where: {
         id: { notIn: this.badSongs },
         group: gender ? { gender } : undefined,
+        release: { droppable: true },
       },
       include: {
         group: { select: { name: true } },
