@@ -84,6 +84,7 @@ export interface NexusGenObjects {
     ownerId?: number | null; // Int
     prefabId: number; // Int!
     quality: NexusGenEnums['Quality']; // Quality!
+    tagId?: number | null; // Int
     tint: number; // Int!
   }
   CardPrefab: { // root type
@@ -174,6 +175,13 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   }
+  Tag: { // root type
+    accountId: number; // Int!
+    emoji: string; // String!
+    id: number; // Int!
+    tag: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Title: { // root type
     description?: string | null; // String
     id: number; // Int!
@@ -254,6 +262,8 @@ export interface NexusGenFieldTypes {
     prefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
     prefabId: number; // Int!
     quality: NexusGenEnums['Quality']; // Quality!
+    tag: NexusGenRootTypes['Tag'] | null; // Tag
+    tagId: number | null; // Int
     tint: number; // Int!
   }
   CardPrefab: { // field return type
@@ -334,6 +344,7 @@ export interface NexusGenFieldTypes {
     createRelease: NexusGenRootTypes['Release']; // Release!
     createSong: NexusGenRootTypes['Song']; // Song!
     createSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
+    createTag: NexusGenRootTypes['Tag']; // Tag!
     createTitle: NexusGenRootTypes['Title']; // Title!
     createUserGroup: NexusGenRootTypes['UserGroup']; // UserGroup!
     deleteAlias: number; // Int!
@@ -351,6 +362,7 @@ export interface NexusGenFieldTypes {
     rollCards: NexusGenRootTypes['Card'][]; // [Card!]!
     setBio: NexusGenRootTypes['Account']; // Account!
     setUserTitle: NexusGenRootTypes['Account']; // Account!
+    tagCard: NexusGenRootTypes['Card']; // Card!
     unassignGroup: number; // Int!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
     updateCharacter: NexusGenRootTypes['Character']; // Character!
@@ -405,6 +417,7 @@ export interface NexusGenFieldTypes {
     searchGroups: NexusGenRootTypes['Group'][]; // [Group!]!
     searchPrefabs: NexusGenRootTypes['CardPrefab'][]; // [CardPrefab!]!
     searchSubgroups: NexusGenRootTypes['Subgroup'][]; // [Subgroup!]!
+    searchTags: NexusGenRootTypes['Tag'][]; // [Tag!]!
     searchTitles: NexusGenRootTypes['Title'][]; // [Title!]!
     title: NexusGenRootTypes['Title'] | null; // Title
     user: NexusGenRootTypes['Account'] | null; // Account
@@ -431,6 +444,14 @@ export interface NexusGenFieldTypes {
     creation: NexusGenScalars['DateTime'] | null; // DateTime
     id: number; // Int!
     name: string; // String!
+  }
+  Tag: { // field return type
+    account: NexusGenRootTypes['Account']; // Account!
+    accountId: number; // Int!
+    emoji: string; // String!
+    id: number; // Int!
+    tag: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Title: { // field return type
     description: string | null; // String
@@ -507,6 +528,8 @@ export interface NexusGenFieldTypeNames {
     prefab: 'CardPrefab'
     prefabId: 'Int'
     quality: 'Quality'
+    tag: 'Tag'
+    tagId: 'Int'
     tint: 'Int'
   }
   CardPrefab: { // field return type name
@@ -587,6 +610,7 @@ export interface NexusGenFieldTypeNames {
     createRelease: 'Release'
     createSong: 'Song'
     createSubgroup: 'Subgroup'
+    createTag: 'Tag'
     createTitle: 'Title'
     createUserGroup: 'UserGroup'
     deleteAlias: 'Int'
@@ -604,6 +628,7 @@ export interface NexusGenFieldTypeNames {
     rollCards: 'Card'
     setBio: 'Account'
     setUserTitle: 'Account'
+    tagCard: 'Card'
     unassignGroup: 'Int'
     updateAlias: 'Alias'
     updateCharacter: 'Character'
@@ -658,6 +683,7 @@ export interface NexusGenFieldTypeNames {
     searchGroups: 'Group'
     searchPrefabs: 'CardPrefab'
     searchSubgroups: 'Subgroup'
+    searchTags: 'Tag'
     searchTitles: 'Title'
     title: 'Title'
     user: 'Account'
@@ -684,6 +710,14 @@ export interface NexusGenFieldTypeNames {
     creation: 'DateTime'
     id: 'Int'
     name: 'String'
+  }
+  Tag: { // field return type name
+    account: 'Account'
+    accountId: 'Int'
+    emoji: 'String'
+    id: 'Int'
+    tag: 'String'
+    updatedAt: 'DateTime'
   }
   Title: { // field return type name
     description: 'String'
@@ -777,6 +811,10 @@ export interface NexusGenArgTypes {
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
       name: string; // String!
     }
+    createTag: { // args
+      emoji: string; // String!
+      name: string; // String!
+    }
     createTitle: { // args
       description?: string | null; // String
       title: string; // String!
@@ -838,6 +876,10 @@ export interface NexusGenArgTypes {
     }
     setUserTitle: { // args
       id: number; // Int!
+    }
+    tagCard: { // args
+      cardId: number; // Int!
+      tag: string; // String!
     }
     unassignGroup: { // args
       accountId: number; // Int!
@@ -919,6 +961,7 @@ export interface NexusGenArgTypes {
       page: number; // Int!
       sort?: NexusGenEnums['InventorySort'] | null; // InventorySort
       subgroup?: string | null; // String
+      tag?: string | null; // String
       userId: number; // Int!
     }
     inventoryPage: { // args
@@ -956,6 +999,9 @@ export interface NexusGenArgTypes {
       search: string; // String!
     }
     searchSubgroups: { // args
+      search: string; // String!
+    }
+    searchTags: { // args
       search: string; // String!
     }
     searchTitles: { // args

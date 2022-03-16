@@ -51,6 +51,8 @@ type Card {
   prefab: CardPrefab!
   prefabId: Int!
   quality: Quality!
+  tag: Tag
+  tagId: Int
   tint: Int!
 }
 
@@ -179,6 +181,7 @@ type Mutation {
   createRelease: Release!
   createSong(groupId: Int, releaseId: Int, soloistId: Int, title: String!, url: String!): Song!
   createSubgroup(creation: DateTime, name: String!): Subgroup!
+  createTag(emoji: String!, name: String!): Tag!
   createTitle(description: String, title: String!): Title!
   createUserGroup(name: String!): UserGroup!
   deleteAlias(id: Int!): Int!
@@ -196,6 +199,7 @@ type Mutation {
   rollCards(amount: Int!, gender: Gender): [Card!]!
   setBio(bio: String): Account!
   setUserTitle(id: Int!): Account!
+  tagCard(cardId: Int!, tag: String!): Card!
   unassignGroup(accountId: Int!, groupId: Int!): Int!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
@@ -254,7 +258,7 @@ type Query {
   getUserTitle(id: Int!): TitleInventory
   getWordsRewardLeaderboard(type: Reward!): [Leaderboard!]!
   getWordsTimeLeaderboard: [Leaderboard!]!
-  inventory(character: String, group: String, order: InventoryOrder, page: Int!, sort: InventorySort, subgroup: String, userId: Int!): [Card!]!
+  inventory(character: String, group: String, order: InventoryOrder, page: Int!, sort: InventorySort, subgroup: String, tag: String, userId: Int!): [Card!]!
   inventoryPage(character: String, group: String, subgroup: String, user: Int!): InventoryPage!
   isWordValid(word: String!): Boolean!
   lastRelease: Release
@@ -268,6 +272,7 @@ type Query {
   searchGroups(search: String!): [Group!]!
   searchPrefabs(search: String!): [CardPrefab!]!
   searchSubgroups(search: String!): [Subgroup!]!
+  searchTags(search: String!): [Tag!]!
   searchTitles(search: String!): [Title!]!
   title(id: Int, title: String): Title
   user(discordId: String, id: Int, username: String): Account
@@ -304,6 +309,15 @@ type Subgroup {
   creation: DateTime
   id: Int!
   name: String!
+}
+
+type Tag {
+  account: Account!
+  accountId: Int!
+  emoji: String!
+  id: Int!
+  tag: String!
+  updatedAt: DateTime!
 }
 
 type Title {

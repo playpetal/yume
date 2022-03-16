@@ -40,8 +40,9 @@ model Account {
   rolls     RollLog[]
   gts       GTS[]
   minigames Minigame[]
-  Words     Words[]
-  Payment   Payment[]
+  words     Words[]
+  payments  Payment[]
+  tags      Tag[]
 }
 
 model UserGroup {
@@ -201,7 +202,23 @@ model Card {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
+  tag   Tag? @relation(fields: [tagId], references: [id])
+  tagId Int?
+
   rolls RollLog[]
+}
+
+model Tag {
+  id Int @id @default(autoincrement())
+
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  tag   String
+  emoji String @db.VarChar(64)
+  cards Card[]
+
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 enum Quality {
@@ -219,8 +236,8 @@ model Minigame {
   lastClaim DateTime
   pending   Boolean  @default(false)
 
-  premiumClaimed   Int      @default(0)
-  lastPremiumClaim DateTime @default("1999-07-27T00:00:00+00:00")
+  premiumClaimed   Int       @default(0)
+  lastPremiumClaim DateTime?
 }
 
 model GTS {

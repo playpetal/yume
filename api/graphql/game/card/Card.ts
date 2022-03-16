@@ -33,6 +33,65 @@ export const CardObject = objectType({
       },
     });
     t.field(Card.hasFrame);
+
+    t.field(Card.tagId);
+    t.field("tag", {
+      type: "Tag",
+      async resolve(source, _, ctx) {
+        if (!source.tagId) return null;
+
+        const tag = await ctx.db.tag.findFirst({ where: { id: source.tagId } });
+
+        if (tag && tag.accountId !== source.ownerId) {
+          await ctx.db.card.update({
+            where: { id: source.id },
+            data: { tagId: null },
+          });
+          return null;
+        }
+
+        return tag;
+      },
+    });
+  },
+});
+
+export const mutTagCard = extendType({
+  type: "Mutation",
+  definition(t) {
+    t.field("tagCard", {
+      type: nonNull("Card"),
+      args: {
+        cardId: nonNull("Int"),
+        tag: nonNull("String"),
+      },
+      async resolve(_, { cardId, tag }, ctx) {
+        const account = await auth(ctx);
+
+        const card = await ctx.db.card.findFirst({ where: { id: cardId } });
+
+        if (!card) throw new UserInputError("that card does not exist.");
+
+        if (card.ownerId !== account.id)
+          throw new AuthenticationError("that card does not belong to you.");
+
+        const targetTag = await ctx.db.tag.findFirst({
+          where: {
+            tag: { equals: tag, mode: "insensitive" },
+            accountId: account.id,
+          },
+        });
+
+        if (!targetTag)
+          throw new UserInputError("you don't have a tag by that name.");
+
+        const _card = await ctx.db.card.update({
+          data: { tagId: targetTag.id },
+          where: { id: card.id },
+        });
+        return _card;
+      },
+    });
   },
 });
 
@@ -76,10 +135,11 @@ export const Inventory = extendType({
         page: nonNull("Int"),
         sort: "InventorySort",
         order: "InventoryOrder",
+        tag: "String",
       },
       async resolve(
         _,
-        { userId, page, character, subgroup, group, sort, order },
+        { userId, page, character, subgroup, group, sort, order, tag },
         ctx
       ) {
         const orderBy: Prisma.Enumerable<Prisma.CardOrderByWithRelationInput> =
@@ -129,6 +189,11 @@ export const Inventory = extendType({
                 ? { name: { contains: subgroup, mode: "insensitive" } }
                 : undefined,
             },
+            tag: tag
+              ? {
+                  tag: { equals: tag, mode: "insensitive" },
+                }
+              : undefined,
           },
           orderBy,
           skip: page * 10 - 10,
