@@ -107,3 +107,27 @@ export const queSearchTags = extendType({
     });
   },
 });
+
+export const queGetTag = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("getTag", {
+      type: "Tag",
+      args: {
+        tag: nonNull("String"),
+      },
+      async resolve(_, { tag }, ctx) {
+        const account = await auth(ctx);
+
+        const targetTag = await ctx.db.tag.findFirst({
+          where: {
+            accountId: account.id,
+            tag: { equals: tag, mode: "insensitive" },
+          },
+        });
+
+        return targetTag;
+      },
+    });
+  },
+});

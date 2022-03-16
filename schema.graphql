@@ -255,6 +255,7 @@ type Query {
   getRandomSong(gender: GroupGender): GameSong
   getSubgroup(id: Int!): Subgroup
   getSupporterLeaderboard: [Leaderboard!]!
+  getTag(tag: String!): Tag
   getUserTitle(id: Int!): TitleInventory
   getWordsRewardLeaderboard(type: Reward!): [Leaderboard!]!
   getWordsTimeLeaderboard: [Leaderboard!]!
