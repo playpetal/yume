@@ -224,8 +224,9 @@ export const InventoryPage = extendType({
         group: "String",
         subgroup: "String",
         character: "String",
+        tag: "String",
       },
-      async resolve(_, { user, group, subgroup, character }, ctx) {
+      async resolve(_, { user, group, subgroup, character, tag }, ctx) {
         const total = await ctx.db.card.count({
           where: {
             owner: { id: user },
@@ -240,6 +241,9 @@ export const InventoryPage = extendType({
                 ? { name: { contains: subgroup, mode: "insensitive" } }
                 : undefined,
             },
+            tag: tag
+              ? { tag: { equals: tag, mode: "insensitive" } }
+              : undefined,
           },
         });
 

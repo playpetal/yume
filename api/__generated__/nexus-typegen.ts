@@ -977,6 +977,7 @@ export interface NexusGenArgTypes {
       character?: string | null; // String
       group?: string | null; // String
       subgroup?: string | null; // String
+      tag?: string | null; // String
       user: number; // Int!
     }
     isEmoji: { // args

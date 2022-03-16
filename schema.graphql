@@ -261,7 +261,7 @@ type Query {
   getWordsRewardLeaderboard(type: Reward!): [Leaderboard!]!
   getWordsTimeLeaderboard: [Leaderboard!]!
   inventory(character: String, group: String, order: InventoryOrder, page: Int!, sort: InventorySort, subgroup: String, tag: String, userId: Int!): [Card!]!
-  inventoryPage(character: String, group: String, subgroup: String, user: Int!): InventoryPage!
+  inventoryPage(character: String, group: String, subgroup: String, tag: String, user: Int!): InventoryPage!
   isEmoji(emoji: String!): Boolean!
   isWordValid(word: String!): Boolean!
   lastRelease: Release
