@@ -76,6 +76,13 @@ export const AccountObject = objectType({
         return hours;
       },
     });
+    t.field("tags", {
+      type: nonNull(list(nonNull("Tag"))),
+      async resolve(root, _, { db }) {
+        const tags = await db.tag.findMany({ where: { accountId: root.id } });
+        return tags;
+      },
+    });
   },
 });
 

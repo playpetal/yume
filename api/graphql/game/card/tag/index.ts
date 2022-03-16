@@ -84,6 +84,23 @@ export const mutCreateTag = extendType({
   },
 });
 
+export const queIsEmoji = extendType({
+  type: "Query",
+  definition(t) {
+    t.field("isEmoji", {
+      type: nonNull("Boolean"),
+      args: { emoji: nonNull("String") },
+      resolve(_, { emoji }) {
+        const isUnicode = Emoji.find(emoji);
+        if (isUnicode) return true;
+
+        const isCustomEmoji = emoji.match(/(<a?)?:\w+:(\d{18}>)?/g) !== null;
+        return isCustomEmoji;
+      },
+    });
+  },
+});
+
 export const queSearchTags = extendType({
   type: "Query",
   definition(t) {

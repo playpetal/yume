@@ -15,6 +15,7 @@ type Account {
   premiumCurrency: Int!
   stats: AccountStats
   supporterTime: Float
+  tags: [Tag!]!
   title: Title
   username: String!
   words: Words
@@ -261,6 +262,7 @@ type Query {
   getWordsTimeLeaderboard: [Leaderboard!]!
   inventory(character: String, group: String, order: InventoryOrder, page: Int!, sort: InventorySort, subgroup: String, tag: String, userId: Int!): [Card!]!
   inventoryPage(character: String, group: String, subgroup: String, user: Int!): InventoryPage!
+  isEmoji(emoji: String!): Boolean!
   isWordValid(word: String!): Boolean!
   lastRelease: Release
   payment(paymentId: String!): Payment

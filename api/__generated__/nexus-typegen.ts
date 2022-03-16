@@ -231,6 +231,7 @@ export interface NexusGenFieldTypes {
     premiumCurrency: number; // Int!
     stats: NexusGenRootTypes['AccountStats'] | null; // AccountStats
     supporterTime: number | null; // Float
+    tags: NexusGenRootTypes['Tag'][]; // [Tag!]!
     title: NexusGenRootTypes['Title'] | null; // Title
     username: string; // String!
     words: NexusGenRootTypes['Words'] | null; // Words
@@ -406,6 +407,7 @@ export interface NexusGenFieldTypes {
     getWordsTimeLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
     inventory: NexusGenRootTypes['Card'][]; // [Card!]!
     inventoryPage: NexusGenRootTypes['InventoryPage']; // InventoryPage!
+    isEmoji: boolean; // Boolean!
     isWordValid: boolean; // Boolean!
     lastRelease: NexusGenRootTypes['Release'] | null; // Release
     payment: NexusGenRootTypes['Payment'] | null; // Payment
@@ -498,6 +500,7 @@ export interface NexusGenFieldTypeNames {
     premiumCurrency: 'Int'
     stats: 'AccountStats'
     supporterTime: 'Float'
+    tags: 'Tag'
     title: 'Title'
     username: 'String'
     words: 'Words'
@@ -673,6 +676,7 @@ export interface NexusGenFieldTypeNames {
     getWordsTimeLeaderboard: 'Leaderboard'
     inventory: 'Card'
     inventoryPage: 'InventoryPage'
+    isEmoji: 'Boolean'
     isWordValid: 'Boolean'
     lastRelease: 'Release'
     payment: 'Payment'
@@ -974,6 +978,9 @@ export interface NexusGenArgTypes {
       group?: string | null; // String
       subgroup?: string | null; // String
       user: number; // Int!
+    }
+    isEmoji: { // args
+      emoji: string; // String!
     }
     isWordValid: { // args
       word: string; // String!
