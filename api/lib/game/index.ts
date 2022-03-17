@@ -41,7 +41,7 @@ export async function canClaimPremiumCurrency(
     where: { accountId: account.id },
   });
 
-  if (!stats) return 25;
+  if (!stats || !stats.lastPremiumClaim) return 25;
 
   if (isNew(stats.lastPremiumClaim, "day")) return 25;
 
