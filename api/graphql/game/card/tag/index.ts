@@ -52,6 +52,16 @@ export const mutCreateTag = extendType({
       async resolve(_, { emoji, name }, ctx) {
         const account = await auth(ctx);
 
+        const nameIsInvalid = name.match(/[^a-z0-9]/gim);
+
+        if (nameIsInvalid)
+          throw new UserInputError(
+            "`name` must only contain alphanumeric characters"
+          );
+
+        if (name.length > 15 || name.length < 1)
+          throw new UserInputError("`name` must not exceed 1-15 characters");
+
         const tagCount = await ctx.db.tag.count({
           where: { accountId: account.id },
         });
@@ -81,9 +91,6 @@ export const mutCreateTag = extendType({
               "`emoji` must be a valid Emoji 13.1 or custom discord emoji"
             );
         }
-
-        if (name.length > 15)
-          throw new UserInputError("`name` must not exceed 10 characters");
 
         const tag = await ctx.db.tag.create({
           data: { accountId: account.id, tag: name, emoji },
