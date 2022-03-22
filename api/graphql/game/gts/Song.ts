@@ -209,7 +209,8 @@ export const ClaimMinigamePetalReward = extendType({
         const account = await auth(ctx);
 
         const canClaim = await canClaimRewards(ctx);
-        if (!canClaim) throw new UserInputError("you cannot claim rewards");
+        let amount = 5;
+        if (!canClaim) amount = 1;
 
         await ctx.db.minigame.upsert({
           create: { accountId: account.id, claimed: 1, lastClaim: new Date() },
@@ -224,7 +225,7 @@ export const ClaimMinigamePetalReward = extendType({
 
         return ctx.db.account.update({
           where: { id: account.id },
-          data: { currency: { increment: 5 } },
+          data: { currency: { increment: amount } },
         });
       },
     });
@@ -307,6 +308,11 @@ export const CompleteGTS = extendType({
       async resolve(_, { reward, guesses, time }, ctx) {
         const account = await auth(ctx);
 
+        const rewards = await canClaimRewards(ctx);
+        let petalAmount = 5;
+
+        if (rewards <= 0) petalAmount = 1;
+
         await ctx.db.gTS.upsert({
           where: { accountId: account.id },
           create: {
@@ -314,15 +320,16 @@ export const CompleteGTS = extendType({
             totalGames: 1,
             totalGuesses: guesses,
             totalTime: time,
-            totalCurrency: reward === "CARD" ? 5 : undefined,
-            totalCards: reward === "PETAL" ? 1 : undefined,
+            totalCurrency: reward === "PETAL" ? petalAmount : undefined,
+            totalCards: reward === "CARD" ? 1 : undefined,
             totalPremiumCurrency: reward === "LILY" ? 1 : undefined,
           },
           update: {
             totalGames: { increment: 1 },
             totalGuesses: { increment: guesses },
             totalTime: { increment: time },
-            totalCurrency: reward === "PETAL" ? { increment: 5 } : undefined,
+            totalCurrency:
+              reward === "PETAL" ? { increment: petalAmount } : undefined,
             totalCards: reward === "CARD" ? { increment: 1 } : undefined,
             totalPremiumCurrency:
               reward === "LILY" ? { increment: 1 } : undefined,
