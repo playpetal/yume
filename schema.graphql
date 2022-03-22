@@ -199,6 +199,7 @@ type Mutation {
   revokeTitle(accountId: Int!, titleId: Int!): Int!
   rollCards(amount: Int!, gender: Gender): [Card!]!
   setBio(bio: String): Account!
+  setFrame(cardId: Int!): Card!
   setUserTitle(id: Int!): Account!
   tagCard(cardId: Int!, tag: String!): Card!
   unassignGroup(accountId: Int!, groupId: Int!): Int!

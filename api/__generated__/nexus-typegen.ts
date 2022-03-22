@@ -362,6 +362,7 @@ export interface NexusGenFieldTypes {
     revokeTitle: number; // Int!
     rollCards: NexusGenRootTypes['Card'][]; // [Card!]!
     setBio: NexusGenRootTypes['Account']; // Account!
+    setFrame: NexusGenRootTypes['Card']; // Card!
     setUserTitle: NexusGenRootTypes['Account']; // Account!
     tagCard: NexusGenRootTypes['Card']; // Card!
     unassignGroup: number; // Int!
@@ -631,6 +632,7 @@ export interface NexusGenFieldTypeNames {
     revokeTitle: 'Int'
     rollCards: 'Card'
     setBio: 'Account'
+    setFrame: 'Card'
     setUserTitle: 'Account'
     tagCard: 'Card'
     unassignGroup: 'Int'
@@ -879,6 +881,9 @@ export interface NexusGenArgTypes {
     }
     setBio: { // args
       bio?: string | null; // String
+    }
+    setFrame: { // args
+      cardId: number; // Int!
     }
     setUserTitle: { // args
       id: number; // Int!
