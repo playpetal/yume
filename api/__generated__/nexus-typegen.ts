@@ -355,6 +355,7 @@ export interface NexusGenFieldTypes {
     deleteSubgroup: number; // Int!
     deleteTag: NexusGenRootTypes['Tag']; // Tag!
     editSong: NexusGenRootTypes['Song']; // Song!
+    editTag: NexusGenRootTypes['Tag']; // Tag!
     gift: boolean; // Boolean!
     grantAllTitle: number; // Int!
     grantTitle: NexusGenRootTypes['TitleInventory']; // TitleInventory!
@@ -627,6 +628,7 @@ export interface NexusGenFieldTypeNames {
     deleteSubgroup: 'Int'
     deleteTag: 'Tag'
     editSong: 'Song'
+    editTag: 'Tag'
     gift: 'Boolean'
     grantAllTitle: 'Int'
     grantTitle: 'TitleInventory'
@@ -858,6 +860,11 @@ export interface NexusGenArgTypes {
       soloistId?: number | null; // Int
       songId: number; // Int!
       title?: string | null; // String
+    }
+    editTag: { // args
+      emoji?: string | null; // String
+      name?: string | null; // String
+      tag: string; // String!
     }
     gift: { // args
       cardIds?: number[] | null; // [Int!]
