@@ -190,6 +190,7 @@ type Mutation {
   deleteGroup(id: Int!): Int!
   deleteSong(songId: Int!): Int!
   deleteSubgroup(id: Int!): Int!
+  deleteTag(tag: String!): Tag!
   editSong(groupId: Int, releaseId: Int, soloistId: Int, songId: Int!, title: String): Song!
   gift(cardIds: [Int!], lilies: Int, petals: Int, recipientId: Int!): Boolean!
   grantAllTitle(titleId: Int!): Int!
@@ -318,6 +319,7 @@ type Subgroup {
 type Tag {
   account: Account!
   accountId: Int!
+  cardCount: Int!
   emoji: String!
   id: Int!
   tag: String!

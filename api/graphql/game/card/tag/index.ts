@@ -4,6 +4,8 @@ import { Tag } from "nexus-prisma";
 import { auth } from "../../../../lib/Auth";
 import Emoji from "node-emoji";
 
+export * from "./mutation";
+
 export const objTag = objectType({
   name: Tag.$name,
   description: Tag.$description,
@@ -26,6 +28,15 @@ export const objTag = objectType({
     t.field(Tag.tag);
 
     t.field(Tag.updatedAt);
+
+    t.field("cardCount", {
+      type: nonNull("Int"),
+      async resolve(root, _, ctx) {
+        const count = await ctx.db.card.count({ where: { tagId: root.id } });
+
+        return count;
+      },
+    });
   },
 });
 

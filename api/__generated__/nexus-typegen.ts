@@ -353,6 +353,7 @@ export interface NexusGenFieldTypes {
     deleteGroup: number; // Int!
     deleteSong: number; // Int!
     deleteSubgroup: number; // Int!
+    deleteTag: NexusGenRootTypes['Tag']; // Tag!
     editSong: NexusGenRootTypes['Song']; // Song!
     gift: boolean; // Boolean!
     grantAllTitle: number; // Int!
@@ -452,6 +453,7 @@ export interface NexusGenFieldTypes {
   Tag: { // field return type
     account: NexusGenRootTypes['Account']; // Account!
     accountId: number; // Int!
+    cardCount: number; // Int!
     emoji: string; // String!
     id: number; // Int!
     tag: string; // String!
@@ -623,6 +625,7 @@ export interface NexusGenFieldTypeNames {
     deleteGroup: 'Int'
     deleteSong: 'Int'
     deleteSubgroup: 'Int'
+    deleteTag: 'Tag'
     editSong: 'Song'
     gift: 'Boolean'
     grantAllTitle: 'Int'
@@ -722,6 +725,7 @@ export interface NexusGenFieldTypeNames {
   Tag: { // field return type name
     account: 'Account'
     accountId: 'Int'
+    cardCount: 'Int'
     emoji: 'String'
     id: 'Int'
     tag: 'String'
@@ -844,6 +848,9 @@ export interface NexusGenArgTypes {
     }
     deleteSubgroup: { // args
       id: number; // Int!
+    }
+    deleteTag: { // args
+      tag: string; // String!
     }
     editSong: { // args
       groupId?: number | null; // Int
