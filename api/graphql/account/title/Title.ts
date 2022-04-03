@@ -120,7 +120,7 @@ export const CreateTitle = extendType({
       type: nonNull("Title"),
       args: { title: nonNull("String"), description: "String" },
       async resolve(_, { title, description }, ctx) {
-        await auth(ctx, { requiredGroups: ["Developer"] });
+        await auth(ctx, { requiredFlags: ["DEVELOPER"] });
 
         const titleExists = await ctx.db.title.findFirst({ where: { title } });
         if (titleExists) throw new UserInputError("that title already exists.");
@@ -138,7 +138,7 @@ export const GrantTitle = extendType({
       type: nonNull("TitleInventory"),
       args: { accountId: nonNull("Int"), titleId: nonNull("Int") },
       async resolve(_, { accountId, titleId }, ctx) {
-        await auth(ctx, { requiredGroups: ["Developer"] });
+        await auth(ctx, { requiredFlags: ["DEVELOPER"] });
 
         return await ctx.db.titleInventory.create({
           data: { accountId: accountId, titleId },
@@ -155,7 +155,7 @@ export const GrantAllTitle = extendType({
       type: nonNull("Int"),
       args: { titleId: nonNull("Int") },
       async resolve(_, { titleId }, ctx) {
-        await auth(ctx, { requiredGroups: ["Developer"] });
+        await auth(ctx, { requiredFlags: ["DEVELOPER"] });
 
         const ids = await ctx.db.account.findMany({
           where: { titles: { none: { titleId } } },
@@ -181,7 +181,7 @@ export const RevokeTitle = extendType({
       type: nonNull("Int"),
       args: { accountId: nonNull("Int"), titleId: nonNull("Int") },
       async resolve(_, { accountId, titleId }, ctx) {
-        await auth(ctx, { requiredGroups: ["Developer"] });
+        await auth(ctx, { requiredFlags: ["DEVELOPER"] });
 
         const title = await ctx.db.titleInventory.findFirst({
           where: { accountId, titleId },
@@ -207,7 +207,7 @@ export const RevokeAllTitle = extendType({
       type: nonNull("Int"),
       args: { titleId: nonNull("Int") },
       async resolve(_, { titleId }, ctx) {
-        await auth(ctx, { requiredGroups: ["Developer"] });
+        await auth(ctx, { requiredFlags: ["DEVELOPER"] });
 
         const data = await ctx.db.titleInventory.findMany({
           where: { titleId },

@@ -60,7 +60,7 @@ export const CreatePrefabMutation = extendType({
         rarity: "Int",
       },
       async resolve(_, args, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         let releaseId = args.releaseId;
 
@@ -116,7 +116,7 @@ export const UpdatePrefabMutation = extendType({
         },
         ctx
       ) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         return ctx.db.cardPrefab.update({
           where: { id: prefabId },

@@ -23,7 +23,7 @@ export const CreateReleaseMutation = extendType({
     t.field("createRelease", {
       type: nonNull("Release"),
       async resolve(_, __, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const release = await ctx.db.release.create({ data: {} });
 
@@ -43,7 +43,7 @@ export const UpdateReleaseMutation = extendType({
         droppable: "Boolean",
       },
       async resolve(_, { id, droppable }, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const release = await ctx.db.release.update({
           where: { id },

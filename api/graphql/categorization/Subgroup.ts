@@ -19,7 +19,7 @@ export const CreateSubgroupMutation = extendType({
       type: nonNull("Subgroup"),
       args: { name: nonNull("String"), creation: "DateTime" },
       async resolve(_, args, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const subgroup = await ctx.db.subgroup.create({ data: args });
 
@@ -36,7 +36,7 @@ export const DeleteSubgroupMutation = extendType({
       type: nonNull("Int"),
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const subgroup = await ctx.db.subgroup.delete({ where: args });
 
@@ -53,7 +53,7 @@ export const UpdateSubgroupMutation = extendType({
       type: nonNull("Subgroup"),
       args: { id: nonNull("Int"), name: "String", creation: "DateTime" },
       async resolve(_, args, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const subgroup = await ctx.db.subgroup.update({
           where: { id: args.id },

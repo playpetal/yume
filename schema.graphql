@@ -9,7 +9,6 @@ type Account {
   currency: Int!
   discordId: String!
   flags: Int!
-  groups: [AccountUserGroup!]!
   gts: GTS
   id: Int!
   premiumCurrency: Int!
@@ -25,14 +24,6 @@ type Account {
 type AccountStats {
   cardCount: Int!
   rollCount: Int!
-}
-
-type AccountUserGroup {
-  account: Account
-  accountId: Int!
-  group: UserGroup
-  groupId: Int!
-  id: Int!
 }
 
 type Alias {
@@ -92,6 +83,13 @@ type DiscordUser {
   locale: String
   mfa_enabled: Boolean
   username: String!
+}
+
+"""Account Flags"""
+enum Flag {
+  DEVELOPER
+  PUBLIC_SUPPORTER
+  RELEASE_MANAGER
 }
 
 """GTS Statistics"""
@@ -165,7 +163,6 @@ type Leaderboard {
 }
 
 type Mutation {
-  assignGroup(accountId: Int!, groupId: Int!): AccountUserGroup!
   burnCard(cardId: Int!): Int!
   changeCardColor(cardId: Int!, color: Int!): Card!
   claimMinigameCardReward: [Card!]!
@@ -184,7 +181,6 @@ type Mutation {
   createSubgroup(creation: DateTime, name: String!): Subgroup!
   createTag(emoji: String!, name: String!): Tag!
   createTitle(description: String, title: String!): Title!
-  createUserGroup(name: String!): UserGroup!
   deleteAlias(id: Int!): Int!
   deleteCharacter(id: Int!): Int!
   deleteGroup(id: Int!): Int!
@@ -204,8 +200,8 @@ type Mutation {
   setFrame(cardId: Int!): Card!
   setUserTitle(id: Int!): Account!
   tagCard(cardId: Int!, tag: String!): Card!
+  toggleFlag(accountId: Int!, flag: Flag!): Account!
   togglePublicSupporter: Account!
-  unassignGroup(accountId: Int!, groupId: Int!): Int!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
   updateGroup(creation: DateTime, gender: GroupGender, id: Int!, name: String): Group!
@@ -282,7 +278,6 @@ type Query {
   searchTitles(search: String!): [Title!]!
   title(id: Int, title: String): Title
   user(discordId: String, id: Int, username: String): Account
-  userGroups(exact: String, search: String): [UserGroup!]!
   userTitles(accountId: Int!, search: String): [TitleInventory!]!
   word: String!
 }
@@ -341,12 +336,6 @@ type TitleInventory {
   id: Int!
   title: Title!
   titleId: Int!
-}
-
-type UserGroup {
-  id: Int!
-  members: [AccountUserGroup!]!
-  name: String!
 }
 
 """Words Minigame Statistics"""

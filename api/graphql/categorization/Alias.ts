@@ -32,7 +32,7 @@ export const CreateAliasMutation = extendType({
         alias: nonNull("String"),
       },
       async resolve(_, args, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const alias = await ctx.db.alias.create({ data: args });
 
@@ -49,7 +49,7 @@ export const DeleteAliasMutation = extendType({
       type: nonNull("Int"),
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const alias = await ctx.db.alias.delete({ where: args });
 
@@ -66,7 +66,7 @@ export const UpdateAliasMutation = extendType({
       type: nonNull("Alias"),
       args: { id: nonNull("Int"), groupId: "Int", alias: "String" },
       async resolve(_, args, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const alias = await ctx.db.alias.update({
           where: { id: args.id },

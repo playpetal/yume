@@ -1,4 +1,4 @@
-import { extendType, list, nonNull, objectType } from "nexus";
+import { enumType, extendType, list, nonNull, objectType } from "nexus";
 import { Account } from "nexus-prisma";
 import { UserInputError, AuthenticationError } from "apollo-server";
 import jwt from "jsonwebtoken";
@@ -49,14 +49,6 @@ export const AccountObject = objectType({
         });
 
         return inventory?.title || null;
-      },
-    });
-    t.field("groups", {
-      type: nonNull(list(nonNull("AccountUserGroup"))),
-      resolve(root, __, ctx) {
-        return ctx.db.accountUserGroup.findMany({
-          where: { accountId: root.id },
-        });
       },
     });
     t.field("supporterTime", {
@@ -121,6 +113,16 @@ export const AccountStatsObject = objectType({
     t.field("cardCount", { type: nonNull("Int") });
     t.field("rollCount", { type: nonNull("Int") });
   },
+});
+
+export const Flag = enumType({
+  name: "Flag",
+  description: "Account Flags",
+  members: [
+    { name: "DEVELOPER" },
+    { name: "RELEASE_MANAGER" },
+    { name: "PUBLIC_SUPPORTER" },
+  ],
 });
 
 export const CreateAccountMutation = extendType({

@@ -34,7 +34,7 @@ export const CreateGroupMutation = extendType({
         gender: "GroupGender",
       },
       async resolve(_, args, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const group = await ctx.db.group.create({
           data: {
@@ -57,7 +57,7 @@ export const DeleteGroupMutation = extendType({
       type: nonNull("Int"),
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const group = await ctx.db.group.delete({ where: { id: args.id } });
 
@@ -79,7 +79,7 @@ export const UpdateGroupMutation = extendType({
         gender: "GroupGender",
       },
       async resolve(_, args, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const group = await ctx.db.group.update({
           where: { id: args.id },

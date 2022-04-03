@@ -70,7 +70,7 @@ export const CreateSong = extendType({
       },
       async resolve(_, { title, url, groupId, soloistId, releaseId }, ctx) {
         try {
-          await auth(ctx, { requiredGroups: ["Release Manager"] });
+          await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
           if (!releaseId) {
             const lastRelease = await ctx.db.release.findFirst({
@@ -113,7 +113,7 @@ export const EditSong = extendType({
         releaseId: "Int",
       },
       async resolve(_, { songId, title, groupId, soloistId, releaseId }, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const song = await ctx.db.song.findFirst({ where: { id: songId } });
 
@@ -142,7 +142,7 @@ export const DeleteSong = extendType({
       type: nonNull("Int"),
       args: { songId: nonNull("Int") },
       async resolve(_, { songId }, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const song = await ctx.db.song.findFirst({ where: { id: songId } });
 

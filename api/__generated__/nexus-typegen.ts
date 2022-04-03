@@ -32,6 +32,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  Flag: "DEVELOPER" | "PUBLIC_SUPPORTER" | "RELEASE_MANAGER"
   Gender: "FEMALE" | "MALE" | "NONBINARY"
   GroupGender: "COED" | "FEMALE" | "MALE"
   InventoryOrder: "ASC" | "DESC"
@@ -65,11 +66,6 @@ export interface NexusGenObjects {
   AccountStats: { // root type
     cardCount: number; // Int!
     rollCount: number; // Int!
-  }
-  AccountUserGroup: { // root type
-    accountId: number; // Int!
-    groupId: number; // Int!
-    id: number; // Int!
   }
   Alias: { // root type
     alias: string; // String!
@@ -192,10 +188,6 @@ export interface NexusGenObjects {
     id: number; // Int!
     titleId: number; // Int!
   }
-  UserGroup: { // root type
-    id: number; // Int!
-    name: string; // String!
-  }
   Words: { // root type
     accountId: number; // Int!
     totalCards: number; // Int!
@@ -225,7 +217,6 @@ export interface NexusGenFieldTypes {
     currency: number; // Int!
     discordId: string; // String!
     flags: number; // Int!
-    groups: NexusGenRootTypes['AccountUserGroup'][]; // [AccountUserGroup!]!
     gts: NexusGenRootTypes['GTS'] | null; // GTS
     id: number; // Int!
     premiumCurrency: number; // Int!
@@ -239,13 +230,6 @@ export interface NexusGenFieldTypes {
   AccountStats: { // field return type
     cardCount: number; // Int!
     rollCount: number; // Int!
-  }
-  AccountUserGroup: { // field return type
-    account: NexusGenRootTypes['Account'] | null; // Account
-    accountId: number; // Int!
-    group: NexusGenRootTypes['UserGroup'] | null; // UserGroup
-    groupId: number; // Int!
-    id: number; // Int!
   }
   Alias: { // field return type
     alias: string; // String!
@@ -328,7 +312,6 @@ export interface NexusGenFieldTypes {
     value: number; // Float!
   }
   Mutation: { // field return type
-    assignGroup: NexusGenRootTypes['AccountUserGroup']; // AccountUserGroup!
     burnCard: number; // Int!
     changeCardColor: NexusGenRootTypes['Card']; // Card!
     claimMinigameCardReward: NexusGenRootTypes['Card'][]; // [Card!]!
@@ -347,7 +330,6 @@ export interface NexusGenFieldTypes {
     createSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
     createTag: NexusGenRootTypes['Tag']; // Tag!
     createTitle: NexusGenRootTypes['Title']; // Title!
-    createUserGroup: NexusGenRootTypes['UserGroup']; // UserGroup!
     deleteAlias: number; // Int!
     deleteCharacter: number; // Int!
     deleteGroup: number; // Int!
@@ -367,8 +349,8 @@ export interface NexusGenFieldTypes {
     setFrame: NexusGenRootTypes['Card']; // Card!
     setUserTitle: NexusGenRootTypes['Account']; // Account!
     tagCard: NexusGenRootTypes['Card']; // Card!
+    toggleFlag: NexusGenRootTypes['Account']; // Account!
     togglePublicSupporter: NexusGenRootTypes['Account']; // Account!
-    unassignGroup: number; // Int!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
     updateCharacter: NexusGenRootTypes['Character']; // Character!
     updateGroup: NexusGenRootTypes['Group']; // Group!
@@ -427,7 +409,6 @@ export interface NexusGenFieldTypes {
     searchTitles: NexusGenRootTypes['Title'][]; // [Title!]!
     title: NexusGenRootTypes['Title'] | null; // Title
     user: NexusGenRootTypes['Account'] | null; // Account
-    userGroups: NexusGenRootTypes['UserGroup'][]; // [UserGroup!]!
     userTitles: NexusGenRootTypes['TitleInventory'][]; // [TitleInventory!]!
     word: string; // String!
   }
@@ -474,11 +455,6 @@ export interface NexusGenFieldTypes {
     title: NexusGenRootTypes['Title']; // Title!
     titleId: number; // Int!
   }
-  UserGroup: { // field return type
-    id: number; // Int!
-    members: NexusGenRootTypes['AccountUserGroup'][]; // [AccountUserGroup!]!
-    name: string; // String!
-  }
   Words: { // field return type
     accountId: number; // Int!
     totalCards: number; // Int!
@@ -498,7 +474,6 @@ export interface NexusGenFieldTypeNames {
     currency: 'Int'
     discordId: 'String'
     flags: 'Int'
-    groups: 'AccountUserGroup'
     gts: 'GTS'
     id: 'Int'
     premiumCurrency: 'Int'
@@ -512,13 +487,6 @@ export interface NexusGenFieldTypeNames {
   AccountStats: { // field return type name
     cardCount: 'Int'
     rollCount: 'Int'
-  }
-  AccountUserGroup: { // field return type name
-    account: 'Account'
-    accountId: 'Int'
-    group: 'UserGroup'
-    groupId: 'Int'
-    id: 'Int'
   }
   Alias: { // field return type name
     alias: 'String'
@@ -601,7 +569,6 @@ export interface NexusGenFieldTypeNames {
     value: 'Float'
   }
   Mutation: { // field return type name
-    assignGroup: 'AccountUserGroup'
     burnCard: 'Int'
     changeCardColor: 'Card'
     claimMinigameCardReward: 'Card'
@@ -620,7 +587,6 @@ export interface NexusGenFieldTypeNames {
     createSubgroup: 'Subgroup'
     createTag: 'Tag'
     createTitle: 'Title'
-    createUserGroup: 'UserGroup'
     deleteAlias: 'Int'
     deleteCharacter: 'Int'
     deleteGroup: 'Int'
@@ -640,8 +606,8 @@ export interface NexusGenFieldTypeNames {
     setFrame: 'Card'
     setUserTitle: 'Account'
     tagCard: 'Card'
+    toggleFlag: 'Account'
     togglePublicSupporter: 'Account'
-    unassignGroup: 'Int'
     updateAlias: 'Alias'
     updateCharacter: 'Character'
     updateGroup: 'Group'
@@ -700,7 +666,6 @@ export interface NexusGenFieldTypeNames {
     searchTitles: 'Title'
     title: 'Title'
     user: 'Account'
-    userGroups: 'UserGroup'
     userTitles: 'TitleInventory'
     word: 'String'
   }
@@ -747,11 +712,6 @@ export interface NexusGenFieldTypeNames {
     title: 'Title'
     titleId: 'Int'
   }
-  UserGroup: { // field return type name
-    id: 'Int'
-    members: 'AccountUserGroup'
-    name: 'String'
-  }
   Words: { // field return type name
     accountId: 'Int'
     totalCards: 'Int'
@@ -765,10 +725,6 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
-    assignGroup: { // args
-      accountId: number; // Int!
-      groupId: number; // Int!
-    }
     burnCard: { // args
       cardId: number; // Int!
     }
@@ -832,9 +788,6 @@ export interface NexusGenArgTypes {
     createTitle: { // args
       description?: string | null; // String
       title: string; // String!
-    }
-    createUserGroup: { // args
-      name: string; // String!
     }
     deleteAlias: { // args
       id: number; // Int!
@@ -906,9 +859,9 @@ export interface NexusGenArgTypes {
       cardId: number; // Int!
       tag: string; // String!
     }
-    unassignGroup: { // args
+    toggleFlag: { // args
       accountId: number; // Int!
-      groupId: number; // Int!
+      flag: NexusGenEnums['Flag']; // Flag!
     }
     updateAlias: { // args
       alias?: string | null; // String
@@ -1044,10 +997,6 @@ export interface NexusGenArgTypes {
       discordId?: string | null; // String
       id?: number | null; // Int
       username?: string | null; // String
-    }
-    userGroups: { // args
-      exact?: string | null; // String
-      search?: string | null; // String
     }
     userTitles: { // args
       accountId: number; // Int!

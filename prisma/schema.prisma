@@ -30,8 +30,6 @@ model Account {
   createdTitles TitleInventory[] @relation("InventoryCreatedByAccount")
   titles        TitleInventory[] @relation("InventoryAccount")
 
-  userGroups AccountUserGroup[]
-
   currency        Int @default(0)
   premiumCurrency Int @default(0)
   paidCurrency    Int @default(0)
@@ -43,24 +41,6 @@ model Account {
   words     Words[]
   payments  Payment[]
   tags      Tag[]
-}
-
-model UserGroup {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-
-  members AccountUserGroup[]
-}
-
-model AccountUserGroup {
-  id Int @id @default(autoincrement())
-
-  account   Account @relation(fields: [accountId], references: [id])
-  accountId Int
-
-  group   UserGroup @relation(fields: [groupId], references: [id])
-  groupId Int
-
 }
 
 /// Broad collections of cards typically encompassing many subgroups

@@ -1,6 +1,6 @@
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../lib/Auth";
-import { FLAGS } from "../../../lib/flags";
+import { toggleFlag } from "../../../lib/flags";
 
 export const togglePublicSupporter = extendType({
   type: "Mutation",
@@ -10,13 +10,7 @@ export const togglePublicSupporter = extendType({
       async resolve(_, __, ctx) {
         const account = await auth(ctx);
 
-        let flags = (account.flags ^= FLAGS.PUBLIC_SUPPORTER);
-
-        const _account = await ctx.db.account.update({
-          where: { id: account.id },
-          data: { flags },
-        });
-
+        const _account = await toggleFlag("PUBLIC_SUPPORTER", account, ctx);
         return _account;
       },
     });

@@ -20,7 +20,7 @@ export const CreateCharacterMutation = extendType({
       type: nonNull("Character"),
       args: { name: nonNull("String"), birthday: "DateTime", gender: "Gender" },
       async resolve(_, args, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const character = await ctx.db.character.create({
           data: {
@@ -43,7 +43,7 @@ export const DeleteCharacterMutation = extendType({
       type: nonNull("Int"),
       args: { id: nonNull("Int") },
       async resolve(_, args, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const character = await ctx.db.character.delete({
           where: { id: args.id },
@@ -67,7 +67,7 @@ export const UpdateCharacterMutation = extendType({
         gender: "Gender",
       },
       async resolve(_, args, ctx) {
-        await auth(ctx, { requiredGroups: ["Release Manager"] });
+        await auth(ctx, { requiredFlags: ["RELEASE_MANAGER"] });
 
         const character = await ctx.db.character.update({
           where: { id: args.id },

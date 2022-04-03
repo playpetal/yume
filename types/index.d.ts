@@ -1,3 +1,3 @@
 declare module "yume" {
-  export type UserGroup = "Developer" | "Release Manager";
+  export type Flag = keyof typeof import("../api/lib/flags").FLAGS;
 }

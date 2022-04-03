@@ -1,12 +1,13 @@
 import { Account } from "@prisma/client";
 import { AuthenticationError } from "apollo-server";
 import jwt from "jsonwebtoken";
-import { UserGroup } from "yume";
+import { Flag } from "yume";
 import { Context } from "../context";
+import { FLAGS } from "./flags";
 
 export async function auth(
   ctx: Context,
-  options?: { requiredGroups?: UserGroup[] }
+  options?: { requiredFlags?: Flag[] }
 ): Promise<Account> {
   if (!ctx.req.headers.authorization)
     throw new AuthenticationError("you must be signed in to use that.");
@@ -19,20 +20,21 @@ export async function auth(
 
     const account = await ctx.db.account.findFirst({
       where: { discordId: id },
-      include: { userGroups: { include: { group: true } } },
     });
 
     if (!account) throw new AuthenticationError("invalid token");
 
     if (!options) return account;
 
-    if (options.requiredGroups) {
-      const groups = account.userGroups.map((g) => g.group.name);
+    if (options.requiredFlags) {
+      const flags = Number(account.flags.toString(2));
 
-      if (groups.includes("Developer")) return account;
+      if (flags & (1 << FLAGS.DEVELOPER)) return account;
 
-      for (let group of options.requiredGroups) {
-        if (!groups.find((g) => g === group))
+      for (let flag of options.requiredFlags) {
+        const bit = FLAGS[flag];
+
+        if (!(flags & (1 << bit)))
           throw new AuthenticationError("you are not authorized to do that.");
       }
     }
