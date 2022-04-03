@@ -23,3 +23,8 @@ export async function toggleFlag(
 
   return _account;
 }
+
+export function hasFlag(flag: keyof typeof FLAGS, flags: number) {
+  const binary = Number(flags.toString(2));
+  return binary & (1 << FLAGS[flag]);
+}

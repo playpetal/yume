@@ -1,4 +1,5 @@
 import { extendType, list, nonNull, objectType } from "nexus";
+import { hasFlag } from "../../../lib/flags";
 
 export const Leaderboard = objectType({
   name: "Leaderboard",
@@ -134,8 +135,7 @@ export const GetSupporterLeaderboard = extendType({
         let supporters: { accountId: number; value: number }[] = [];
 
         for (let payment of payments) {
-          const flags = Number(payment.account.flags.toString(2));
-          if (!(flags & (flags << 0))) continue;
+          if (!hasFlag("PUBLIC_SUPPORTER", payment.account.flags)) continue;
 
           const exists = supporters.find(
             (d) => d.accountId === payment.accountId
