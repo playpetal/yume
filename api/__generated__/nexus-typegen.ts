@@ -367,10 +367,10 @@ export interface NexusGenFieldTypes {
     setFrame: NexusGenRootTypes['Card']; // Card!
     setUserTitle: NexusGenRootTypes['Account']; // Account!
     tagCard: NexusGenRootTypes['Card']; // Card!
+    togglePublicSupporter: NexusGenRootTypes['Account']; // Account!
     unassignGroup: number; // Int!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
     updateCharacter: NexusGenRootTypes['Character']; // Character!
-    updateFlags: number; // Int!
     updateGroup: NexusGenRootTypes['Group']; // Group!
     updatePrefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
     updateRelease: NexusGenRootTypes['Release']; // Release!
@@ -640,10 +640,10 @@ export interface NexusGenFieldTypeNames {
     setFrame: 'Card'
     setUserTitle: 'Account'
     tagCard: 'Card'
+    togglePublicSupporter: 'Account'
     unassignGroup: 'Int'
     updateAlias: 'Alias'
     updateCharacter: 'Character'
-    updateFlags: 'Int'
     updateGroup: 'Group'
     updatePrefab: 'CardPrefab'
     updateRelease: 'Release'
@@ -920,9 +920,6 @@ export interface NexusGenArgTypes {
       gender?: NexusGenEnums['Gender'] | null; // Gender
       id: number; // Int!
       name?: string | null; // String
-    }
-    updateFlags: { // args
-      flags: number; // Int!
     }
     updateGroup: { // args
       creation?: NexusGenScalars['DateTime'] | null; // DateTime

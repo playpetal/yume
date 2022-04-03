@@ -369,22 +369,3 @@ export const CanClaimPremiumRewards = extendType({
     });
   },
 });
-
-export const UpdateFlags = extendType({
-  type: "Mutation",
-  definition(t) {
-    t.field("updateFlags", {
-      type: nonNull("Int"),
-      args: { flags: nonNull("Int") },
-      async resolve(_, { flags }, ctx) {
-        const account = await auth(ctx);
-
-        const _account = await ctx.db.account.update({
-          data: { flags },
-          where: { id: account.id },
-        });
-        return _account.flags;
-      },
-    });
-  },
-});
