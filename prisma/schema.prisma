@@ -34,13 +34,14 @@ model Account {
   premiumCurrency Int @default(0)
   paidCurrency    Int @default(0)
 
-  cards     Card[]
-  rolls     RollLog[]
-  gts       GTS[]
-  minigames Minigame[]
-  words     Words[]
-  payments  Payment[]
-  tags      Tag[]
+  cards         Card[]
+  rolls         RollLog[]
+  gts           GTS[]
+  minigames     Minigame[]
+  words         Words[]
+  payments      Payment[]
+  tags          Tag[]
+  minigameStats MinigameStats[]
 }
 
 /// Broad collections of cards typically encompassing many subgroups
@@ -209,6 +210,12 @@ enum Quality {
   BLOOM
 }
 
+enum MinigameType {
+  GTS
+  GUESS_CHARACTER
+  WORDS
+}
+
 model Minigame {
   account   Account  @relation(fields: [accountId], references: [id])
   accountId Int      @id @unique
@@ -218,6 +225,22 @@ model Minigame {
 
   premiumClaimed   Int       @default(0)
   lastPremiumClaim DateTime?
+}
+
+model MinigameStats {
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  type                 MinigameType
+  totalGames           Int          @default(0)
+  totalAttempts        Int          @default(0)
+  totalTime            Int          @default(0)
+  totalCurrency        Int          @default(0)
+  totalPremiumCurrency Int          @default(0)
+  totalCards           Int          @default(0)
+
+  @@id([accountId, type])
+  @@unique([accountId, type])
 }
 
 model GTS {

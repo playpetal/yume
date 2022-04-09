@@ -1,6 +1,5 @@
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../lib/Auth";
-import { canClaimRewards } from "../../../lib/game";
 import { getWord, wordIsValid } from "../../../lib/game/words";
 
 export const GetWord = extendType({
@@ -26,53 +25,6 @@ export const WordIsValid = extendType({
       },
       async resolve(_, { word }) {
         return wordIsValid(word);
-      },
-    });
-  },
-});
-
-export const CompleteWords = extendType({
-  type: "Mutation",
-  definition(t) {
-    t.field("completeWords", {
-      type: nonNull("Boolean"),
-      args: {
-        reward: nonNull("Reward"),
-        words: nonNull("Int"),
-        time: nonNull("Int"),
-      },
-      async resolve(_, { reward, words, time }, ctx) {
-        const account = await auth(ctx);
-
-        const rewards = await canClaimRewards(ctx);
-        let petalAmount = 5;
-
-        if (rewards <= 0) petalAmount = 1;
-
-        await ctx.db.words.upsert({
-          where: { accountId: account.id },
-          create: {
-            accountId: account.id,
-            totalGames: 1,
-            totalWords: words,
-            totalTime: time,
-            totalCurrency: reward === "PETAL" ? petalAmount : undefined,
-            totalCards: reward === "CARD" ? 1 : undefined,
-            totalPremiumCurrency: reward === "LILY" ? 1 : undefined,
-          },
-          update: {
-            totalGames: { increment: 1 },
-            totalWords: { increment: words },
-            totalTime: { increment: time },
-            totalCurrency:
-              reward === "PETAL" ? { increment: petalAmount } : undefined,
-            totalCards: reward === "CARD" ? { increment: 1 } : undefined,
-            totalPremiumCurrency:
-              reward === "LILY" ? { increment: 1 } : undefined,
-          },
-        });
-
-        return true;
       },
     });
   },

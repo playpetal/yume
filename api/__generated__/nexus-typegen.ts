@@ -37,6 +37,7 @@ export interface NexusGenEnums {
   GroupGender: "COED" | "FEMALE" | "MALE"
   InventoryOrder: "ASC" | "DESC"
   InventorySort: "CHARACTER" | "CODE" | "GROUP" | "ISSUE" | "STAGE" | "SUBGROUP"
+  MinigameType: "GTS" | "GUESS_CHARACTER" | "WORDS"
   ProductType: "ALPHA_TITLE" | "BETA_TITLE" | "PAID_CURRENCY" | "SIGMA_TITLE"
   Quality: "BLOOM" | "BUD" | "FLOWER" | "SEED" | "SPROUT"
   Reward: "CARD" | "LILY" | "PETAL"
@@ -299,9 +300,8 @@ export interface NexusGenFieldTypes {
     claimMinigameCardReward: NexusGenRootTypes['Card'][]; // [Card!]!
     claimMinigameLilyReward: NexusGenRootTypes['Account']; // Account!
     claimMinigamePetalReward: NexusGenRootTypes['Account']; // Account!
-    completeGts: boolean; // Boolean!
+    completeMinigame: boolean; // Boolean!
     completeTransaction: boolean; // Boolean!
-    completeWords: boolean; // Boolean!
     createAccount: NexusGenRootTypes['Account']; // Account!
     createAlias: NexusGenRootTypes['Alias']; // Alias!
     createCharacter: NexusGenRootTypes['Character']; // Character!
@@ -548,9 +548,8 @@ export interface NexusGenFieldTypeNames {
     claimMinigameCardReward: 'Card'
     claimMinigameLilyReward: 'Account'
     claimMinigamePetalReward: 'Account'
-    completeGts: 'Boolean'
+    completeMinigame: 'Boolean'
     completeTransaction: 'Boolean'
-    completeWords: 'Boolean'
     createAccount: 'Account'
     createAlias: 'Alias'
     createCharacter: 'Character'
@@ -707,18 +706,14 @@ export interface NexusGenArgTypes {
       cardId: number; // Int!
       color: number; // Int!
     }
-    completeGts: { // args
+    completeMinigame: { // args
       guesses: number; // Int!
       reward: NexusGenEnums['Reward']; // Reward!
       time: number; // Int!
+      type: NexusGenEnums['MinigameType']; // MinigameType!
     }
     completeTransaction: { // args
       token: string; // String!
-    }
-    completeWords: { // args
-      reward: NexusGenEnums['Reward']; // Reward!
-      time: number; // Int!
-      words: number; // Int!
     }
     createAccount: { // args
       username: string; // String!

@@ -151,15 +151,20 @@ type Leaderboard {
   value: Float!
 }
 
+enum MinigameType {
+  GTS
+  GUESS_CHARACTER
+  WORDS
+}
+
 type Mutation {
   burnCard(cardId: Int!): Int!
   changeCardColor(cardId: Int!, color: Int!): Card!
   claimMinigameCardReward: [Card!]!
   claimMinigameLilyReward: Account!
   claimMinigamePetalReward: Account!
-  completeGts(guesses: Int!, reward: Reward!, time: Int!): Boolean!
+  completeMinigame(guesses: Int!, reward: Reward!, time: Int!, type: MinigameType!): Boolean!
   completeTransaction(token: String!): Boolean!
-  completeWords(reward: Reward!, time: Int!, words: Int!): Boolean!
   createAccount(username: String!): Account!
   createAlias(alias: String!, groupId: Int!): Alias!
   createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
