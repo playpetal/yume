@@ -1,4 +1,4 @@
 export * from "./Group";
 export * from "./Subgroup";
-export * from "./Character";
+export * from "./character";
 export * from "./Alias";

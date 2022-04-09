@@ -972,6 +972,8 @@ export interface NexusGenArgTypes {
       search: string; // String!
     }
     searchCharacters: { // args
+      birthday?: NexusGenScalars['DateTime'] | null; // DateTime
+      page?: number | null; // Int
       search: string; // String!
     }
     searchGroups: { // args
