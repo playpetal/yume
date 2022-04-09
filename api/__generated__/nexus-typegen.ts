@@ -978,6 +978,8 @@ export interface NexusGenArgTypes {
     }
     searchCharacters: { // args
       birthday?: NexusGenScalars['DateTime'] | null; // DateTime
+      birthdayAfter?: NexusGenScalars['DateTime'] | null; // DateTime
+      birthdayBefore?: NexusGenScalars['DateTime'] | null; // DateTime
       page?: number | null; // Int
       search: string; // String!
     }

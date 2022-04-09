@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { extendType, nonNull, list } from "nexus";
 
 export const SearchCharactersQuery = extendType({
@@ -8,13 +9,28 @@ export const SearchCharactersQuery = extendType({
       args: {
         search: nonNull("String"),
         birthday: "DateTime",
+        birthdayBefore: "DateTime",
+        birthdayAfter: "DateTime",
         page: "Int",
       },
-      async resolve(_, { search, birthday, page }, ctx) {
+      async resolve(
+        _,
+        { search, birthday, birthdayBefore, birthdayAfter, page },
+        ctx
+      ) {
+        let filter: Prisma.DateTimeNullableFilter = {};
+
+        if (birthday) {
+          filter = birthday;
+        } else if (birthdayBefore || birthdayAfter) {
+          filter["lt"] = birthdayBefore;
+          filter["gt"] = birthdayAfter;
+        }
+
         return ctx.db.character.findMany({
           where: {
             name: { contains: search, mode: "insensitive" },
-            birthday: birthday,
+            birthday: filter,
           },
           take: 25,
           skip: Math.max(page || 1, 1) * 25 - 25,
