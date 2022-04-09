@@ -1,11 +1,16 @@
 import { enumType, extendType, list, nonNull, objectType } from "nexus";
 import { Account } from "nexus-prisma";
-import { UserInputError, AuthenticationError } from "apollo-server";
 import jwt from "jsonwebtoken";
 import { auth } from "../../lib/Auth";
 import { getAccountStats } from "../../lib/account";
 import { Card } from "@prisma/client";
 import { canClaimPremiumCurrency, canClaimRewards } from "../../lib/game";
+import {
+  DuplicateAccountError,
+  InvalidInputError,
+  UnauthorizedError,
+  UsernameTakenError,
+} from "../../lib/error";
 
 export const AccountObject = objectType({
   name: Account.$name,
@@ -135,10 +140,7 @@ export const CreateAccountMutation = extendType({
       },
       async resolve(_, args, ctx) {
         const auth = ctx.req.headers.authorization;
-        if (!auth)
-          throw new AuthenticationError(
-            "Authorization is required to use this mutation."
-          );
+        if (!auth) throw new UnauthorizedError();
 
         let discordId: string | undefined;
 
@@ -146,12 +148,14 @@ export const CreateAccountMutation = extendType({
           args.username
         );
         if (usernameIsInvalid)
-          throw new UserInputError(
-            "Username cannot contain non-alphanumeric characters except for space, _, and -."
+          throw new InvalidInputError(
+            "usernames may only contain alphanumeric characters, spaces, hyphens, and underscores."
           );
 
-        if (args.username.length > 20)
-          throw new UserInputError("Username cannot exceed 20 characters.");
+        if (args.username.length > 20 || args.username.length < 2)
+          throw new InvalidInputError(
+            "username can only be 2-20 characters long."
+          );
 
         try {
           const { id } = jwt.verify(auth, process.env.SHARED_SECRET!) as {
@@ -160,23 +164,20 @@ export const CreateAccountMutation = extendType({
 
           discordId = id;
         } catch (e) {
-          console.error(e);
-          throw new AuthenticationError("Invalid JWT");
+          throw new UnauthorizedError();
         }
 
         const accountExists = await ctx.db.account.findFirst({
           where: { discordId },
         });
 
-        if (accountExists)
-          throw new UserInputError("You already have an account.");
+        if (accountExists) throw new DuplicateAccountError();
 
         const usernameExists = await ctx.db.account.findFirst({
           where: { username: { equals: args.username, mode: "insensitive" } },
         });
 
-        if (usernameExists)
-          throw new UserInputError("That username is already taken.");
+        if (usernameExists) throw new UsernameTakenError();
 
         return await ctx.db.account.create({
           data: { discordId, username: args.username },
@@ -193,11 +194,6 @@ export const GetUserQuery = extendType({
       type: "Account",
       args: { username: "String", id: "Int", discordId: "String" },
       async resolve(_, args, ctx) {
-        /*if (!ctx.req.headers.authorization)
-          throw new AuthenticationError(
-            "Authorization is reuqired to use this query."
-          );*/
-
         return ctx.db.account.findFirst({
           where: {
             username: args.username
@@ -219,25 +215,12 @@ export const SetBioMutation = extendType({
       type: nonNull("Account"),
       args: { bio: "String" },
       async resolve(_, args, ctx) {
-        const auth = ctx.req.headers.authorization;
-        if (!auth)
-          throw new AuthenticationError(
-            "Authorization is required to use this mutation."
-          );
+        const account = await auth(ctx);
 
-        try {
-          const { id } = jwt.verify(auth, process.env.SHARED_SECRET!) as {
-            id: string;
-          };
-
-          return ctx.db.account.update({
-            where: { discordId: id },
-            data: { bio: args.bio },
-          });
-        } catch (e) {
-          console.log(e);
-          throw new Error("An unexpected error occurred.");
-        }
+        return ctx.db.account.update({
+          where: { id: account.id },
+          data: { bio: args.bio },
+        });
       },
     });
   },
@@ -279,11 +262,11 @@ export const Gift = extendType({
         });
 
         if (!recipient)
-          throw new UserInputError(`i couldn't find that user :(`);
+          throw new InvalidInputError(`there is no user by that id.`);
 
         if (lilies) {
           if (account.premiumCurrency < lilies || lilies < 0)
-            throw new UserInputError(
+            throw new InvalidInputError(
               "you don't have enough lilies to do that."
             );
 
@@ -300,7 +283,7 @@ export const Gift = extendType({
 
         if (petals) {
           if (account.currency < petals || petals < 0)
-            throw new UserInputError(
+            throw new InvalidInputError(
               "you don't have enough petals to do that."
             );
 
@@ -322,11 +305,11 @@ export const Gift = extendType({
             const card = await ctx.db.card.findFirst({ where: { id: cardId } });
 
             if (!card)
-              throw new UserInputError(
+              throw new InvalidInputError(
                 `\`${cardId.toString(16)}\` does not exist.`
               );
             if (card.ownerId !== account.id)
-              throw new UserInputError(
+              throw new InvalidInputError(
                 `\`${cardId.toString(16)}\` does not belong to you.`
               );
 
