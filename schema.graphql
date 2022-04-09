@@ -139,6 +139,18 @@ type Leaderboard {
   value: Float!
 }
 
+enum LeaderboardType {
+  GTS_CARD
+  GTS_LILY
+  GTS_PETAL
+  GTS_TIME
+  PUBLIC_SUPPORTER
+  WORDS_CARD
+  WORDS_LILY
+  WORDS_PETAL
+  WORDS_TIME
+}
+
 type MinigameStats {
   account: Account!
   accountId: Int!
@@ -243,17 +255,13 @@ type Query {
   canClaimRewards: Int!
   getCard(id: Int!): Card
   getCharacter(id: Int!): Character
-  getGTSRewardLeaderboard(type: Reward!): [Leaderboard!]!
-  getGTSTimeLeaderboard: [Leaderboard!]!
   getGroup(id: Int!): Group
+  getLeaderboard(type: LeaderboardType!): [Leaderboard!]!
   getRandomCharacter(gender: Gender): Character!
   getRandomSong(gender: GroupGender): GameSong
   getSubgroup(id: Int!): Subgroup
-  getSupporterLeaderboard: [Leaderboard!]!
   getTag(tag: String!): Tag
   getUserTitle(id: Int!): TitleInventory
-  getWordsRewardLeaderboard(type: Reward!): [Leaderboard!]!
-  getWordsTimeLeaderboard: [Leaderboard!]!
   inventory(character: String, group: String, order: InventoryOrder, page: Int!, sort: InventorySort, subgroup: String, tag: String, userId: Int!): [Card!]!
   inventoryPage(character: String, group: String, subgroup: String, tag: String, user: Int!): InventoryPage!
   isEmoji(emoji: String!): Boolean!

@@ -37,6 +37,7 @@ export interface NexusGenEnums {
   GroupGender: "COED" | "FEMALE" | "MALE"
   InventoryOrder: "ASC" | "DESC"
   InventorySort: "CHARACTER" | "CODE" | "GROUP" | "ISSUE" | "STAGE" | "SUBGROUP"
+  LeaderboardType: "GTS_CARD" | "GTS_LILY" | "GTS_PETAL" | "GTS_TIME" | "PUBLIC_SUPPORTER" | "WORDS_CARD" | "WORDS_LILY" | "WORDS_PETAL" | "WORDS_TIME"
   MinigameType: "GTS" | "GUESS_CHARACTER" | "WORDS"
   ProductType: "ALPHA_TITLE" | "BETA_TITLE" | "PAID_CURRENCY" | "SIGMA_TITLE"
   Quality: "BLOOM" | "BUD" | "FLOWER" | "SEED" | "SPROUT"
@@ -355,17 +356,13 @@ export interface NexusGenFieldTypes {
     canClaimRewards: number; // Int!
     getCard: NexusGenRootTypes['Card'] | null; // Card
     getCharacter: NexusGenRootTypes['Character'] | null; // Character
-    getGTSRewardLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
-    getGTSTimeLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
     getGroup: NexusGenRootTypes['Group'] | null; // Group
+    getLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
     getRandomCharacter: NexusGenRootTypes['Character']; // Character!
     getRandomSong: NexusGenRootTypes['GameSong'] | null; // GameSong
     getSubgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
-    getSupporterLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
     getTag: NexusGenRootTypes['Tag'] | null; // Tag
     getUserTitle: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
-    getWordsRewardLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
-    getWordsTimeLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
     inventory: NexusGenRootTypes['Card'][]; // [Card!]!
     inventoryPage: NexusGenRootTypes['InventoryPage']; // InventoryPage!
     isEmoji: boolean; // Boolean!
@@ -595,17 +592,13 @@ export interface NexusGenFieldTypeNames {
     canClaimRewards: 'Int'
     getCard: 'Card'
     getCharacter: 'Character'
-    getGTSRewardLeaderboard: 'Leaderboard'
-    getGTSTimeLeaderboard: 'Leaderboard'
     getGroup: 'Group'
+    getLeaderboard: 'Leaderboard'
     getRandomCharacter: 'Character'
     getRandomSong: 'GameSong'
     getSubgroup: 'Subgroup'
-    getSupporterLeaderboard: 'Leaderboard'
     getTag: 'Tag'
     getUserTitle: 'TitleInventory'
-    getWordsRewardLeaderboard: 'Leaderboard'
-    getWordsTimeLeaderboard: 'Leaderboard'
     inventory: 'Card'
     inventoryPage: 'InventoryPage'
     isEmoji: 'Boolean'
@@ -862,11 +855,11 @@ export interface NexusGenArgTypes {
     getCharacter: { // args
       id: number; // Int!
     }
-    getGTSRewardLeaderboard: { // args
-      type: NexusGenEnums['Reward']; // Reward!
-    }
     getGroup: { // args
       id: number; // Int!
+    }
+    getLeaderboard: { // args
+      type: NexusGenEnums['LeaderboardType']; // LeaderboardType!
     }
     getRandomCharacter: { // args
       gender?: NexusGenEnums['Gender'] | null; // Gender
@@ -882,9 +875,6 @@ export interface NexusGenArgTypes {
     }
     getUserTitle: { // args
       id: number; // Int!
-    }
-    getWordsRewardLeaderboard: { // args
-      type: NexusGenEnums['Reward']; // Reward!
     }
     inventory: { // args
       character?: string | null; // String
