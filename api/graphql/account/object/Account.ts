@@ -1,6 +1,6 @@
-import { enumType, list, nonNull, objectType } from "nexus";
+import { objectType, nonNull, list } from "nexus";
 import { Account } from "nexus-prisma";
-import { getAccountStats } from "../../lib/account";
+import { getAccountStats } from "../../../lib/account";
 
 export const AccountObject = objectType({
   name: Account.$name,
@@ -71,51 +71,4 @@ export const AccountObject = objectType({
       },
     });
   },
-});
-
-export const GTSStats = objectType({
-  name: "GTS",
-  description: "GTS Statistics",
-  definition(t) {
-    t.field("accountId", { type: nonNull("Int") });
-    t.field("totalGuesses", { type: nonNull("Int") });
-    t.field("totalTime", { type: nonNull("Int") });
-    t.field("totalGames", { type: nonNull("Int") });
-    t.field("totalCards", { type: nonNull("Int") });
-    t.field("totalCurrency", { type: nonNull("Int") });
-    t.field("totalPremiumCurrency", { type: nonNull("Int") });
-  },
-});
-
-export const WordsStats = objectType({
-  name: "Words",
-  description: "Words Minigame Statistics",
-  definition(t) {
-    t.field("accountId", { type: nonNull("Int") });
-    t.field("totalWords", { type: nonNull("Int") });
-    t.field("totalTime", { type: nonNull("Int") });
-    t.field("totalGames", { type: nonNull("Int") });
-    t.field("totalCards", { type: nonNull("Int") });
-    t.field("totalCurrency", { type: nonNull("Int") });
-    t.field("totalPremiumCurrency", { type: nonNull("Int") });
-  },
-});
-
-export const AccountStatsObject = objectType({
-  name: "AccountStats",
-  description: "Account Stats",
-  definition(t) {
-    t.field("cardCount", { type: nonNull("Int") });
-    t.field("rollCount", { type: nonNull("Int") });
-  },
-});
-
-export const Flag = enumType({
-  name: "Flag",
-  description: "Account Flags",
-  members: [
-    { name: "DEVELOPER" },
-    { name: "RELEASE_MANAGER" },
-    { name: "PUBLIC_SUPPORTER" },
-  ],
 });
