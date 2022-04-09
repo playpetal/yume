@@ -9,15 +9,14 @@ type Account {
   currency: Int!
   discordId: String!
   flags: Int!
-  gts: GTS
   id: Int!
+  minigameStats(type: MinigameType!): MinigameStats
   premiumCurrency: Int!
   stats: AccountStats
   supporterTime: Float
   tags: [Tag!]!
   title: Title
   username: String!
-  words: Words
 }
 
 """Account Stats"""
@@ -81,17 +80,6 @@ enum Flag {
   RELEASE_MANAGER
 }
 
-"""GTS Statistics"""
-type GTS {
-  accountId: Int!
-  totalCards: Int!
-  totalCurrency: Int!
-  totalGames: Int!
-  totalGuesses: Int!
-  totalPremiumCurrency: Int!
-  totalTime: Int!
-}
-
 """Game song"""
 type GameSong {
   group: String
@@ -149,6 +137,18 @@ type Leaderboard {
   account: Account!
   accountId: Int!
   value: Float!
+}
+
+type MinigameStats {
+  account: Account!
+  accountId: Int!
+  totalAttempts: Int!
+  totalCards: Int!
+  totalCurrency: Int!
+  totalGames: Int!
+  totalPremiumCurrency: Int!
+  totalTime: Int!
+  type: MinigameType!
 }
 
 enum MinigameType {
@@ -331,15 +331,4 @@ type TitleInventory {
   id: Int!
   title: Title!
   titleId: Int!
-}
-
-"""Words Minigame Statistics"""
-type Words {
-  accountId: Int!
-  totalCards: Int!
-  totalCurrency: Int!
-  totalGames: Int!
-  totalPremiumCurrency: Int!
-  totalTime: Int!
-  totalWords: Int!
 }

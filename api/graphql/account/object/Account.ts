@@ -15,18 +15,21 @@ export const AccountObject = objectType({
     t.field(Account.bio);
     t.field(Account.currency);
     t.field(Account.premiumCurrency);
-    t.field("gts", {
-      type: "GTS",
-      async resolve(root, _, ctx) {
-        return ctx.db.gTS.findFirst({ where: { accountId: root.id } });
+
+    t.field("minigameStats", {
+      type: "MinigameStats",
+      args: {
+        type: nonNull("MinigameType"),
+      },
+      async resolve(source, { type }, ctx) {
+        const stats = await ctx.db.minigameStats.findFirst({
+          where: { accountId: source.id, type },
+        });
+
+        return stats;
       },
     });
-    t.field("words", {
-      type: "Words",
-      async resolve(root, _, ctx) {
-        return ctx.db.words.findFirst({ where: { accountId: root.id } });
-      },
-    });
+
     t.field("stats", {
       type: "AccountStats",
       async resolve(root, _, ctx) {

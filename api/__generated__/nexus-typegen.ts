@@ -99,15 +99,6 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   }
-  GTS: { // root type
-    accountId: number; // Int!
-    totalCards: number; // Int!
-    totalCurrency: number; // Int!
-    totalGames: number; // Int!
-    totalGuesses: number; // Int!
-    totalPremiumCurrency: number; // Int!
-    totalTime: number; // Int!
-  }
   GameSong: { // root type
     group?: string | null; // String
     id: number; // Int!
@@ -128,6 +119,16 @@ export interface NexusGenObjects {
   Leaderboard: { // root type
     accountId: number; // Int!
     value: number; // Float!
+  }
+  MinigameStats: { // root type
+    accountId: number; // Int!
+    totalAttempts: number; // Int!
+    totalCards: number; // Int!
+    totalCurrency: number; // Int!
+    totalGames: number; // Int!
+    totalPremiumCurrency: number; // Int!
+    totalTime: number; // Int!
+    type: NexusGenEnums['MinigameType']; // MinigameType!
   }
   Mutation: {};
   Payment: { // root type
@@ -180,15 +181,6 @@ export interface NexusGenObjects {
     id: number; // Int!
     titleId: number; // Int!
   }
-  Words: { // root type
-    accountId: number; // Int!
-    totalCards: number; // Int!
-    totalCurrency: number; // Int!
-    totalGames: number; // Int!
-    totalPremiumCurrency: number; // Int!
-    totalTime: number; // Int!
-    totalWords: number; // Int!
-  }
 }
 
 export interface NexusGenInterfaces {
@@ -209,15 +201,14 @@ export interface NexusGenFieldTypes {
     currency: number; // Int!
     discordId: string; // String!
     flags: number; // Int!
-    gts: NexusGenRootTypes['GTS'] | null; // GTS
     id: number; // Int!
+    minigameStats: NexusGenRootTypes['MinigameStats'] | null; // MinigameStats
     premiumCurrency: number; // Int!
     stats: NexusGenRootTypes['AccountStats'] | null; // AccountStats
     supporterTime: number | null; // Float
     tags: NexusGenRootTypes['Tag'][]; // [Tag!]!
     title: NexusGenRootTypes['Title'] | null; // Title
     username: string; // String!
-    words: NexusGenRootTypes['Words'] | null; // Words
   }
   AccountStats: { // field return type
     cardCount: number; // Int!
@@ -262,15 +253,6 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     name: string; // String!
   }
-  GTS: { // field return type
-    accountId: number; // Int!
-    totalCards: number; // Int!
-    totalCurrency: number; // Int!
-    totalGames: number; // Int!
-    totalGuesses: number; // Int!
-    totalPremiumCurrency: number; // Int!
-    totalTime: number; // Int!
-  }
   GameSong: { // field return type
     group: string | null; // String
     id: number; // Int!
@@ -293,6 +275,17 @@ export interface NexusGenFieldTypes {
     account: NexusGenRootTypes['Account']; // Account!
     accountId: number; // Int!
     value: number; // Float!
+  }
+  MinigameStats: { // field return type
+    account: NexusGenRootTypes['Account']; // Account!
+    accountId: number; // Int!
+    totalAttempts: number; // Int!
+    totalCards: number; // Int!
+    totalCurrency: number; // Int!
+    totalGames: number; // Int!
+    totalPremiumCurrency: number; // Int!
+    totalTime: number; // Int!
+    type: NexusGenEnums['MinigameType']; // MinigameType!
   }
   Mutation: { // field return type
     burnCard: number; // Int!
@@ -438,15 +431,6 @@ export interface NexusGenFieldTypes {
     title: NexusGenRootTypes['Title']; // Title!
     titleId: number; // Int!
   }
-  Words: { // field return type
-    accountId: number; // Int!
-    totalCards: number; // Int!
-    totalCurrency: number; // Int!
-    totalGames: number; // Int!
-    totalPremiumCurrency: number; // Int!
-    totalTime: number; // Int!
-    totalWords: number; // Int!
-  }
 }
 
 export interface NexusGenFieldTypeNames {
@@ -457,15 +441,14 @@ export interface NexusGenFieldTypeNames {
     currency: 'Int'
     discordId: 'String'
     flags: 'Int'
-    gts: 'GTS'
     id: 'Int'
+    minigameStats: 'MinigameStats'
     premiumCurrency: 'Int'
     stats: 'AccountStats'
     supporterTime: 'Float'
     tags: 'Tag'
     title: 'Title'
     username: 'String'
-    words: 'Words'
   }
   AccountStats: { // field return type name
     cardCount: 'Int'
@@ -510,15 +493,6 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     name: 'String'
   }
-  GTS: { // field return type name
-    accountId: 'Int'
-    totalCards: 'Int'
-    totalCurrency: 'Int'
-    totalGames: 'Int'
-    totalGuesses: 'Int'
-    totalPremiumCurrency: 'Int'
-    totalTime: 'Int'
-  }
   GameSong: { // field return type name
     group: 'String'
     id: 'Int'
@@ -541,6 +515,17 @@ export interface NexusGenFieldTypeNames {
     account: 'Account'
     accountId: 'Int'
     value: 'Float'
+  }
+  MinigameStats: { // field return type name
+    account: 'Account'
+    accountId: 'Int'
+    totalAttempts: 'Int'
+    totalCards: 'Int'
+    totalCurrency: 'Int'
+    totalGames: 'Int'
+    totalPremiumCurrency: 'Int'
+    totalTime: 'Int'
+    type: 'MinigameType'
   }
   Mutation: { // field return type name
     burnCard: 'Int'
@@ -686,18 +671,14 @@ export interface NexusGenFieldTypeNames {
     title: 'Title'
     titleId: 'Int'
   }
-  Words: { // field return type name
-    accountId: 'Int'
-    totalCards: 'Int'
-    totalCurrency: 'Int'
-    totalGames: 'Int'
-    totalPremiumCurrency: 'Int'
-    totalTime: 'Int'
-    totalWords: 'Int'
-  }
 }
 
 export interface NexusGenArgTypes {
+  Account: {
+    minigameStats: { // args
+      type: NexusGenEnums['MinigameType']; // MinigameType!
+    }
+  }
   Mutation: {
     burnCard: { // args
       cardId: number; // Int!
