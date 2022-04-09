@@ -32,6 +32,12 @@ type Alias {
   id: Int!
 }
 
+type Announcement {
+  announcement: String!
+  createdAt: DateTime!
+  id: Int!
+}
+
 type Card {
   createdAt: DateTime!
   hasFrame: Boolean!
@@ -253,6 +259,7 @@ type Query {
   aliases(alias: String, groupId: Int, id: Int): [Alias!]!
   canClaimPremiumRewards: Int!
   canClaimRewards: Int!
+  getAnnouncements: [Announcement!]!
   getCard(id: Int!): Card
   getCharacter(id: Int!): Character
   getGroup(id: Int!): Group

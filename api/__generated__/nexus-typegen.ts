@@ -74,6 +74,11 @@ export interface NexusGenObjects {
     groupId: number; // Int!
     id: number; // Int!
   }
+  Announcement: { // root type
+    announcement: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+  }
   Card: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     hasFrame: boolean; // Boolean!
@@ -221,6 +226,11 @@ export interface NexusGenFieldTypes {
     groupId: number; // Int!
     id: number; // Int!
   }
+  Announcement: { // field return type
+    announcement: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+  }
   Card: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     hasFrame: boolean; // Boolean!
@@ -354,6 +364,7 @@ export interface NexusGenFieldTypes {
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
     canClaimPremiumRewards: number; // Int!
     canClaimRewards: number; // Int!
+    getAnnouncements: NexusGenRootTypes['Announcement'][]; // [Announcement!]!
     getCard: NexusGenRootTypes['Card'] | null; // Card
     getCharacter: NexusGenRootTypes['Character'] | null; // Character
     getGroup: NexusGenRootTypes['Group'] | null; // Group
@@ -455,6 +466,11 @@ export interface NexusGenFieldTypeNames {
     alias: 'String'
     group: 'Group'
     groupId: 'Int'
+    id: 'Int'
+  }
+  Announcement: { // field return type name
+    announcement: 'String'
+    createdAt: 'DateTime'
     id: 'Int'
   }
   Card: { // field return type name
@@ -590,6 +606,7 @@ export interface NexusGenFieldTypeNames {
     aliases: 'Alias'
     canClaimPremiumRewards: 'Int'
     canClaimRewards: 'Int'
+    getAnnouncements: 'Announcement'
     getCard: 'Card'
     getCharacter: 'Character'
     getGroup: 'Group'

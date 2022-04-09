@@ -331,3 +331,9 @@ model PrefabCollection {
   @@id([accountId, prefabId])
   @@unique([accountId, prefabId])
 }
+
+model Announcement {
+  id           Int      @id @default(autoincrement())
+  announcement String
+  createdAt    DateTime @default(now())
+}
