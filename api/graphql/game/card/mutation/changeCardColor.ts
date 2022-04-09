@@ -20,12 +20,12 @@ export const ChangeCardColor = extendType({
         if (card.ownerId !== account.id)
           throw new UserInputError("not owner of card");
 
-        if (account.premiumCurrency < 25)
+        if (account.premiumCurrency < 1)
           throw new UserInputError("not enough lilies");
 
         await ctx.db.account.update({
           where: { id: account.id },
-          data: { premiumCurrency: { decrement: 25 } },
+          data: { premiumCurrency: { decrement: 1 } },
         });
 
         return ctx.db.card.update({

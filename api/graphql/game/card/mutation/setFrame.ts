@@ -20,12 +20,12 @@ export const setFrame = extendType({
         if (card.ownerId !== account.id)
           throw new AuthenticationError("that card doesn't belong to you.");
 
-        if (account.premiumCurrency < 100)
+        if (account.premiumCurrency < 1)
           throw new UserInputError("you don't have enough lilies to do that.");
 
         await ctx.db.account.update({
           where: { id: account.id },
-          data: { premiumCurrency: { decrement: 100 } },
+          data: { premiumCurrency: { decrement: 1 } },
         });
 
         const _card = await ctx.db.card.update({
