@@ -82,6 +82,20 @@ export async function roll(
       },
     });
 
+    await ctx.db.prefabCollection.upsert({
+      create: {
+        accountId: account.id,
+        prefabId: prefab.id,
+        rolled: true,
+      },
+      update: {
+        rolled: true,
+      },
+      where: {
+        accountId_prefabId: { accountId: account.id, prefabId: prefab.id },
+      },
+    });
+
     cards.push(card);
   }
 
