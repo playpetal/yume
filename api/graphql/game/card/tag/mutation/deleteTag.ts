@@ -1,6 +1,6 @@
-import { UserInputError } from "apollo-server";
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../../../lib/Auth";
+import { NotFoundError } from "../../../../../lib/error";
 
 export const deleteTag = extendType({
   type: "Mutation",
@@ -19,7 +19,7 @@ export const deleteTag = extendType({
         });
 
         if (!targetTag)
-          throw new UserInputError("you don't have a tag by that name.");
+          throw new NotFoundError("you don't have any tags with that name.");
 
         await ctx.db.tag.delete({ where: { id: targetTag.id } });
 

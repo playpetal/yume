@@ -1,7 +1,7 @@
-import { UserInputError } from "apollo-server";
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../../../lib/Auth";
 import Emoji from "node-emoji";
+import { InvalidInputError, NotFoundError } from "../../../../../lib/error";
 
 export const editTag = extendType({
   type: "Mutation",
@@ -20,18 +20,20 @@ export const editTag = extendType({
         });
 
         if (!targetTag)
-          throw new UserInputError("you don't have a tag by that name.");
+          throw new NotFoundError("you don't have any tags with that name.");
 
         if (name) {
           const nameIsInvalid = name.match(/[^a-z0-9]/gim);
 
           if (nameIsInvalid)
-            throw new UserInputError(
-              "`name` must only contain alphanumeric characters"
+            throw new InvalidInputError(
+              "tag names may only contain alphanumeric characters!"
             );
 
           if (name.length > 15 || name.length < 1)
-            throw new UserInputError("`name` must not exceed 1-15 characters");
+            throw new InvalidInputError(
+              "tag names may only be 1-15 characters long!"
+            );
         }
 
         if (emoji) {
@@ -42,8 +44,8 @@ export const editTag = extendType({
               emoji.match(/(<a?)?:\w+:(\d{18}>)?/g) !== null;
 
             if (!isCustomEmoji)
-              throw new UserInputError(
-                "`emoji` must be a valid Emoji 13.1 or custom discord emoji"
+              throw new InvalidInputError(
+                "emojis must be either Emoji 13.1 or custom Discord emoji!"
               );
           }
         }

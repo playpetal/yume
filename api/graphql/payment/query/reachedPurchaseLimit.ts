@@ -1,6 +1,6 @@
-import { UserInputError } from "apollo-server";
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../lib/Auth";
+import { NotFoundError } from "../../../lib/error";
 
 export const ReachedPurchaseLimit = extendType({
   type: "Query",
@@ -15,7 +15,8 @@ export const ReachedPurchaseLimit = extendType({
           where: { id: productId },
         });
 
-        if (!product) throw new UserInputError("invalid product");
+        if (!product)
+          throw new NotFoundError("there are no products with that id.");
 
         if (!product.limit) return false;
 

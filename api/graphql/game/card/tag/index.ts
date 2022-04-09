@@ -3,6 +3,7 @@ import { extendType, list, nonNull, objectType } from "nexus";
 import { Tag } from "nexus-prisma";
 import { auth } from "../../../../lib/Auth";
 import Emoji from "node-emoji";
+import { InvalidInputError } from "../../../../lib/error";
 
 export * from "./mutation";
 
@@ -55,12 +56,14 @@ export const mutCreateTag = extendType({
         const nameIsInvalid = name.match(/[^a-z0-9]/gim);
 
         if (nameIsInvalid)
-          throw new UserInputError(
-            "`name` must only contain alphanumeric characters"
+          throw new InvalidInputError(
+            "tag names may only contain alphanumeric characters!"
           );
 
         if (name.length > 15 || name.length < 1)
-          throw new UserInputError("`name` must not exceed 1-15 characters");
+          throw new InvalidInputError(
+            "tag names may only be 1-15 characters long!"
+          );
 
         const tagCount = await ctx.db.tag.count({
           where: { accountId: account.id },
@@ -87,8 +90,8 @@ export const mutCreateTag = extendType({
           const isCustomEmoji = emoji.match(/(<a?)?:\w+:(\d{18}>)?/g) !== null;
 
           if (!isCustomEmoji)
-            throw new UserInputError(
-              "`emoji` must be a valid Emoji 13.1 or custom discord emoji"
+            throw new InvalidInputError(
+              "emojis must be either Emoji 13.1 or custom Discord emoji!"
             );
         }
 

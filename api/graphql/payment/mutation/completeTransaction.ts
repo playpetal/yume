@@ -1,5 +1,5 @@
-import { AuthenticationError } from "apollo-server";
 import { extendType, nonNull } from "nexus";
+import { AuthorizationError, NotFoundError } from "../../../lib/error";
 import { validatePayment, completePayment } from "../../../lib/payment";
 
 export const CompleteTransaction = extendType({
@@ -14,20 +14,28 @@ export const CompleteTransaction = extendType({
         const auth = ctx.req.headers.authorization;
 
         if (auth !== process.env.PAYMENT_SHARED_SECRET)
-          throw new AuthenticationError("not allowed");
+          throw new AuthorizationError(
+            "you are not allowed to access this mutation."
+          );
 
         const payment = await ctx.db.payment.findFirst({
           where: { paymentId: token },
           include: { product: true },
         });
 
-        if (!payment) throw new AuthenticationError("invalid transaction");
+        if (!payment)
+          throw new NotFoundError(
+            "transaction not found. if this is in error, please contact us at discord.gg/petal."
+          );
 
-        if (payment.success) throw new AuthenticationError("already processed");
+        if (payment.success) return true;
 
         const valid = await validatePayment(token);
 
-        if (!valid) throw new AuthenticationError("invalid transaction");
+        if (!valid)
+          throw new AuthorizationError(
+            "invalid token. if this is in error, please contact us at discord.gg/petal."
+          );
 
         const count = await ctx.db.payment.count({
           where: {
@@ -38,13 +46,16 @@ export const CompleteTransaction = extendType({
         });
 
         if (payment.product.limit && count > payment.product.limit)
-          throw new AuthenticationError(
-            "you've reached the limit for that product"
+          throw new AuthorizationError(
+            "you've reached the limit for that product."
           );
 
         const final = await completePayment(token);
 
-        if (!final) throw new AuthenticationError("unable to capture funds");
+        if (!final)
+          throw new AuthorizationError(
+            "unable to capture funds. if this is in error, please contact us at discord.gg/petal."
+          );
 
         await ctx.db.payment.update({
           where: { id: payment.id },

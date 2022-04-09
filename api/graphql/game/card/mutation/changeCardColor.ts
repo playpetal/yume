@@ -1,6 +1,7 @@
 import { UserInputError } from "apollo-server";
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../../lib/Auth";
+import { AuthorizationError, NotFoundError } from "../../../../lib/error";
 
 export const ChangeCardColor = extendType({
   type: "Mutation",
@@ -15,10 +16,12 @@ export const ChangeCardColor = extendType({
         const account = await auth(ctx);
 
         const card = await ctx.db.card.findFirst({ where: { id: cardId } });
-        if (!card) throw new UserInputError("card not found");
+        if (!card) throw new NotFoundError("there are no cards with that id.");
 
         if (card.ownerId !== account.id)
-          throw new UserInputError("not owner of card");
+          throw new AuthorizationError(
+            "you are not allowed to perform that action on that card."
+          );
 
         if (account.premiumCurrency < 1)
           throw new UserInputError("not enough lilies");

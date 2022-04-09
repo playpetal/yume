@@ -1,6 +1,6 @@
-import { UserInputError, AuthenticationError } from "apollo-server";
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../lib/Auth";
+import { AuthorizationError, NotFoundError } from "../../../lib/error";
 import { createTransaction } from "../../../lib/payment";
 
 export const NewTransaction = extendType({
@@ -16,9 +16,12 @@ export const NewTransaction = extendType({
           where: { id: productId },
         });
 
-        if (!product) throw new UserInputError("invalid product");
+        if (!product)
+          throw new NotFoundError("there are no products with that id.");
         if (!product.available)
-          throw new AuthenticationError("product not available");
+          throw new AuthorizationError(
+            "you are not authorized to purchase that product."
+          );
 
         const transaction = await createTransaction(product);
 

@@ -1,6 +1,7 @@
-import { AuthenticationError, UserInputError } from "apollo-server";
+import { UserInputError } from "apollo-server";
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../../lib/Auth";
+import { AuthorizationError, NotFoundError } from "../../../../lib/error";
 
 export const setFrame = extendType({
   type: "Mutation",
@@ -15,10 +16,12 @@ export const setFrame = extendType({
 
         const card = await ctx.db.card.findFirst({ where: { id: cardId } });
 
-        if (!card) throw new UserInputError("card not found");
+        if (!card) throw new NotFoundError("there are no cards with that id.");
 
         if (card.ownerId !== account.id)
-          throw new AuthenticationError("that card doesn't belong to you.");
+          throw new AuthorizationError(
+            "you are not allowed to perform that action on that card."
+          );
 
         if (account.premiumCurrency < 1)
           throw new UserInputError("you don't have enough lilies to do that.");

@@ -1,6 +1,6 @@
-import { UserInputError } from "apollo-server";
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../lib/Auth";
+import { NotFoundError } from "../../../lib/error";
 import { toggleFlag } from "../../../lib/flags";
 
 export const devToggleFlag = extendType({
@@ -17,7 +17,7 @@ export const devToggleFlag = extendType({
         });
 
         if (!targetAccount)
-          throw new UserInputError("there is no account by that id");
+          throw new NotFoundError("there aren't any accounts with that id.");
 
         const _account = await toggleFlag(flag, targetAccount, ctx);
 

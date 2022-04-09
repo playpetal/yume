@@ -3,6 +3,7 @@ import { enumType, extendType, list, nonNull, objectType } from "nexus";
 import { Song } from "nexus-prisma";
 import { auth } from "../../../lib/Auth";
 import { roll } from "../../../lib/card";
+import { NotFoundError } from "../../../lib/error";
 import { canClaimPremiumCurrency, canClaimRewards } from "../../../lib/game";
 import { gts } from "../../../lib/gts";
 
@@ -117,7 +118,7 @@ export const EditSong = extendType({
 
         const song = await ctx.db.song.findFirst({ where: { id: songId } });
 
-        if (!song) throw new UserInputError("song not found");
+        if (!song) throw new NotFoundError("there are no songs with that id.");
 
         const _song = await ctx.db.song.update({
           where: { id: songId },
@@ -146,7 +147,7 @@ export const DeleteSong = extendType({
 
         const song = await ctx.db.song.findFirst({ where: { id: songId } });
 
-        if (!song) throw new UserInputError("song not found");
+        if (!song) throw new NotFoundError("there are no songs with that id.");
 
         const _song = await ctx.db.song.delete({ where: { id: song.id } });
 

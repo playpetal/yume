@@ -1,6 +1,6 @@
-import { UserInputError, AuthenticationError } from "apollo-server";
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../../lib/Auth";
+import { AuthorizationError, NotFoundError } from "../../../../lib/error";
 
 export const BurnCard = extendType({
   type: "Mutation",
@@ -17,11 +17,12 @@ export const BurnCard = extendType({
           where: { id: args.cardId },
         });
 
-        if (!card)
-          throw new UserInputError("The specified card does not exist.");
+        if (!card) throw new NotFoundError("there are no cards with that id.");
 
         if (card.ownerId != account.id)
-          throw new AuthenticationError("That card doesn't belong to you.");
+          throw new AuthorizationError(
+            "you are not allowed to perform that action on that card."
+          );
 
         const tier =
           ["SEED", "SPROUT", "BUD", "FLOWER", "BLOOM"].indexOf(card.quality) +

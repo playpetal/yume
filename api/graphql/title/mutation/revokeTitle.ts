@@ -1,6 +1,6 @@
-import { UserInputError } from "apollo-server";
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../lib/Auth";
+import { NotFoundError } from "../../../lib/error";
 
 export const RevokeTitle = extendType({
   type: "Mutation",
@@ -16,7 +16,7 @@ export const RevokeTitle = extendType({
         });
 
         if (!title)
-          throw new UserInputError("that user doesn't have that title.");
+          throw new NotFoundError("that user doesn't have that title.");
 
         await ctx.db.titleInventory.delete({
           where: { id: title.id },

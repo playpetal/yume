@@ -39,3 +39,30 @@ export class UsernameTakenError extends ApolloError {
     super("that username has already been taken.", "USERNAME_TAKEN");
   }
 }
+
+export class NotFoundError extends ApolloError {
+  isUserFacing = true;
+  name = "NotFoundError";
+
+  constructor(message: string) {
+    super(message, "NOT_FOUND");
+  }
+}
+
+export class AuthenticationError extends ApolloError {
+  isUserFacing = true;
+  name = "AuthenticationError";
+
+  constructor(message: string) {
+    super(message, "NOT_AUTHENTICATED");
+  }
+}
+
+export class AuthorizationError extends ApolloError {
+  isUserFacing = true;
+  name = "AuthorizationError";
+
+  constructor(message: string) {
+    super(message, "NOT_AUTHORIZED");
+  }
+}
