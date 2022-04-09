@@ -252,6 +252,7 @@ type Query {
   getGTSRewardLeaderboard(type: Reward!): [Leaderboard!]!
   getGTSTimeLeaderboard: [Leaderboard!]!
   getGroup(id: Int!): Group
+  getRandomCharacter(gender: Gender): Character!
   getRandomSong(gender: GroupGender): GameSong
   getSubgroup(id: Int!): Subgroup
   getSupporterLeaderboard: [Leaderboard!]!

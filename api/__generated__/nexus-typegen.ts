@@ -383,6 +383,7 @@ export interface NexusGenFieldTypes {
     getGTSRewardLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
     getGTSTimeLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
     getGroup: NexusGenRootTypes['Group'] | null; // Group
+    getRandomCharacter: NexusGenRootTypes['Character']; // Character!
     getRandomSong: NexusGenRootTypes['GameSong'] | null; // GameSong
     getSubgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
     getSupporterLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
@@ -640,6 +641,7 @@ export interface NexusGenFieldTypeNames {
     getGTSRewardLeaderboard: 'Leaderboard'
     getGTSTimeLeaderboard: 'Leaderboard'
     getGroup: 'Group'
+    getRandomCharacter: 'Character'
     getRandomSong: 'GameSong'
     getSubgroup: 'Subgroup'
     getSupporterLeaderboard: 'Leaderboard'
@@ -916,6 +918,9 @@ export interface NexusGenArgTypes {
     }
     getGroup: { // args
       id: number; // Int!
+    }
+    getRandomCharacter: { // args
+      gender?: NexusGenEnums['Gender'] | null; // Gender
     }
     getRandomSong: { // args
       gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
