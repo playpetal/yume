@@ -936,6 +936,7 @@ export interface NexusGenArgTypes {
       birthday?: NexusGenScalars['DateTime'] | null; // DateTime
       birthdayAfter?: NexusGenScalars['DateTime'] | null; // DateTime
       birthdayBefore?: NexusGenScalars['DateTime'] | null; // DateTime
+      gender?: NexusGenEnums['Gender'] | null; // Gender
       page?: number | null; // Int
       search: string; // String!
     }

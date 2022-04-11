@@ -11,11 +11,12 @@ export const SearchCharactersQuery = extendType({
         birthday: "DateTime",
         birthdayBefore: "DateTime",
         birthdayAfter: "DateTime",
+        gender: "Gender",
         page: "Int",
       },
       async resolve(
         _,
-        { search, birthday, birthdayBefore, birthdayAfter, page },
+        { search, birthday, birthdayBefore, birthdayAfter, gender, page },
         ctx
       ) {
         let filter: Prisma.DateTimeNullableFilter = {};
@@ -31,6 +32,7 @@ export const SearchCharactersQuery = extendType({
           where: {
             name: { contains: search, mode: "insensitive" },
             birthday: filter,
+            gender: gender,
           },
           take: 25,
           skip: Math.max(page || 1, 1) * 25 - 25,
