@@ -51,3 +51,9 @@ export async function auth(
     );
   }
 }
+
+export function hasLilySharedSecret(ctx: Context): boolean {
+  if (!ctx.req.headers.authorization) return false;
+
+  return ctx.req.headers.authorization === process.env.LILY_SHARED_SECRET;
+}

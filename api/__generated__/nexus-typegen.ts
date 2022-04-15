@@ -299,6 +299,7 @@ export interface NexusGenFieldTypes {
     type: NexusGenEnums['MinigameType']; // MinigameType!
   }
   Mutation: { // field return type
+    boost: boolean; // Boolean!
     burnCard: number; // Int!
     changeCardColor: NexusGenRootTypes['Card']; // Card!
     claimMinigameCardReward: NexusGenRootTypes['Card'][]; // [Card!]!
@@ -541,6 +542,7 @@ export interface NexusGenFieldTypeNames {
     type: 'MinigameType'
   }
   Mutation: { // field return type name
+    boost: 'Boolean'
     burnCard: 'Int'
     changeCardColor: 'Card'
     claimMinigameCardReward: 'Card'
@@ -690,6 +692,10 @@ export interface NexusGenArgTypes {
     }
   }
   Mutation: {
+    boost: { // args
+      count: number; // Int!
+      discordId: string; // String!
+    }
     burnCard: { // args
       cardId: number; // Int!
     }

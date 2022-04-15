@@ -176,6 +176,7 @@ enum MinigameType {
 }
 
 type Mutation {
+  boost(count: Int!, discordId: String!): Boolean!
   burnCard(cardId: Int!): Int!
   changeCardColor(cardId: Int!, color: Int!): Card!
   claimMinigameCardReward: [Card!]!
