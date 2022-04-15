@@ -61,6 +61,8 @@ export const boost = extendType({
               "%u",
               `**${account.username}**`
             );
+          } else if (account) {
+            user = `**${account.username}**`;
           }
         }
 
