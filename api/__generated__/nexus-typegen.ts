@@ -344,6 +344,7 @@ export interface NexusGenFieldTypes {
     updatePrefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
     updateRelease: NexusGenRootTypes['Release']; // Release!
     updateSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
+    upgradeCard: NexusGenRootTypes['Card']; // Card!
   }
   Payment: { // field return type
     accountId: number; // Int!
@@ -587,6 +588,7 @@ export interface NexusGenFieldTypeNames {
     updatePrefab: 'CardPrefab'
     updateRelease: 'Release'
     updateSubgroup: 'Subgroup'
+    upgradeCard: 'Card'
   }
   Payment: { // field return type name
     accountId: 'Int'
@@ -864,6 +866,10 @@ export interface NexusGenArgTypes {
       creation?: NexusGenScalars['DateTime'] | null; // DateTime
       id: number; // Int!
       name?: string | null; // String
+    }
+    upgradeCard: { // args
+      cardId: number; // Int!
+      fodderCardId: number; // Int!
     }
   }
   Query: {

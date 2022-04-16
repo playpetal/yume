@@ -3,3 +3,4 @@ export * from "./changeCardColor";
 export * from "./rollCards";
 export * from "./setFrame";
 export * from "./tagCard";
+export * from "./upgradeCard";

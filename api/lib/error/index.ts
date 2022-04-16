@@ -66,3 +66,21 @@ export class AuthorizationError extends ApolloError {
     super(message, "NOT_AUTHORIZED");
   }
 }
+
+export class ResourceMaxedError extends ApolloError {
+  isUserFacing = true;
+  name = "ResourceMaxedError";
+
+  constructor(message: string) {
+    super(message, "RESOURCE_MAXED");
+  }
+}
+
+export class MissingResourceError extends ApolloError {
+  isUserFacing = true;
+  name = "MissingResourceError";
+
+  constructor(message: string) {
+    super(message, "MISSING_RESOURCE");
+  }
+}

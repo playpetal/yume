@@ -221,6 +221,7 @@ type Mutation {
   updatePrefab(characterId: Int, groupId: Int, maxCards: Int, prefabId: Int!, rarity: Int, releaseId: Int, subgroupId: Int): CardPrefab!
   updateRelease(droppable: Boolean, id: Int!): Release!
   updateSubgroup(creation: DateTime, id: Int!, name: String): Subgroup!
+  upgradeCard(cardId: Int!, fodderCardId: Int!): Card!
 }
 
 type Payment {
