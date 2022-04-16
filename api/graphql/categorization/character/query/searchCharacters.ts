@@ -13,10 +13,21 @@ export const SearchCharactersQuery = extendType({
         birthdayAfter: "DateTime",
         gender: "Gender",
         page: "Int",
+        minLetters: "Int",
+        maxLetters: "Int",
       },
       async resolve(
         _,
-        { search, birthday, birthdayBefore, birthdayAfter, gender, page },
+        {
+          search,
+          birthday,
+          birthdayBefore,
+          birthdayAfter,
+          minLetters,
+          maxLetters,
+          gender,
+          page,
+        },
         ctx
       ) {
         let filter: Prisma.DateTimeNullableFilter = {};
@@ -28,15 +39,31 @@ export const SearchCharactersQuery = extendType({
           filter["gt"] = birthdayAfter;
         }
 
-        return ctx.db.character.findMany({
+        const characters = await ctx.db.character.findMany({
           where: {
             name: { contains: search, mode: "insensitive" },
             birthday: filter,
             gender: gender,
           },
-          take: 25,
-          skip: Math.max(page || 1, 1) * 25 - 25,
+          /*take: 25,
+          skip: Math.max(page || 1, 1) * 25 - 25,*/
         });
+
+        const _page = Math.max(page || 1, 1);
+
+        if (!minLetters && !maxLetters)
+          return characters.slice(_page * 25 - 25, _page * 25);
+
+        const filteredCharacters = characters.filter((c) => {
+          if (minLetters && maxLetters) {
+            return c.name.length <= maxLetters && c.name.length >= minLetters;
+          }
+
+          if (maxLetters) return c.name.length <= maxLetters;
+          if (minLetters) return c.name.length >= minLetters;
+        });
+
+        return filteredCharacters.slice(_page * 25 - 25, _page * 25);
       },
     });
   },
