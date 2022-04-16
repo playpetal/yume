@@ -935,7 +935,11 @@ export interface NexusGenArgTypes {
       id: number; // Int!
     }
     searchCards: { // args
+      exclude?: number | null; // Int
+      maxQuality?: NexusGenEnums['Quality'] | null; // Quality
+      minQuality?: NexusGenEnums['Quality'] | null; // Quality
       ownerId: number; // Int!
+      prefabId?: number | null; // Int
       search: string; // String!
     }
     searchCharacters: { // args

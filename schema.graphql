@@ -280,7 +280,7 @@ type Query {
   products: [Product!]!
   reachedPurchaseLimit(productId: Int!): Boolean!
   release(id: Int!): Release
-  searchCards(ownerId: Int!, search: String!): [Card!]!
+  searchCards(exclude: Int, maxQuality: Quality, minQuality: Quality, ownerId: Int!, prefabId: Int, search: String!): [Card!]!
   searchCharacters(birthday: DateTime, birthdayAfter: DateTime, birthdayBefore: DateTime, gender: Gender, page: Int, search: String!): [Character!]!
   searchGroups(search: String!): [Group!]!
   searchPrefabs(search: String!): [CardPrefab!]!
