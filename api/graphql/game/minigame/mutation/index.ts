@@ -1,1 +1,2 @@
-export * from "./completeMinigame";
+export * from "./answerMinigame";
+export * from "./startMinigame";

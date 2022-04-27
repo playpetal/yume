@@ -126,6 +126,22 @@ export interface NexusGenObjects {
     accountId: number; // Int!
     value: number; // Float!
   }
+  Minigame: { // root type
+    accountId: number; // Int!
+    channelId?: string | null; // String
+    data: NexusGenRootTypes['MinigameData']; // MinigameData!
+    guildId?: string | null; // String
+    messageId?: string | null; // String
+    type: NexusGenEnums['MinigameType']; // MinigameType!
+  }
+  MinigameData: { // root type
+    attempts: number; // Int!
+    correct?: boolean | null; // Boolean
+    elapsed?: number | null; // Int
+    isGendered?: boolean | null; // Boolean
+    startedAt: NexusGenScalars['DateTime']; // DateTime!
+    type: NexusGenEnums['MinigameType']; // MinigameType!
+  }
   MinigameStats: { // root type
     accountId: number; // Int!
     totalAttempts: number; // Int!
@@ -287,6 +303,22 @@ export interface NexusGenFieldTypes {
     accountId: number; // Int!
     value: number; // Float!
   }
+  Minigame: { // field return type
+    accountId: number; // Int!
+    channelId: string | null; // String
+    data: NexusGenRootTypes['MinigameData']; // MinigameData!
+    guildId: string | null; // String
+    messageId: string | null; // String
+    type: NexusGenEnums['MinigameType']; // MinigameType!
+  }
+  MinigameData: { // field return type
+    attempts: number; // Int!
+    correct: boolean | null; // Boolean
+    elapsed: number | null; // Int
+    isGendered: boolean | null; // Boolean
+    startedAt: NexusGenScalars['DateTime']; // DateTime!
+    type: NexusGenEnums['MinigameType']; // MinigameType!
+  }
   MinigameStats: { // field return type
     account: NexusGenRootTypes['Account']; // Account!
     accountId: number; // Int!
@@ -299,13 +331,13 @@ export interface NexusGenFieldTypes {
     type: NexusGenEnums['MinigameType']; // MinigameType!
   }
   Mutation: { // field return type
+    answerMinigame: NexusGenRootTypes['Minigame'] | null; // Minigame
     boost: boolean; // Boolean!
     burnCard: number; // Int!
     changeCardColor: NexusGenRootTypes['Card']; // Card!
     claimMinigameCardReward: NexusGenRootTypes['Card'][]; // [Card!]!
     claimMinigameLilyReward: NexusGenRootTypes['Account']; // Account!
     claimMinigamePetalReward: NexusGenRootTypes['Account']; // Account!
-    completeMinigame: boolean; // Boolean!
     completeTransaction: boolean; // Boolean!
     createAccount: NexusGenRootTypes['Account']; // Account!
     createAlias: NexusGenRootTypes['Alias']; // Alias!
@@ -335,6 +367,7 @@ export interface NexusGenFieldTypes {
     setBio: NexusGenRootTypes['Account']; // Account!
     setFrame: NexusGenRootTypes['Card']; // Card!
     setUserTitle: NexusGenRootTypes['Account']; // Account!
+    startMinigame: NexusGenRootTypes['Minigame'] | null; // Minigame
     tagCard: NexusGenRootTypes['Card']; // Card!
     toggleFlag: NexusGenRootTypes['Account']; // Account!
     togglePublicSupporter: NexusGenRootTypes['Account']; // Account!
@@ -531,6 +564,22 @@ export interface NexusGenFieldTypeNames {
     accountId: 'Int'
     value: 'Float'
   }
+  Minigame: { // field return type name
+    accountId: 'Int'
+    channelId: 'String'
+    data: 'MinigameData'
+    guildId: 'String'
+    messageId: 'String'
+    type: 'MinigameType'
+  }
+  MinigameData: { // field return type name
+    attempts: 'Int'
+    correct: 'Boolean'
+    elapsed: 'Int'
+    isGendered: 'Boolean'
+    startedAt: 'DateTime'
+    type: 'MinigameType'
+  }
   MinigameStats: { // field return type name
     account: 'Account'
     accountId: 'Int'
@@ -543,13 +592,13 @@ export interface NexusGenFieldTypeNames {
     type: 'MinigameType'
   }
   Mutation: { // field return type name
+    answerMinigame: 'Minigame'
     boost: 'Boolean'
     burnCard: 'Int'
     changeCardColor: 'Card'
     claimMinigameCardReward: 'Card'
     claimMinigameLilyReward: 'Account'
     claimMinigamePetalReward: 'Account'
-    completeMinigame: 'Boolean'
     completeTransaction: 'Boolean'
     createAccount: 'Account'
     createAlias: 'Alias'
@@ -579,6 +628,7 @@ export interface NexusGenFieldTypeNames {
     setBio: 'Account'
     setFrame: 'Card'
     setUserTitle: 'Account'
+    startMinigame: 'Minigame'
     tagCard: 'Card'
     toggleFlag: 'Account'
     togglePublicSupporter: 'Account'
@@ -694,6 +744,9 @@ export interface NexusGenArgTypes {
     }
   }
   Mutation: {
+    answerMinigame: { // args
+      answer: string; // String!
+    }
     boost: { // args
       count: number; // Int!
       discordId: string; // String!
@@ -704,12 +757,6 @@ export interface NexusGenArgTypes {
     changeCardColor: { // args
       cardId: number; // Int!
       color: number; // Int!
-    }
-    completeMinigame: { // args
-      guesses: number; // Int!
-      reward: NexusGenEnums['Reward']; // Reward!
-      time: number; // Int!
-      type: NexusGenEnums['MinigameType']; // MinigameType!
     }
     completeTransaction: { // args
       token: string; // String!
@@ -823,6 +870,14 @@ export interface NexusGenArgTypes {
     }
     setUserTitle: { // args
       id: number; // Int!
+    }
+    startMinigame: { // args
+      channelId?: string | null; // String
+      gender?: NexusGenEnums['Gender'] | null; // Gender
+      groupGender?: NexusGenEnums['GroupGender'] | null; // GroupGender
+      guildId?: string | null; // String
+      messageId?: string | null; // String
+      type: NexusGenEnums['MinigameType']; // MinigameType!
     }
     tagCard: { // args
       cardId: number; // Int!

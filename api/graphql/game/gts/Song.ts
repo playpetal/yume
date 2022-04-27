@@ -1,11 +1,14 @@
+import { MinigameType } from "@prisma/client";
 import { UserInputError } from "apollo-server";
 import { enumType, extendType, list, nonNull, objectType } from "nexus";
 import { Song } from "nexus-prisma";
+import { Minigame } from "yume";
 import { auth } from "../../../lib/Auth";
 import { roll } from "../../../lib/card";
 import { NotFoundError } from "../../../lib/error";
 import { canClaimPremiumCurrency, canClaimRewards } from "../../../lib/game";
 import { gts } from "../../../lib/gts";
+import { redis } from "../../../lib/redis";
 
 export const SongObject = objectType({
   name: Song.$name,
@@ -188,8 +191,8 @@ export const GetRandomSongQuery = extendType({
 
         return {
           ...song,
-          group: song.group?.name,
-          soloist: song.soloist?.name,
+          group: song.group,
+          soloist: song.soloist,
         };
       },
     });
@@ -209,7 +212,15 @@ export const ClaimMinigamePetalReward = extendType({
       async resolve(_, __, ctx) {
         const account = await auth(ctx);
 
-        const canClaim = await canClaimRewards(ctx);
+        const minigame = await redis.get(`minigame:${account.id}`);
+        if (!minigame) throw new Error("Not playing minigame");
+
+        const { data } = JSON.parse(minigame) as Minigame<MinigameType>;
+        if (!data.correct) throw new Error("Not correct");
+
+        await redis.del(`minigame:${account.id}`);
+
+        const canClaim = await canClaimRewards(ctx, account);
         let amount = 5;
         if (!canClaim) amount = 1;
 
@@ -241,7 +252,15 @@ export const ClaimMinigameLilyReward = extendType({
       async resolve(_, __, ctx) {
         const account = await auth(ctx);
 
-        const canClaim = await canClaimRewards(ctx);
+        const minigame = await redis.get(`minigame:${account.id}`);
+        if (!minigame) throw new Error("Not playing minigame");
+
+        const { data } = JSON.parse(minigame) as Minigame<MinigameType>;
+        if (!data.correct) throw new Error("Not correct");
+
+        await redis.del(`minigame:${account.id}`);
+
+        const canClaim = await canClaimRewards(ctx, account);
         if (!canClaim) throw new UserInputError("you cannot claim rewards");
 
         const canClaimPremium = await canClaimPremiumCurrency(account, ctx);
@@ -276,7 +295,15 @@ export const ClaimMinigameCardReward = extendType({
       async resolve(_, __, ctx) {
         const account = await auth(ctx);
 
-        const canClaim = await canClaimRewards(ctx);
+        const minigame = await redis.get(`minigame:${account.id}`);
+        if (!minigame) throw new Error("Not playing minigame");
+
+        const { data } = JSON.parse(minigame) as Minigame<MinigameType>;
+        if (!data.correct) throw new Error("Not correct");
+
+        await redis.del(`minigame:${account.id}`);
+
+        const canClaim = await canClaimRewards(ctx, account);
         if (!canClaim) throw new UserInputError("you cannot claim rewards");
 
         await ctx.db.minigame.upsert({

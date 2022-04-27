@@ -157,6 +157,26 @@ enum LeaderboardType {
   WORDS_TIME
 }
 
+"""Minigame"""
+type Minigame {
+  accountId: Int!
+  channelId: String
+  data: MinigameData!
+  guildId: String
+  messageId: String
+  type: MinigameType!
+}
+
+"""MinigameData"""
+type MinigameData {
+  attempts: Int!
+  correct: Boolean
+  elapsed: Int
+  isGendered: Boolean
+  startedAt: DateTime!
+  type: MinigameType!
+}
+
 type MinigameStats {
   account: Account!
   accountId: Int!
@@ -176,13 +196,13 @@ enum MinigameType {
 }
 
 type Mutation {
+  answerMinigame(answer: String!): Minigame
   boost(count: Int!, discordId: String!): Boolean!
   burnCard(cardId: Int!): Int!
   changeCardColor(cardId: Int!, color: Int!): Card!
   claimMinigameCardReward: [Card!]!
   claimMinigameLilyReward: Account!
   claimMinigamePetalReward: Account!
-  completeMinigame(guesses: Int!, reward: Reward!, time: Int!, type: MinigameType!): Boolean!
   completeTransaction(token: String!): Boolean!
   createAccount(username: String!): Account!
   createAlias(alias: String!, groupId: Int!): Alias!
@@ -212,6 +232,7 @@ type Mutation {
   setBio(bio: String): Account!
   setFrame(cardId: Int!): Card!
   setUserTitle(id: Int!): Account!
+  startMinigame(channelId: String, gender: Gender, groupGender: GroupGender, guildId: String, messageId: String, type: MinigameType!): Minigame
   tagCard(cardId: Int!, tag: String!): Card!
   toggleFlag(accountId: Int!, flag: Flag!): Account!
   togglePublicSupporter: Account!

@@ -5,8 +5,8 @@ import { Context } from "../../context";
 type Song = {
   id: number;
   title: string;
-  group?: { name: string } | null;
-  soloist?: { name: string } | null;
+  group?: string;
+  soloist?: string;
 };
 type RedisSong = Song & { video: string };
 
@@ -99,7 +99,13 @@ class GTSManager {
         data: { video: string };
       };
 
-      const instance: RedisSong = { ...song, video: video };
+      const instance: RedisSong = {
+        id: song.id,
+        title: song.title,
+        group: song.group?.name,
+        soloist: song.soloist?.name,
+        video: video,
+      };
 
       if (addToStack) {
         await redis.rpush(
