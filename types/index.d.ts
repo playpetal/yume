@@ -8,61 +8,36 @@ declare module "yume" {
     answerType: AnswerType;
   };
 
-  export type MinigameDataType<
-    T extends import("@prisma/client").MinigameType
-  > = T extends "GTS"
-    ? GTSData
-    : T extends "GUESS_CHARACTER"
-    ? CharacterGuessData
-    : T extends "WORDS"
-    ? WordsData
-    : never;
+  export type MinigameType = "GTS";
+  export type MinigameState =
+    | "PLAYING"
+    | "CANCELLED"
+    | "FAILED"
+    | "PENDING"
+    | "COMPLETED";
 
-  export type Minigame<T extends import("@prisma/client").MinigameType> = {
-    accountId: number;
-    messageId?: string;
-    channelId?: string;
-    guildId?: string;
-    data: T extends "GTS"
-      ? GTSData
-      : T extends "GUESS_CHARACTER"
-      ? CharacterGuessData
-      : T extends "WORDS"
-      ? WordsData
-      : never;
-  };
-
-  export type UnknownMinigameData = CharacterGuessData | GTSData | WordsData;
-
-  export type BaseMinigameData = {
-    correct: boolean;
-    attempts: number;
-    isGendered: boolean;
-    elapsed?: number;
-    startedAt: Date;
-  };
-
-  export type CharacterGuessData = BaseMinigameData & {
-    type: "GUESS_CHARACTER";
-    answer: import("@prisma/client").Character;
-  };
-
-  export type GTSData = BaseMinigameData & {
-    type: "GTS";
-    answer: GameSong;
-  };
-
-  export type WordsData = BaseMinigameData & {
-    type: "WORDS";
-    answer: string;
-  };
-
-  export type GameSong = {
-    id: number;
+  export type MinigameSong = {
     title: string;
     group?: string;
     soloist?: string;
+  };
+
+  export type GuessTheSongMinigame<T extends boolean> = {
+    type: "GTS";
+    accountId: number;
+
+    messageId?: string;
+    channelId?: string;
+    guildId?: string;
+
     video?: string;
+    state: MinigameState;
+    song: T extends true ? MinigameSong : MinigameSong | null;
+    attempts: MinigameSong[];
+    maxAttempts: number;
+    timeLimit: number;
+    startedAt: Date;
+    elapsed?: number;
   };
 
   type Reward = "PETAL" | "LILY" | "CARD";

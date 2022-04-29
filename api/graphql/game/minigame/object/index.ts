@@ -1,3 +1,5 @@
-export * from "./Minigame";
-export * from "./MinigameData";
 export * from "./MinigameStats";
+
+export * from "./GuessTheSong";
+
+export * from "./MinigameReward";

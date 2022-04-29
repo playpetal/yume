@@ -20,7 +20,8 @@
     "nexus": "^1.1.0",
     "nexus-prisma": "^0.35.0",
     "node-emoji": "^1.11.0",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "string-similarity": "^4.0.4"
   },
   "devDependencies": {
     "@types/ioredis": "^4.28.7",
@@ -31,6 +32,7 @@
     "@types/node-emoji": "^1.8.1",
     "@types/paypal__checkout-server-sdk": "^1.0.2",
     "@types/pg": "^8.6.3",
+    "@types/string-similarity": "^4.0.0",
     "concurrently": "^6.5.1",
     "get-port": "5.1.1",
     "graphql-request": "^3.7.0",

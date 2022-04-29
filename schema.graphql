@@ -86,15 +86,6 @@ enum Flag {
   RELEASE_MANAGER
 }
 
-"""Game song"""
-type GameSong {
-  group: String
-  id: Int!
-  soloist: String
-  title: String!
-  video: String!
-}
-
 """Character gender"""
 enum Gender {
   FEMALE
@@ -116,6 +107,63 @@ enum GroupGender {
   COED
   FEMALE
   MALE
+}
+
+"""Contains data for the 'Guess The Song' minigame."""
+type GuessTheSong {
+  """The account that initiated the minigame."""
+  account: Account!
+
+  """The ID of the account that initiated the minigame."""
+  accountId: Int!
+
+  """A list of songs that have already been guessed in this minigame."""
+  attempts: [MinigameSong!]!
+
+  """
+  The ID of the Discord channel that this minigame is being played at, if applicable.
+  """
+  channelId: String
+
+  """
+  The time, in milliseconds, this minigame took to complete. Will only returned when the minigame has ended.
+  """
+  elapsed: Int
+
+  """
+  The ID of the Discord guild that this minigame is being played at, if applicable.
+  """
+  guildId: String
+
+  """The maximium amount of attempts that can be made in this minigame."""
+  maxAttempts: Int!
+
+  """
+  The ID of the Discord message that this minigame is being played at, if applicable.
+  """
+  messageId: String
+
+  """
+  The solution to the minigame. Will only be returned when the minigame state is CANCELLED, FAILED, PENDING, or COMPLETED.
+  """
+  song: MinigameSong
+
+  """The time at which this minigame began."""
+  startedAt: DateTime!
+
+  """The state of the minigame."""
+  state: MinigameState!
+
+  """The amount of time allotted for this minigame."""
+  timeLimit: Int!
+
+  """The type of the minigame."""
+  type: MinigameType!
+
+  """
+  A Base64-encoded video of the song to guess. Will only be returned on minigame start.
+  """
+  video: String
 }
 
 """Inventory ordering type"""
@@ -157,24 +205,42 @@ enum LeaderboardType {
   WORDS_TIME
 }
 
-"""Minigame"""
-type Minigame {
-  accountId: Int!
-  channelId: String
-  data: MinigameData!
-  guildId: String
-  messageId: String
-  type: MinigameType!
+"""Contains data pertaining to rewards claimed for a minigame."""
+type MinigameReward {
+  """Returns the account of the minigame player."""
+  account: Account!
+
+  """If applicable, returns the card claimed from the minigame."""
+  card: Card
 }
 
-"""MinigameData"""
-type MinigameData {
-  attempts: Int!
-  correct: Boolean
-  elapsed: Int
-  isGendered: Boolean
-  startedAt: DateTime!
-  type: MinigameType!
+"""Contains song data for the 'Guess The Song' minigame."""
+type MinigameSong {
+  group: String
+  soloist: String
+  title: String!
+}
+
+"""Represents the state of a minigame."""
+enum MinigameState {
+  """Set when the minigame has been cancelled by the player."""
+  CANCELLED
+
+  """
+  Set when the minigame has been completed and the reward has been claimed.
+  """
+  COMPLETED
+
+  """
+  Set when the minigame has finished by time expiration or by reaching the attempt limit.
+  """
+  FAILED
+
+  """Set when the minigame has been completed and the reward is pending."""
+  PENDING
+
+  """Set when the minigame is still being played."""
+  PLAYING
 }
 
 type MinigameStats {
@@ -196,13 +262,15 @@ enum MinigameType {
 }
 
 type Mutation {
-  answerMinigame(answer: String!): Minigame
+  """Submits an answer to a 'Guess The Song' minigame."""
+  answerGuessTheSong(answer: String!): GuessTheSong!
   boost(count: Int!, discordId: String!): Boolean!
   burnCard(cardId: Int!): Int!
+  cancelMinigame: Boolean!
   changeCardColor(cardId: Int!, color: Int!): Card!
-  claimMinigameCardReward: [Card!]!
-  claimMinigameLilyReward: Account!
-  claimMinigamePetalReward: Account!
+
+  """Claims a reward from a `PENDING` 'Guess The Song' game."""
+  completeGuessTheSong(reward: Reward!): MinigameReward!
   completeTransaction(token: String!): Boolean!
   createAccount(username: String!): Account!
   createAlias(alias: String!, groupId: Int!): Alias!
@@ -232,13 +300,16 @@ type Mutation {
   setBio(bio: String): Account!
   setFrame(cardId: Int!): Card!
   setUserTitle(id: Int!): Account!
-  startMinigame(channelId: String, gender: Gender, groupGender: GroupGender, guildId: String, messageId: String, type: MinigameType!): Minigame
+
+  """Starts a new instance of the 'Guess The Song' minigame."""
+  startGuessTheSong(channelId: String, gender: GroupGender, group: Int, guildId: String, messageId: String): GuessTheSong!
   tagCard(cardId: Int!, tag: String!): Card!
   toggleFlag(accountId: Int!, flag: Flag!): Account!
   togglePublicSupporter: Account!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
   updateGroup(creation: DateTime, gender: GroupGender, id: Int!, name: String): Group!
+  updateMinigameMessage(channelId: String!, guildId: String!, messageId: String!): Boolean!
   updatePrefab(characterId: Int, groupId: Int, maxCards: Int, prefabId: Int!, rarity: Int, releaseId: Int, subgroupId: Int): CardPrefab!
   updateRelease(droppable: Boolean, id: Int!): Release!
   updateSubgroup(creation: DateTime, id: Int!, name: String): Subgroup!
@@ -286,9 +357,9 @@ type Query {
   getCard(id: Int!): Card
   getCharacter(id: Int!): Character
   getGroup(id: Int!): Group
+  getGuessTheSong: GuessTheSong
   getLeaderboard(type: LeaderboardType!): [Leaderboard!]!
   getRandomCharacter(gender: Gender): Character!
-  getRandomSong(gender: GroupGender): GameSong
   getSubgroup(id: Int!): Subgroup
   getTag(tag: String!): Tag
   getUserTitle(id: Int!): TitleInventory

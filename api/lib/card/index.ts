@@ -1,4 +1,4 @@
-import { CardPrefab, Gender, Quality } from "@prisma/client";
+import { Account, CardPrefab, Gender, Quality } from "@prisma/client";
 import { Context } from "../../context";
 import { createAnnouncement } from "../announcement/createAnnouncement";
 import { auth } from "../Auth";
@@ -81,65 +81,12 @@ export async function roll(
         ownerId: account.id,
         issue,
       },
+      include: {
+        prefab: { include: { character: true, subgroup: true, group: true } },
+      },
     });
 
-    if (prefab.subgroupId) {
-      const subgroup = await ctx.db.cardPrefab.findMany({
-        where: { subgroupId: prefab.subgroupId },
-      });
-
-      const collection = await ctx.db.prefabCollection.findMany({
-        where: {
-          accountId: account.id,
-          prefab: { subgroupId: prefab.subgroupId },
-        },
-      });
-
-      const rolled = collection.filter((c) => c.rolled === true);
-      const remainingCards = subgroup.length - rolled.length;
-
-      if (remainingCards === 1) {
-        const missingCard = subgroup.find(
-          (c) => !rolled.find((r) => r.prefabId === c.id)
-        );
-
-        if (missingCard && missingCard.id === prefab.id) {
-          let displayName = "%u";
-          let subgroupName = "";
-
-          if (account.activeTitleId) {
-            const { title } = (await ctx.db.titleInventory.findFirst({
-              where: { id: account.activeTitleId },
-              include: { title: true },
-            }))!;
-
-            displayName = title.title;
-          }
-
-          const prefabData = await ctx.db.cardPrefab.findFirst({
-            where: { id: missingCard.id },
-            select: {
-              group: { select: { name: true } },
-              subgroup: { select: { name: true } },
-            },
-          });
-
-          if (prefabData?.group) subgroupName = `${prefabData.group.name}`;
-          if (prefabData?.subgroup)
-            subgroupName += ` ${prefabData.subgroup.name}`;
-
-          await createAnnouncement(
-            ctx,
-            "%u has obtained all %a **%s** cards!",
-            {
-              "%u": displayName.replace("%u", `**${account.username}**`),
-              "%a": subgroup.length,
-              "%s": subgroupName.trim() || "an unknown subgroup!",
-            }
-          );
-        }
-      }
-    }
+    if (prefab.subgroupId) await checkCollection(ctx, account, prefab);
 
     await ctx.db.prefabCollection.upsert({
       create: {
@@ -165,4 +112,63 @@ export async function roll(
   });
 
   return cards;
+}
+
+async function checkCollection(
+  ctx: Context,
+  account: Account,
+  prefab: CardPrefab
+): Promise<void> {
+  const subgroup = await ctx.db.cardPrefab.findMany({
+    where: { subgroupId: prefab.subgroupId },
+  });
+
+  if (subgroup.length <= 1) return;
+
+  const collection = await ctx.db.prefabCollection.findMany({
+    where: {
+      accountId: account.id,
+      prefab: { subgroupId: prefab.subgroupId },
+    },
+  });
+
+  const rolled = collection.filter((c) => c.rolled === true);
+  const remainingCards = subgroup.length - rolled.length;
+
+  if (remainingCards !== 1) return;
+
+  const missingCard = subgroup.find(
+    (c) => !rolled.find((r) => r.prefabId === c.id)
+  );
+
+  if (!missingCard || missingCard.id !== prefab.id) return;
+
+  let displayName = "%u";
+  let subgroupName = "";
+
+  if (account.activeTitleId) {
+    const { title } = (await ctx.db.titleInventory.findFirst({
+      where: { id: account.activeTitleId },
+      include: { title: true },
+    }))!;
+
+    displayName = title.title;
+  }
+
+  const prefabData = await ctx.db.cardPrefab.findFirst({
+    where: { id: missingCard.id },
+    select: {
+      group: { select: { name: true } },
+      subgroup: { select: { name: true } },
+    },
+  });
+
+  if (prefabData?.group) subgroupName = `${prefabData.group.name}`;
+  if (prefabData?.subgroup) subgroupName += ` ${prefabData.subgroup.name}`;
+
+  await createAnnouncement(ctx, "%u has obtained all %a **%s** cards!", {
+    "%u": displayName.replace("%u", `**${account.username}**`),
+    "%a": subgroup.length,
+    "%s": subgroupName.trim() || "an unknown subgroup!",
+  });
 }

@@ -38,6 +38,7 @@ export interface NexusGenEnums {
   InventoryOrder: "ASC" | "DESC"
   InventorySort: "CHARACTER" | "CODE" | "GROUP" | "ISSUE" | "STAGE" | "SUBGROUP"
   LeaderboardType: "GTS_CARD" | "GTS_LILY" | "GTS_PETAL" | "GTS_TIME" | "PUBLIC_SUPPORTER" | "WORDS_CARD" | "WORDS_LILY" | "WORDS_PETAL" | "WORDS_TIME"
+  MinigameState: "CANCELLED" | "COMPLETED" | "FAILED" | "PENDING" | "PLAYING"
   MinigameType: "GTS" | "GUESS_CHARACTER" | "WORDS"
   ProductType: "ALPHA_TITLE" | "BETA_TITLE" | "PAID_CURRENCY" | "SIGMA_TITLE"
   Quality: "BLOOM" | "BUD" | "FLOWER" | "SEED" | "SPROUT"
@@ -105,18 +106,26 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   }
-  GameSong: { // root type
-    group?: string | null; // String
-    id: number; // Int!
-    soloist?: string | null; // String
-    title: string; // String!
-    video: string; // String!
-  }
   Group: { // root type
     creation?: NexusGenScalars['DateTime'] | null; // DateTime
     gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
     id: number; // Int!
     name: string; // String!
+  }
+  GuessTheSong: { // root type
+    accountId: number; // Int!
+    attempts: NexusGenRootTypes['MinigameSong'][]; // [MinigameSong!]!
+    channelId?: string | null; // String
+    elapsed?: number | null; // Int
+    guildId?: string | null; // String
+    maxAttempts: number; // Int!
+    messageId?: string | null; // String
+    song?: NexusGenRootTypes['MinigameSong'] | null; // MinigameSong
+    startedAt: NexusGenScalars['DateTime']; // DateTime!
+    state: NexusGenEnums['MinigameState']; // MinigameState!
+    timeLimit: number; // Int!
+    type: NexusGenEnums['MinigameType']; // MinigameType!
+    video?: string | null; // String
   }
   InventoryPage: { // root type
     cards: number; // Int!
@@ -126,21 +135,14 @@ export interface NexusGenObjects {
     accountId: number; // Int!
     value: number; // Float!
   }
-  Minigame: { // root type
-    accountId: number; // Int!
-    channelId?: string | null; // String
-    data: NexusGenRootTypes['MinigameData']; // MinigameData!
-    guildId?: string | null; // String
-    messageId?: string | null; // String
-    type: NexusGenEnums['MinigameType']; // MinigameType!
+  MinigameReward: { // root type
+    account: NexusGenRootTypes['Account']; // Account!
+    card?: NexusGenRootTypes['Card'] | null; // Card
   }
-  MinigameData: { // root type
-    attempts: number; // Int!
-    correct?: boolean | null; // Boolean
-    elapsed?: number | null; // Int
-    isGendered?: boolean | null; // Boolean
-    startedAt: NexusGenScalars['DateTime']; // DateTime!
-    type: NexusGenEnums['MinigameType']; // MinigameType!
+  MinigameSong: { // root type
+    group?: string | null; // String
+    soloist?: string | null; // String
+    title: string; // String!
   }
   MinigameStats: { // root type
     accountId: number; // Int!
@@ -280,19 +282,28 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     name: string; // String!
   }
-  GameSong: { // field return type
-    group: string | null; // String
-    id: number; // Int!
-    soloist: string | null; // String
-    title: string; // String!
-    video: string; // String!
-  }
   Group: { // field return type
     aliases: NexusGenRootTypes['Alias'][]; // [Alias!]!
     creation: NexusGenScalars['DateTime'] | null; // DateTime
     gender: NexusGenEnums['GroupGender'] | null; // GroupGender
     id: number; // Int!
     name: string; // String!
+  }
+  GuessTheSong: { // field return type
+    account: NexusGenRootTypes['Account']; // Account!
+    accountId: number; // Int!
+    attempts: NexusGenRootTypes['MinigameSong'][]; // [MinigameSong!]!
+    channelId: string | null; // String
+    elapsed: number | null; // Int
+    guildId: string | null; // String
+    maxAttempts: number; // Int!
+    messageId: string | null; // String
+    song: NexusGenRootTypes['MinigameSong'] | null; // MinigameSong
+    startedAt: NexusGenScalars['DateTime']; // DateTime!
+    state: NexusGenEnums['MinigameState']; // MinigameState!
+    timeLimit: number; // Int!
+    type: NexusGenEnums['MinigameType']; // MinigameType!
+    video: string | null; // String
   }
   InventoryPage: { // field return type
     cards: number; // Int!
@@ -303,21 +314,14 @@ export interface NexusGenFieldTypes {
     accountId: number; // Int!
     value: number; // Float!
   }
-  Minigame: { // field return type
-    accountId: number; // Int!
-    channelId: string | null; // String
-    data: NexusGenRootTypes['MinigameData']; // MinigameData!
-    guildId: string | null; // String
-    messageId: string | null; // String
-    type: NexusGenEnums['MinigameType']; // MinigameType!
+  MinigameReward: { // field return type
+    account: NexusGenRootTypes['Account']; // Account!
+    card: NexusGenRootTypes['Card'] | null; // Card
   }
-  MinigameData: { // field return type
-    attempts: number; // Int!
-    correct: boolean | null; // Boolean
-    elapsed: number | null; // Int
-    isGendered: boolean | null; // Boolean
-    startedAt: NexusGenScalars['DateTime']; // DateTime!
-    type: NexusGenEnums['MinigameType']; // MinigameType!
+  MinigameSong: { // field return type
+    group: string | null; // String
+    soloist: string | null; // String
+    title: string; // String!
   }
   MinigameStats: { // field return type
     account: NexusGenRootTypes['Account']; // Account!
@@ -331,13 +335,12 @@ export interface NexusGenFieldTypes {
     type: NexusGenEnums['MinigameType']; // MinigameType!
   }
   Mutation: { // field return type
-    answerMinigame: NexusGenRootTypes['Minigame'] | null; // Minigame
+    answerGuessTheSong: NexusGenRootTypes['GuessTheSong']; // GuessTheSong!
     boost: boolean; // Boolean!
     burnCard: number; // Int!
+    cancelMinigame: boolean; // Boolean!
     changeCardColor: NexusGenRootTypes['Card']; // Card!
-    claimMinigameCardReward: NexusGenRootTypes['Card'][]; // [Card!]!
-    claimMinigameLilyReward: NexusGenRootTypes['Account']; // Account!
-    claimMinigamePetalReward: NexusGenRootTypes['Account']; // Account!
+    completeGuessTheSong: NexusGenRootTypes['MinigameReward']; // MinigameReward!
     completeTransaction: boolean; // Boolean!
     createAccount: NexusGenRootTypes['Account']; // Account!
     createAlias: NexusGenRootTypes['Alias']; // Alias!
@@ -367,13 +370,14 @@ export interface NexusGenFieldTypes {
     setBio: NexusGenRootTypes['Account']; // Account!
     setFrame: NexusGenRootTypes['Card']; // Card!
     setUserTitle: NexusGenRootTypes['Account']; // Account!
-    startMinigame: NexusGenRootTypes['Minigame'] | null; // Minigame
+    startGuessTheSong: NexusGenRootTypes['GuessTheSong']; // GuessTheSong!
     tagCard: NexusGenRootTypes['Card']; // Card!
     toggleFlag: NexusGenRootTypes['Account']; // Account!
     togglePublicSupporter: NexusGenRootTypes['Account']; // Account!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
     updateCharacter: NexusGenRootTypes['Character']; // Character!
     updateGroup: NexusGenRootTypes['Group']; // Group!
+    updateMinigameMessage: boolean; // Boolean!
     updatePrefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
     updateRelease: NexusGenRootTypes['Release']; // Release!
     updateSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
@@ -403,9 +407,9 @@ export interface NexusGenFieldTypes {
     getCard: NexusGenRootTypes['Card'] | null; // Card
     getCharacter: NexusGenRootTypes['Character'] | null; // Character
     getGroup: NexusGenRootTypes['Group'] | null; // Group
+    getGuessTheSong: NexusGenRootTypes['GuessTheSong'] | null; // GuessTheSong
     getLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
     getRandomCharacter: NexusGenRootTypes['Character']; // Character!
-    getRandomSong: NexusGenRootTypes['GameSong'] | null; // GameSong
     getSubgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
     getTag: NexusGenRootTypes['Tag'] | null; // Tag
     getUserTitle: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
@@ -541,19 +545,28 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     name: 'String'
   }
-  GameSong: { // field return type name
-    group: 'String'
-    id: 'Int'
-    soloist: 'String'
-    title: 'String'
-    video: 'String'
-  }
   Group: { // field return type name
     aliases: 'Alias'
     creation: 'DateTime'
     gender: 'GroupGender'
     id: 'Int'
     name: 'String'
+  }
+  GuessTheSong: { // field return type name
+    account: 'Account'
+    accountId: 'Int'
+    attempts: 'MinigameSong'
+    channelId: 'String'
+    elapsed: 'Int'
+    guildId: 'String'
+    maxAttempts: 'Int'
+    messageId: 'String'
+    song: 'MinigameSong'
+    startedAt: 'DateTime'
+    state: 'MinigameState'
+    timeLimit: 'Int'
+    type: 'MinigameType'
+    video: 'String'
   }
   InventoryPage: { // field return type name
     cards: 'Int'
@@ -564,21 +577,14 @@ export interface NexusGenFieldTypeNames {
     accountId: 'Int'
     value: 'Float'
   }
-  Minigame: { // field return type name
-    accountId: 'Int'
-    channelId: 'String'
-    data: 'MinigameData'
-    guildId: 'String'
-    messageId: 'String'
-    type: 'MinigameType'
+  MinigameReward: { // field return type name
+    account: 'Account'
+    card: 'Card'
   }
-  MinigameData: { // field return type name
-    attempts: 'Int'
-    correct: 'Boolean'
-    elapsed: 'Int'
-    isGendered: 'Boolean'
-    startedAt: 'DateTime'
-    type: 'MinigameType'
+  MinigameSong: { // field return type name
+    group: 'String'
+    soloist: 'String'
+    title: 'String'
   }
   MinigameStats: { // field return type name
     account: 'Account'
@@ -592,13 +598,12 @@ export interface NexusGenFieldTypeNames {
     type: 'MinigameType'
   }
   Mutation: { // field return type name
-    answerMinigame: 'Minigame'
+    answerGuessTheSong: 'GuessTheSong'
     boost: 'Boolean'
     burnCard: 'Int'
+    cancelMinigame: 'Boolean'
     changeCardColor: 'Card'
-    claimMinigameCardReward: 'Card'
-    claimMinigameLilyReward: 'Account'
-    claimMinigamePetalReward: 'Account'
+    completeGuessTheSong: 'MinigameReward'
     completeTransaction: 'Boolean'
     createAccount: 'Account'
     createAlias: 'Alias'
@@ -628,13 +633,14 @@ export interface NexusGenFieldTypeNames {
     setBio: 'Account'
     setFrame: 'Card'
     setUserTitle: 'Account'
-    startMinigame: 'Minigame'
+    startGuessTheSong: 'GuessTheSong'
     tagCard: 'Card'
     toggleFlag: 'Account'
     togglePublicSupporter: 'Account'
     updateAlias: 'Alias'
     updateCharacter: 'Character'
     updateGroup: 'Group'
+    updateMinigameMessage: 'Boolean'
     updatePrefab: 'CardPrefab'
     updateRelease: 'Release'
     updateSubgroup: 'Subgroup'
@@ -664,9 +670,9 @@ export interface NexusGenFieldTypeNames {
     getCard: 'Card'
     getCharacter: 'Character'
     getGroup: 'Group'
+    getGuessTheSong: 'GuessTheSong'
     getLeaderboard: 'Leaderboard'
     getRandomCharacter: 'Character'
-    getRandomSong: 'GameSong'
     getSubgroup: 'Subgroup'
     getTag: 'Tag'
     getUserTitle: 'TitleInventory'
@@ -744,7 +750,7 @@ export interface NexusGenArgTypes {
     }
   }
   Mutation: {
-    answerMinigame: { // args
+    answerGuessTheSong: { // args
       answer: string; // String!
     }
     boost: { // args
@@ -757,6 +763,9 @@ export interface NexusGenArgTypes {
     changeCardColor: { // args
       cardId: number; // Int!
       color: number; // Int!
+    }
+    completeGuessTheSong: { // args
+      reward: NexusGenEnums['Reward']; // Reward!
     }
     completeTransaction: { // args
       token: string; // String!
@@ -871,13 +880,12 @@ export interface NexusGenArgTypes {
     setUserTitle: { // args
       id: number; // Int!
     }
-    startMinigame: { // args
+    startGuessTheSong: { // args
       channelId?: string | null; // String
-      gender?: NexusGenEnums['Gender'] | null; // Gender
-      groupGender?: NexusGenEnums['GroupGender'] | null; // GroupGender
+      gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
+      group?: number | null; // Int
       guildId?: string | null; // String
       messageId?: string | null; // String
-      type: NexusGenEnums['MinigameType']; // MinigameType!
     }
     tagCard: { // args
       cardId: number; // Int!
@@ -903,6 +911,11 @@ export interface NexusGenArgTypes {
       gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
       id: number; // Int!
       name?: string | null; // String
+    }
+    updateMinigameMessage: { // args
+      channelId: string; // String!
+      guildId: string; // String!
+      messageId: string; // String!
     }
     updatePrefab: { // args
       characterId?: number | null; // Int
@@ -947,9 +960,6 @@ export interface NexusGenArgTypes {
     }
     getRandomCharacter: { // args
       gender?: NexusGenEnums['Gender'] | null; // Gender
-    }
-    getRandomSong: { // args
-      gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
     }
     getSubgroup: { // args
       id: number; // Int!

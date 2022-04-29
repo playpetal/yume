@@ -1,14 +1,8 @@
-import { MinigameType } from "@prisma/client";
-import { UserInputError } from "apollo-server";
-import { enumType, extendType, list, nonNull, objectType } from "nexus";
+import { enumType, extendType, nonNull, objectType } from "nexus";
 import { Song } from "nexus-prisma";
-import { Minigame } from "yume";
 import { auth } from "../../../lib/Auth";
-import { roll } from "../../../lib/card";
 import { NotFoundError } from "../../../lib/error";
-import { canClaimPremiumCurrency, canClaimRewards } from "../../../lib/game";
 import { gts } from "../../../lib/gts";
-import { redis } from "../../../lib/redis";
 
 export const SongObject = objectType({
   name: Song.$name,
@@ -49,11 +43,9 @@ export const SongObject = objectType({
 });
 
 export const GameSongObject = objectType({
-  name: "GameSong",
-  description: "Game song",
+  name: "MinigameSong",
+  description: "Contains song data for the 'Guess The Song' minigame.",
   definition(t) {
-    t.field("id", { type: nonNull("Int") });
-    t.field("video", { type: nonNull("String") });
     t.field("title", { type: nonNull("String") });
     t.field("group", { type: "String" });
     t.field("soloist", { type: "String" });
@@ -160,7 +152,7 @@ export const DeleteSong = extendType({
   },
 });
 
-export const GetRandomSongQuery = extendType({
+/*export const GetRandomSongQuery = extendType({
   type: "Query",
   definition(t) {
     t.field("getRandomSong", {
@@ -197,128 +189,9 @@ export const GetRandomSongQuery = extendType({
       },
     });
   },
-});
+});*/
 
 export const Reward = enumType({
   name: "Reward",
   members: ["CARD", "PETAL", "LILY"],
-});
-
-export const ClaimMinigamePetalReward = extendType({
-  type: "Mutation",
-  definition(t) {
-    t.field("claimMinigamePetalReward", {
-      type: nonNull("Account"),
-      async resolve(_, __, ctx) {
-        const account = await auth(ctx);
-
-        const minigame = await redis.get(`minigame:${account.id}`);
-        if (!minigame) throw new Error("Not playing minigame");
-
-        const { data } = JSON.parse(minigame) as Minigame<MinigameType>;
-        if (!data.correct) throw new Error("Not correct");
-
-        await redis.del(`minigame:${account.id}`);
-
-        const canClaim = await canClaimRewards(ctx, account);
-        let amount = 5;
-        if (!canClaim) amount = 1;
-
-        await ctx.db.minigame.upsert({
-          create: { accountId: account.id, claimed: 1, lastClaim: new Date() },
-          update: {
-            claimed: canClaim === 3 ? 1 : { increment: 1 },
-            lastClaim: new Date(),
-          },
-          where: {
-            accountId: account.id,
-          },
-        });
-
-        return ctx.db.account.update({
-          where: { id: account.id },
-          data: { currency: { increment: amount } },
-        });
-      },
-    });
-  },
-});
-
-export const ClaimMinigameLilyReward = extendType({
-  type: "Mutation",
-  definition(t) {
-    t.field("claimMinigameLilyReward", {
-      type: nonNull("Account"),
-      async resolve(_, __, ctx) {
-        const account = await auth(ctx);
-
-        const minigame = await redis.get(`minigame:${account.id}`);
-        if (!minigame) throw new Error("Not playing minigame");
-
-        const { data } = JSON.parse(minigame) as Minigame<MinigameType>;
-        if (!data.correct) throw new Error("Not correct");
-
-        await redis.del(`minigame:${account.id}`);
-
-        const canClaim = await canClaimRewards(ctx, account);
-        if (!canClaim) throw new UserInputError("you cannot claim rewards");
-
-        const canClaimPremium = await canClaimPremiumCurrency(account, ctx);
-
-        await ctx.db.minigame.upsert({
-          create: { accountId: account.id, claimed: 1, lastClaim: new Date() },
-          update: {
-            claimed: canClaim === 3 ? 1 : { increment: 1 },
-            lastClaim: new Date(),
-            premiumClaimed: canClaimPremium === 25 ? 1 : { increment: 1 },
-            lastPremiumClaim: new Date(),
-          },
-          where: {
-            accountId: account.id,
-          },
-        });
-
-        return ctx.db.account.update({
-          where: { id: account.id },
-          data: { premiumCurrency: { increment: 1 } },
-        });
-      },
-    });
-  },
-});
-
-export const ClaimMinigameCardReward = extendType({
-  type: "Mutation",
-  definition(t) {
-    t.field("claimMinigameCardReward", {
-      type: nonNull(list(nonNull("Card"))),
-      async resolve(_, __, ctx) {
-        const account = await auth(ctx);
-
-        const minigame = await redis.get(`minigame:${account.id}`);
-        if (!minigame) throw new Error("Not playing minigame");
-
-        const { data } = JSON.parse(minigame) as Minigame<MinigameType>;
-        if (!data.correct) throw new Error("Not correct");
-
-        await redis.del(`minigame:${account.id}`);
-
-        const canClaim = await canClaimRewards(ctx, account);
-        if (!canClaim) throw new UserInputError("you cannot claim rewards");
-
-        await ctx.db.minigame.upsert({
-          create: { accountId: account.id, claimed: 1, lastClaim: new Date() },
-          update: {
-            claimed: canClaim === 3 ? 1 : { increment: 1 },
-            lastClaim: new Date(),
-          },
-          where: {
-            accountId: account.id,
-          },
-        });
-
-        return roll(ctx, { amount: 1, free: true });
-      },
-    });
-  },
 });
