@@ -48,7 +48,7 @@ export const startGuessTheSong = extendType({
           startedAt: Date.now(),
           state: "PLAYING",
           timeLimit: ruleset.timeLimit,
-          video: song.video,
+          video: undefined,
           messageId: messageId ?? undefined,
           channelId: channelId ?? undefined,
           guildId: guildId ?? undefined,
@@ -56,7 +56,7 @@ export const startGuessTheSong = extendType({
 
         await setMinigame(minigame);
 
-        return { ...minigame, song: null };
+        return { ...minigame, song: null, video: song.video };
       },
     });
   },
