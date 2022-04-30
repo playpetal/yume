@@ -3,12 +3,17 @@ import { Context } from "../context";
 
 export async function getRandomCharacter(
   ctx: Context,
-  gender?: Gender
+  options?: { gender?: Gender; group?: string }
 ): Promise<Character> {
   const characterCount = await ctx.db.character.count({
     where: {
-      prefabs: { some: { release: { droppable: true } } },
-      gender: gender ?? undefined,
+      prefabs: {
+        some: {
+          release: { droppable: true },
+          group: { name: { equals: options?.group, mode: "insensitive" } },
+        },
+      },
+      gender: options?.gender ?? undefined,
     },
   });
 
@@ -22,8 +27,13 @@ export async function getRandomCharacter(
 
   const character = await ctx.db.character.findFirst({
     where: {
-      prefabs: { some: { release: { droppable: true } } },
-      gender: gender ?? undefined,
+      prefabs: {
+        some: {
+          release: { droppable: true },
+          group: { name: { equals: options?.group, mode: "insensitive" } },
+        },
+      },
+      gender: options?.gender ?? undefined,
     },
     skip,
     orderBy: { [orderBy]: orderDir },

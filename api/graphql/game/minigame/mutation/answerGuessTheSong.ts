@@ -2,11 +2,12 @@ import { MinigameType } from "@prisma/client";
 import { extendType, nonNull } from "nexus";
 import { Minigame } from "yume";
 import { auth } from "../../../../lib/Auth";
-import { MinigameNotImplementedError } from "../../../../lib/error/minigame";
 import {
-  NotPlayingGTSError,
+  MinigameNotImplementedError,
+  NotPlayingMinigameError,
+  PlayingOtherMinigameError,
   RewardsPendingError,
-} from "../../../../lib/error/minigame/guessTheSong";
+} from "../../../../lib/error/minigame";
 import { canClaimRewards } from "../../../../lib/game";
 import { getMinigame } from "../../../../lib/minigame/redis/getMinigame";
 import { setMinigame } from "../../../../lib/minigame/redis/setMinigame";
@@ -36,7 +37,7 @@ export const answerGuessTheSong = extendType({
             minigame.state === "CANCELLED" ||
             minigame.state === "COMPLETED"
           )
-            throw new NotPlayingGTSError("you're not playing guess-the-song!");
+            throw new NotPlayingMinigameError("guess-the-song");
 
           if (minigame.state === "PENDING")
             throw new RewardsPendingError(
@@ -44,12 +45,9 @@ export const answerGuessTheSong = extendType({
             );
         }
 
-        if (!isGuessTheSong(minigame))
-          throw new NotPlayingGTSError(
-            "you're currently playing a different minigame!"
-          );
+        if (!isGuessTheSong(minigame)) throw new PlayingOtherMinigameError();
 
-        const ruleset = rulesets.GTS;
+        const ruleset = rulesets.GUESS_THE_SONG;
         if (!ruleset) throw new MinigameNotImplementedError();
 
         minigame.attempts.push({ title: answer });
@@ -63,7 +61,7 @@ export const answerGuessTheSong = extendType({
         const { rating } = findBestMatch(answer, candidates);
 
         if (rating >= 0.8) {
-          minigame.elapsed = Date.now() - minigame.startedAt.getTime();
+          minigame.elapsed = Date.now() - minigame.startedAt;
 
           const canClaim = await canClaimRewards(ctx, account);
 

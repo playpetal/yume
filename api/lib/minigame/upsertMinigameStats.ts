@@ -1,8 +1,9 @@
+import { MinigameType } from "@prisma/client";
 import { Context } from "../../context";
 
 export async function upsertMinigameStats(
   ctx: Context,
-  minigame: "GTS" | "GUESS_CHARACTER" | "WORDS",
+  minigame: MinigameType,
   account: { id: number },
   reward: { type: "PETAL" | "CARD" | "LILY"; amount: number },
   games: number,

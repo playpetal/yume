@@ -1,17 +1,17 @@
-import { MinigameType } from "@prisma/client";
+import { Character, MinigameType } from "@prisma/client";
 import { extendType } from "nexus";
-import { Minigame, MinigameSong } from "yume";
+import { Minigame } from "yume";
 import { auth } from "../../../../lib/Auth";
 import { PlayingOtherMinigameError } from "../../../../lib/error/minigame";
 import { getMinigame } from "../../../../lib/minigame/redis/getMinigame";
 import { setMinigame } from "../../../../lib/minigame/redis/setMinigame";
-import { isGuessTheSong } from "../../../../lib/minigame/util/typeguards/isGuessTheSong";
+import { isGuessTheIdol } from "../../../../lib/minigame/util/typeguards/isGuessTheIdol";
 
-export const getGuessTheSong = extendType({
+export const getGuessTheIdol = extendType({
   type: "Query",
   definition(t) {
-    t.field("getGuessTheSong", {
-      type: "GuessTheSong",
+    t.field("getGuessTheIdol", {
+      type: "GuessTheIdol",
       async resolve(_, __, ctx) {
         const account = await auth(ctx);
 
@@ -20,7 +20,7 @@ export const getGuessTheSong = extendType({
         );
         if (!minigame) return null;
 
-        if (!isGuessTheSong(minigame)) throw new PlayingOtherMinigameError();
+        if (!isGuessTheIdol(minigame)) throw new PlayingOtherMinigameError();
 
         let expired =
           minigame.state === "PLAYING" &&
@@ -32,13 +32,13 @@ export const getGuessTheSong = extendType({
           await setMinigame(minigame);
         }
 
-        let song: MinigameSong | null = minigame.song;
+        let character: Character | null = minigame.character;
 
         if (minigame.state === "PLAYING") {
-          song = null;
+          character = null;
         }
 
-        return { ...minigame, song };
+        return { ...minigame, character };
       },
     });
   },

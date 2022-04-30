@@ -1,4 +1,4 @@
-import { Card } from "@prisma/client";
+import { Card, MinigameType } from "@prisma/client";
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../../lib/Auth";
 import { roll } from "../../../../lib/card";
@@ -9,7 +9,6 @@ import {
   NoRewardsPendingError,
   RewardsAlreadyClaimedError,
 } from "../../../../lib/error/minigame";
-import { NotPlayingGTSError } from "../../../../lib/error/minigame/guessTheSong";
 import { canClaimPremiumCurrency, canClaimRewards } from "../../../../lib/game";
 import { modifyCurrency } from "../../../../lib/game/economy/modifyCurrency";
 import { modifyPremiumCurrency } from "../../../../lib/game/economy/modifyPremiumCurrency";
@@ -18,19 +17,18 @@ import { getMinigame } from "../../../../lib/minigame/redis/getMinigame";
 import { setMinigame } from "../../../../lib/minigame/redis/setMinigame";
 import { rulesets } from "../../../../lib/minigame/rulesets";
 import { upsertMinigameStats } from "../../../../lib/minigame/upsertMinigameStats";
-import { isGuessTheSong } from "../../../../lib/minigame/util/typeguards/isGuessTheSong";
 
-export const completeGuessTheSong = extendType({
+export const completeMinigame = extendType({
   type: "Mutation",
   definition(t) {
-    t.field("completeGuessTheSong", {
+    t.field("completeMinigame", {
       type: nonNull("MinigameReward"),
-      description: "Claims a reward from a `PENDING` 'Guess The Song' game.",
+      description: "Claims a reward from a `PENDING` minigame.",
       args: { reward: nonNull("Reward") },
       async resolve(_, { reward }, ctx) {
         const account = await auth(ctx);
 
-        const minigame = await getMinigame(account.id);
+        const minigame = await getMinigame<MinigameType>(account.id);
 
         if (!minigame || minigame.state !== "PENDING") {
           if (minigame?.state === "COMPLETED")
@@ -41,15 +39,10 @@ export const completeGuessTheSong = extendType({
           throw new NoRewardsPendingError();
         }
 
-        if (!isGuessTheSong(minigame))
-          throw new NotPlayingGTSError(
-            "you're currently playing a different minigame!"
-          );
-
         const isEligible = await canClaimRewards(ctx, account);
         if (isEligible <= 0) throw new AllRewardsClaimedError();
 
-        const ruleset = rulesets.GTS;
+        const ruleset = rulesets.GUESS_THE_IDOL;
         if (!ruleset) throw new MinigameNotImplementedError();
 
         if (reward === "LILY") {

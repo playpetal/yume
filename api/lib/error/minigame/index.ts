@@ -45,6 +45,15 @@ export class RewardsAlreadyClaimedError extends ApolloError {
   }
 }
 
+export class RewardsPendingError extends ApolloError {
+  isUserFacing = true;
+  name = "RewardsPendingError";
+
+  constructor(message: string) {
+    super(message, "REWARDS_PENDING");
+  }
+}
+
 export class NoRewardsPendingError extends ApolloError {
   isUserFacing = true;
   name = "NoRewardsPendingError";
@@ -53,6 +62,27 @@ export class NoRewardsPendingError extends ApolloError {
     super(
       "you have no rewards pending for this minigame!",
       "NO_REWARDS_PENDING"
+    );
+  }
+}
+
+export class NotPlayingMinigameError extends ApolloError {
+  isUserFacing = true;
+  name = "NotPlayingMinigameError";
+
+  constructor(minigame: string) {
+    super(`you're not currently playing ${minigame}!`, "NOT_PLAYING_MINIGAME");
+  }
+}
+
+export class PlayingOtherMinigameError extends ApolloError {
+  isUserFacing = true;
+  name = "PlayingOtherMinigameError";
+
+  constructor() {
+    super(
+      "you're currently playing a different minigame!",
+      "PLAYING_OTHER_MINIGAME"
     );
   }
 }

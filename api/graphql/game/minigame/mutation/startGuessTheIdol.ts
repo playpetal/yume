@@ -2,26 +2,26 @@ import { extendType, nonNull } from "nexus";
 import { Minigame } from "yume";
 import { auth } from "../../../../lib/Auth";
 import { MinigameNotImplementedError } from "../../../../lib/error/minigame";
-import { gts } from "../../../../lib/gts";
+import { getRandomCharacter } from "../../../../lib/getRandomCharacter";
 import { getMinigame } from "../../../../lib/minigame/redis/getMinigame";
 import { setMinigame } from "../../../../lib/minigame/redis/setMinigame";
 import { rulesets } from "../../../../lib/minigame/rulesets";
 
-export const startGuessTheSong = extendType({
+export const startGuessTheIdol = extendType({
   type: "Mutation",
   definition(t) {
-    t.field("startGuessTheSong", {
-      type: nonNull("GuessTheSong"),
+    t.field("startGuessTheIdol", {
+      type: nonNull("GuessTheIdol"),
       description: "Starts a new instance of the 'Guess The Song' minigame.",
       args: {
-        gender: "GroupGender",
-        group: "Int",
+        gender: "Gender",
+        group: "String",
         /* discord */
         messageId: "String",
         channelId: "String",
         guildId: "String",
       },
-      async resolve(_, { gender, messageId, channelId, guildId }, ctx) {
+      async resolve(_, { gender, group, messageId, channelId, guildId }, ctx) {
         const account = await auth(ctx);
 
         const activeMinigame = await getMinigame(account.id);
@@ -33,30 +33,31 @@ export const startGuessTheSong = extendType({
         )
           throw new Error("You're playing a minigame already");
 
-        const ruleset = rulesets.GUESS_THE_SONG;
+        const ruleset = rulesets.GUESS_THE_IDOL;
         if (!ruleset) throw new MinigameNotImplementedError();
 
-        const song = await gts.getSong(ctx, gender ?? undefined);
-        if (!song) throw new Error("No songs");
+        const character = await getRandomCharacter(ctx, {
+          gender: gender ?? undefined,
+          group: group ?? undefined,
+        });
 
-        const minigame: Minigame<"GUESS_THE_SONG"> = {
-          type: "GUESS_THE_SONG",
+        const minigame: Minigame<"GUESS_THE_IDOL"> = {
+          type: "GUESS_THE_IDOL",
           accountId: account.id,
           attempts: [],
           maxAttempts: ruleset.maxAttempts,
-          song: { title: song.title, group: song.group, soloist: song.soloist },
           startedAt: Date.now(),
           state: "PLAYING",
           timeLimit: ruleset.timeLimit,
-          video: song.video,
           messageId: messageId ?? undefined,
           channelId: channelId ?? undefined,
           guildId: guildId ?? undefined,
+          character,
         };
 
         await setMinigame(minigame);
 
-        return { ...minigame, song: null };
+        return { ...minigame, character: null };
       },
     });
   },

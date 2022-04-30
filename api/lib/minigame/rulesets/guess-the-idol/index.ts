@@ -1,8 +1,8 @@
 import { Ruleset } from "yume";
 
-const rulesetGuessCharacter: Ruleset = {
+const rulesetGuessTheIdol: Ruleset = {
   timeLimit: 1000 * 60 * 5,
   maxAttempts: 6,
 };
 
-export default rulesetGuessCharacter;
+export default rulesetGuessTheIdol;

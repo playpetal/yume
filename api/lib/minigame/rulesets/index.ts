@@ -1,9 +1,9 @@
 import { MinigameType } from "@prisma/client";
 import { Ruleset } from "yume";
-import rulesetGuessCharacter from "./guess-character";
+import rulesetGuessTheIdol from "./guess-the-idol";
 import rulesetGuessTheSong from "./guess-the-song";
 
 export const rulesets: { [key in MinigameType]?: Ruleset } = {
-  GTS: rulesetGuessTheSong,
-  GUESS_CHARACTER: rulesetGuessCharacter,
+  GUESS_THE_SONG: rulesetGuessTheSong,
+  GUESS_THE_IDOL: rulesetGuessTheIdol,
 } as const;

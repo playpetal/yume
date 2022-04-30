@@ -8,8 +8,5 @@ export async function getMinigame<T extends MinigameType>(
   const minigame = await redis.get(`minigame:${accountId}`);
   if (!minigame) return null;
 
-  const _minigame = JSON.parse(minigame) as Minigame<T>;
-  _minigame.startedAt = new Date(_minigame.startedAt);
-
-  return _minigame;
+  return JSON.parse(minigame) as Minigame<T>;
 }

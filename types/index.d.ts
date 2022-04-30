@@ -28,9 +28,17 @@ declare module "yume" {
     state: MinigameState;
     maxAttempts: number;
     timeLimit: number;
-    startedAt: Date;
+    startedAt: number;
     elapsed?: number;
-  } & (T extends "GTS" ? GuessTheSongMinigame : GuessTheCharacterMinigame);
+  } & (T extends "GUESS_THE_SONG"
+    ? GuessTheSongMinigame
+    : T extends "GUESS_THE_IDOL"
+    ? GuessTheIdolMinigame
+    : T extends "GUESS_THE_GROUP"
+    ? GuessTheGroupMinigame
+    : { attempts: any[] });
+
+  export type MinigameComparison = "GREATER" | "LESS" | "EQUAL";
 
   export type GuessTheSongMinigame = {
     video?: string;
@@ -38,9 +46,23 @@ declare module "yume" {
     attempts: MinigameSong[];
   };
 
-  export type GuessTheCharacterMinigame = {
-    character: import("@prisma/client").Character | null;
-    attempts: import("@prisma/client").Character[];
+  export type GuessTheIdolCharacter = {
+    name: string;
+    birthday?: Date | null;
+    gender?: import("@prisma/client").Gender | null;
+    nameLength: MinigameComparison;
+    birthDate: MinigameComparison;
+    isGender: boolean;
+  };
+
+  export type GuessTheIdolMinigame = {
+    character: import("@prisma/client").Character;
+    attempts: GuessTheIdolCharacter[];
+  };
+
+  export type GuessTheGroupMinigame = {
+    group: import("@prisma/client").Group;
+    attempts: import("@prisma/client").Group[];
   };
 
   type Reward = "PETAL" | "LILY" | "CARD";
