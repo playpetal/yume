@@ -1,6 +1,5 @@
 import { Card } from "@prisma/client";
 import { extendType, nonNull } from "nexus";
-import { GuessTheSongMinigame } from "yume";
 import { auth } from "../../../../lib/Auth";
 import { roll } from "../../../../lib/card";
 import {
@@ -10,6 +9,7 @@ import {
   NoRewardsPendingError,
   RewardsAlreadyClaimedError,
 } from "../../../../lib/error/minigame";
+import { NotPlayingGTSError } from "../../../../lib/error/minigame/guessTheSong";
 import { canClaimPremiumCurrency, canClaimRewards } from "../../../../lib/game";
 import { modifyCurrency } from "../../../../lib/game/economy/modifyCurrency";
 import { modifyPremiumCurrency } from "../../../../lib/game/economy/modifyPremiumCurrency";
@@ -18,6 +18,7 @@ import { getMinigame } from "../../../../lib/minigame/redis/getMinigame";
 import { setMinigame } from "../../../../lib/minigame/redis/setMinigame";
 import { rulesets } from "../../../../lib/minigame/rulesets";
 import { upsertMinigameStats } from "../../../../lib/minigame/upsertMinigameStats";
+import { isGuessTheSong } from "../../../../lib/minigame/util/typeguards/isGuessTheSong";
 
 export const completeGuessTheSong = extendType({
   type: "Mutation",
@@ -29,9 +30,7 @@ export const completeGuessTheSong = extendType({
       async resolve(_, { reward }, ctx) {
         const account = await auth(ctx);
 
-        const minigame: GuessTheSongMinigame<true> | null = await getMinigame(
-          account.id
-        );
+        const minigame = await getMinigame(account.id);
 
         if (!minigame || minigame.state !== "PENDING") {
           if (minigame?.state === "COMPLETED")
@@ -41,6 +40,11 @@ export const completeGuessTheSong = extendType({
 
           throw new NoRewardsPendingError();
         }
+
+        if (!isGuessTheSong(minigame))
+          throw new NotPlayingGTSError(
+            "you're currently playing a different minigame!"
+          );
 
         const isEligible = await canClaimRewards(ctx, account);
         if (isEligible <= 0) throw new AllRewardsClaimedError();

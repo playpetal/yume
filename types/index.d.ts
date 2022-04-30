@@ -6,7 +6,6 @@ declare module "yume" {
     maxAttempts: number;
   };
 
-  export type MinigameType = "GTS";
   export type MinigameState =
     | "PLAYING"
     | "CANCELLED"
@@ -20,22 +19,28 @@ declare module "yume" {
     soloist?: string;
   };
 
-  export type GuessTheSongMinigame<T extends boolean> = {
-    type: "GTS";
+  export type Minigame<T extends import("@prisma/client").MinigameType> = {
+    type: T;
     accountId: number;
-
     messageId?: string;
     channelId?: string;
     guildId?: string;
-
-    video?: string;
     state: MinigameState;
-    song: T extends true ? MinigameSong : MinigameSong | null;
-    attempts: MinigameSong[];
     maxAttempts: number;
     timeLimit: number;
     startedAt: Date;
     elapsed?: number;
+  } & (T extends "GTS" ? GuessTheSongMinigame : GuessTheCharacterMinigame);
+
+  export type GuessTheSongMinigame = {
+    video?: string;
+    song: MinigameSong;
+    attempts: MinigameSong[];
+  };
+
+  export type GuessTheCharacterMinigame = {
+    character: import("@prisma/client").Character | null;
+    attempts: import("@prisma/client").Character[];
   };
 
   type Reward = "PETAL" | "LILY" | "CARD";

@@ -1,8 +1,11 @@
+import { MinigameType } from "@prisma/client";
 import { extendType } from "nexus";
-import { GuessTheSongMinigame } from "yume";
+import { Minigame, MinigameSong } from "yume";
 import { auth } from "../../../../lib/Auth";
+import { NotPlayingGTSError } from "../../../../lib/error/minigame/guessTheSong";
 import { getMinigame } from "../../../../lib/minigame/redis/getMinigame";
 import { setMinigame } from "../../../../lib/minigame/redis/setMinigame";
+import { isGuessTheSong } from "../../../../lib/minigame/util/typeguards/isGuessTheSong";
 
 export const getGuessTheSong = extendType({
   type: "Query",
@@ -12,8 +15,13 @@ export const getGuessTheSong = extendType({
       async resolve(_, __, ctx) {
         const account = await auth(ctx);
 
-        const minigame = await getMinigame(account.id);
+        let minigame: Minigame<MinigameType> | null = await getMinigame(
+          account.id
+        );
         if (!minigame) return null;
+
+        if (!isGuessTheSong(minigame))
+          throw new NotPlayingGTSError("you're not playing guess-the-song!");
 
         let expired =
           minigame.state === "PLAYING" &&
@@ -25,11 +33,13 @@ export const getGuessTheSong = extendType({
           await setMinigame(minigame);
         }
 
+        let song: MinigameSong | null = minigame.song;
+
         if (minigame.state === "PLAYING") {
-          (minigame as GuessTheSongMinigame<false>).song = null;
+          song = null;
         }
 
-        return minigame;
+        return { ...minigame, song };
       },
     });
   },

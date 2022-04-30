@@ -1,5 +1,6 @@
+import { MinigameType } from "@prisma/client";
 import { extendType, nonNull } from "nexus";
-import { GuessTheSongMinigame } from "yume";
+import { Minigame } from "yume";
 import { auth } from "../../../../lib/Auth";
 import { MinigameNotImplementedError } from "../../../../lib/error/minigame";
 import {
@@ -12,6 +13,7 @@ import { setMinigame } from "../../../../lib/minigame/redis/setMinigame";
 import { rulesets } from "../../../../lib/minigame/rulesets";
 import { upsertMinigameStats } from "../../../../lib/minigame/upsertMinigameStats";
 import { findBestMatch } from "../../../../lib/minigame/util/compareStrings";
+import { isGuessTheSong } from "../../../../lib/minigame/util/typeguards/isGuessTheSong";
 
 export const answerGuessTheSong = extendType({
   type: "Mutation",
@@ -23,7 +25,7 @@ export const answerGuessTheSong = extendType({
       async resolve(_, { answer }, ctx) {
         const account = await auth(ctx);
 
-        const minigame: GuessTheSongMinigame<true> | null = await getMinigame(
+        const minigame: Minigame<MinigameType> | null = await getMinigame(
           account.id
         );
 
@@ -40,23 +42,23 @@ export const answerGuessTheSong = extendType({
             throw new RewardsPendingError(
               "you have rewards pending! claim them to start a new minigame."
             );
-
-          if (minigame.type !== "GTS")
-            throw new NotPlayingGTSError(
-              "you're currently playing a different minigame!"
-            );
         }
+
+        if (!isGuessTheSong(minigame))
+          throw new NotPlayingGTSError(
+            "you're currently playing a different minigame!"
+          );
 
         const ruleset = rulesets.GTS;
         if (!ruleset) throw new MinigameNotImplementedError();
 
         minigame.attempts.push({ title: answer });
 
-        const candidates: string[] = [minigame.song!.title];
-        if (minigame.song!.group)
-          candidates.push(`${minigame.song!.group} - ${minigame.song!.title}`);
-        if (minigame.song!.soloist)
-          candidates.push(`${minigame.song!.soloist} - ${minigame.song.title}`);
+        const candidates: string[] = [minigame.song.title];
+        if (minigame.song.group)
+          candidates.push(`${minigame.song.group} - ${minigame.song.title}`);
+        if (minigame.song.soloist)
+          candidates.push(`${minigame.song.soloist} - ${minigame.song.title}`);
 
         const { rating } = findBestMatch(answer, candidates);
 
