@@ -1,6 +1,7 @@
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../../lib/Auth";
-import { redis } from "../../../../lib/redis";
+import { getMinigame } from "../../../../lib/minigame/redis/getMinigame";
+import { setMinigame } from "../../../../lib/minigame/redis/setMinigame";
 
 export const updateMinigameMessage = extendType({
   type: "Mutation",
@@ -15,15 +16,14 @@ export const updateMinigameMessage = extendType({
       async resolve(_, { messageId, channelId, guildId }, ctx) {
         const account = await auth(ctx);
 
-        const _minigame = await redis.get(`minigame:${account.id}`);
-        if (!_minigame) throw new Error("Not playing minigame");
+        const minigame = await getMinigame(account.id);
+        if (!minigame) throw new Error("Not playing minigame");
 
-        const minigame = JSON.parse(_minigame) as any;
         minigame.messageId = messageId;
         minigame.channelId = channelId;
         minigame.guildId = guildId;
 
-        await redis.set(`minigame:${account.id}`, JSON.stringify(minigame));
+        await setMinigame(minigame);
         return true;
       },
     });
