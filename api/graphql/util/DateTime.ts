@@ -9,6 +9,8 @@ export const DateTime = scalarType({
     return new Date(value);
   },
   serialize(value) {
+    if (typeof value === "number" || typeof value === "string")
+      value = new Date(value);
     return value.getTime();
   },
   parseLiteral(ast) {

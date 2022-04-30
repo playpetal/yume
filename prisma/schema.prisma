@@ -216,6 +216,10 @@ enum MinigameType {
   GTS
   GUESS_CHARACTER
   WORDS
+
+  GUESS_THE_SONG
+  GUESS_THE_IDOL
+  GUESS_THE_GROUP
 }
 
 model Minigame {

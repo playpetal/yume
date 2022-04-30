@@ -1,7 +1,6 @@
 import { Account } from "@prisma/client";
 import { DateTime as Time } from "luxon";
 import { Context } from "../../context";
-import { auth } from "../Auth";
 
 export function isNew(last: Date, type: "hour" | "day"): boolean {
   if (type === "hour") {
@@ -17,9 +16,10 @@ export function isNew(last: Date, type: "hour" | "day"): boolean {
   }
 }
 
-export async function canClaimRewards(ctx: Context): Promise<number> {
-  const account = await auth(ctx);
-
+export async function canClaimRewards(
+  ctx: Context,
+  account: Account
+): Promise<number> {
   const stats = await ctx.db.minigame.findFirst({
     where: { accountId: account.id },
   });
