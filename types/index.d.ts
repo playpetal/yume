@@ -1,11 +1,9 @@
 declare module "yume" {
   export type Flag = keyof typeof import("../api/lib/flags").FLAGS;
 
-  export type AnswerType = "CHARACTER" | "SONG";
   export type Ruleset = {
     timeLimit: number;
     maxAttempts: number;
-    answerType: AnswerType;
   };
 
   export type MinigameType = "GTS";
