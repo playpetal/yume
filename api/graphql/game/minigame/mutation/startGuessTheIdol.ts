@@ -53,6 +53,7 @@ export const startGuessTheIdol = extendType({
           channelId: channelId ?? undefined,
           guildId: guildId ?? undefined,
           character,
+          group: group ?? undefined,
         };
 
         await setMinigame(minigame);

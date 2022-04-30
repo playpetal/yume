@@ -15,6 +15,7 @@ export const SearchCharactersQuery = extendType({
         page: "Int",
         minLetters: "Int",
         maxLetters: "Int",
+        group: "String",
       },
       async resolve(
         _,
@@ -27,6 +28,7 @@ export const SearchCharactersQuery = extendType({
           maxLetters,
           gender,
           page,
+          group,
         },
         ctx
       ) {
@@ -44,6 +46,13 @@ export const SearchCharactersQuery = extendType({
             name: { contains: search, mode: "insensitive" },
             birthday: filter,
             gender: gender,
+            prefabs: {
+              some: {
+                group: {
+                  name: { contains: group ?? undefined, mode: "insensitive" },
+                },
+              },
+            },
           },
           /*take: 25,
           skip: Math.max(page || 1, 1) * 25 - 25,*/

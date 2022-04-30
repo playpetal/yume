@@ -119,6 +119,7 @@ export interface NexusGenObjects {
     channelId?: string | null; // String
     character?: NexusGenRootTypes['Character'] | null; // Character
     elapsed?: number | null; // Int
+    group?: string | null; // String
     guildId?: string | null; // String
     maxAttempts: number; // Int!
     messageId?: string | null; // String
@@ -319,6 +320,7 @@ export interface NexusGenFieldTypes {
     channelId: string | null; // String
     character: NexusGenRootTypes['Character'] | null; // Character
     elapsed: number | null; // Int
+    group: string | null; // String
     guildId: string | null; // String
     maxAttempts: number; // Int!
     messageId: string | null; // String
@@ -607,6 +609,7 @@ export interface NexusGenFieldTypeNames {
     channelId: 'String'
     character: 'Character'
     elapsed: 'Int'
+    group: 'String'
     guildId: 'String'
     maxAttempts: 'Int'
     messageId: 'String'
@@ -1098,6 +1101,7 @@ export interface NexusGenArgTypes {
       birthdayAfter?: NexusGenScalars['DateTime'] | null; // DateTime
       birthdayBefore?: NexusGenScalars['DateTime'] | null; // DateTime
       gender?: NexusGenEnums['Gender'] | null; // Gender
+      group?: string | null; // String
       maxLetters?: number | null; // Int
       minLetters?: number | null; // Int
       page?: number | null; // Int

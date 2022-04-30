@@ -57,6 +57,7 @@ declare module "yume" {
 
   export type GuessTheIdolMinigame = {
     character: import("@prisma/client").Character;
+    group?: string;
     attempts: GuessTheIdolCharacter[];
   };
 

@@ -54,6 +54,12 @@ export const GuessTheIdol = objectType({
         "The solution to the minigame. Will only be returned when the minigame state is CANCELLED, FAILED, PENDING, or COMPLETED.",
     });
 
+    t.field("group", {
+      type: "String",
+      description:
+        "The name of the group the answer will be in, if applicable.",
+    });
+
     t.field("attempts", {
       type: nonNull(list(nonNull("GuessTheIdolCharacter"))),
       description:

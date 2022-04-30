@@ -135,6 +135,9 @@ type GuessTheIdol {
   """
   elapsed: Int
 
+  """The name of the group the answer will be in, if applicable."""
+  group: String
+
   """
   The ID of the Discord guild that this minigame is being played at, if applicable.
   """
@@ -452,7 +455,7 @@ type Query {
   reachedPurchaseLimit(productId: Int!): Boolean!
   release(id: Int!): Release
   searchCards(exclude: Int, maxQuality: Quality, minQuality: Quality, ownerId: Int!, prefabId: Int, search: String!): [Card!]!
-  searchCharacters(birthday: DateTime, birthdayAfter: DateTime, birthdayBefore: DateTime, gender: Gender, maxLetters: Int, minLetters: Int, page: Int, search: String!): [Character!]!
+  searchCharacters(birthday: DateTime, birthdayAfter: DateTime, birthdayBefore: DateTime, gender: Gender, group: String, maxLetters: Int, minLetters: Int, page: Int, search: String!): [Character!]!
   searchGroups(search: String!): [Group!]!
   searchPrefabs(search: String!): [CardPrefab!]!
   searchSubgroups(search: String!): [Subgroup!]!
