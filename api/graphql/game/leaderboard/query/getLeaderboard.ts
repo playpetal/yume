@@ -1,3 +1,4 @@
+import { MinigameType } from "@prisma/client";
 import { extendType, list, nonNull } from "nexus";
 import { hasFlag } from "../../../../lib/flags";
 
@@ -43,16 +44,14 @@ export const getLeaderboard = extendType({
           return leaderboard.sort((a, b) => b.value - a.value).slice(0, 10);
         }
 
-        const minigameType: "GTS" | "WORDS" = type.split("_")[0] as
-          | "GTS"
-          | "WORDS";
+        const minigameType: MinigameType = type.split("x")[0] as MinigameType;
 
         const users = await db.minigameStats.findMany({
           where: { type: minigameType, totalGames: { gte: 25 } },
         });
 
         const minigameSubtype: "PETAL" | "CARD" | "LILY" | "TIME" = type.split(
-          "_"
+          "x"
         )[1] as "PETAL" | "CARD" | "LILY" | "TIME";
 
         if (minigameSubtype === "PETAL") {
@@ -68,8 +67,11 @@ export const getLeaderboard = extendType({
             return { accountId: accountId, value: totalPremiumCurrency };
           });
         } else if (minigameSubtype === "TIME") {
-          leaderboard = users.map(({ accountId, totalTime }) => {
-            return { accountId: accountId, value: totalTime };
+          leaderboard = users.map(({ accountId, totalTime, totalGames }) => {
+            return {
+              accountId: accountId,
+              value: Math.ceil(totalTime / totalGames),
+            };
           });
         }
 
