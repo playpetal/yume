@@ -43,6 +43,7 @@ model Account {
   tags          Tag[]
   minigameStats MinigameStats[]
   collections   PrefabCollection[]
+  Bias          Bias[]
 }
 
 /// Broad collections of cards typically encompassing many subgroups
@@ -56,6 +57,7 @@ model Group {
   songs Song[]
 
   cards CardPrefab[]
+  Bias  Bias[]
 }
 
 enum GroupGender {
@@ -340,4 +342,15 @@ model Announcement {
   id           Int      @id @default(autoincrement())
   announcement String
   createdAt    DateTime @default(now())
+}
+
+model Bias {
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int
+
+  @@id([accountId, groupId])
+  @@unique([accountId, groupId])
 }

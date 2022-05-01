@@ -81,6 +81,10 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
   }
+  Bias: { // root type
+    accountId: number; // Int!
+    groupId: number; // Int!
+  }
   Card: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     hasFrame: boolean; // Boolean!
@@ -272,6 +276,12 @@ export interface NexusGenFieldTypes {
     announcement: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
+  }
+  Bias: { // field return type
+    account: NexusGenRootTypes['Account']; // Account!
+    accountId: number; // Int!
+    group: NexusGenRootTypes['Group']; // Group!
+    groupId: number; // Int!
   }
   Card: { // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -561,6 +571,12 @@ export interface NexusGenFieldTypeNames {
     announcement: 'String'
     createdAt: 'DateTime'
     id: 'Int'
+  }
+  Bias: { // field return type name
+    account: 'Account'
+    accountId: 'Int'
+    group: 'Group'
+    groupId: 'Int'
   }
   Card: { // field return type name
     createdAt: 'DateTime'
