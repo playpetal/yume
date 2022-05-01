@@ -38,6 +38,13 @@ type Announcement {
   id: Int!
 }
 
+type Bias {
+  account: Account!
+  accountId: Int!
+  group: Group!
+  groupId: Int!
+}
+
 type Card {
   createdAt: DateTime!
   hasFrame: Boolean!
@@ -337,6 +344,8 @@ enum MinigameType {
 }
 
 type Mutation {
+  addBias(groupId: Int!): Bias!
+
   """Submits an answer to a 'Guess The Song' minigame."""
   answerGuessTheIdol(answer: String!): GuessTheIdol!
 
@@ -372,6 +381,7 @@ type Mutation {
   grantAllTitle(titleId: Int!): Int!
   grantTitle(accountId: Int!, titleId: Int!): TitleInventory!
   newTransaction(productId: Int!): Payment!
+  removeBias(groupId: Int!): Bias!
   revokeAllTitle(titleId: Int!): Int!
   revokeTitle(accountId: Int!, titleId: Int!): Int!
   rollCards(amount: Int!, gender: Gender): [Card!]!
@@ -435,6 +445,7 @@ type Query {
   canClaimPremiumRewards: Int!
   canClaimRewards: Int!
   getAnnouncements: [Announcement!]!
+  getBiases(accountId: Int!): [Bias!]!
   getCard(id: Int!): Card
   getCharacter(id: Int!): Character
   getGroup(id: Int!): Group

@@ -1,5 +1,15 @@
 import { ApolloError } from "apollo-server-errors";
 
+export class UserFacingError extends ApolloError {
+  isUserFacing = true;
+  name = "UserFacingError";
+
+  constructor(message: string, code?: string, name?: string) {
+    super(message, code || "USER_FACING_ERROR");
+    if (name) this.name = name;
+  }
+}
+
 export const NoPermissionError: Error = new Error(
   "You don't have permission to do that."
 );
