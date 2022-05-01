@@ -393,6 +393,7 @@ export interface NexusGenFieldTypes {
     type: NexusGenEnums['MinigameType']; // MinigameType!
   }
   Mutation: { // field return type
+    addBias: NexusGenRootTypes['Bias']; // Bias!
     answerGuessTheIdol: NexusGenRootTypes['GuessTheIdol']; // GuessTheIdol!
     answerGuessTheSong: NexusGenRootTypes['GuessTheSong']; // GuessTheSong!
     boost: boolean; // Boolean!
@@ -423,6 +424,7 @@ export interface NexusGenFieldTypes {
     grantAllTitle: number; // Int!
     grantTitle: NexusGenRootTypes['TitleInventory']; // TitleInventory!
     newTransaction: NexusGenRootTypes['Payment']; // Payment!
+    removeBias: NexusGenRootTypes['Bias']; // Bias!
     revokeAllTitle: number; // Int!
     revokeTitle: number; // Int!
     rollCards: NexusGenRootTypes['Card'][]; // [Card!]!
@@ -464,6 +466,7 @@ export interface NexusGenFieldTypes {
     canClaimPremiumRewards: number; // Int!
     canClaimRewards: number; // Int!
     getAnnouncements: NexusGenRootTypes['Announcement'][]; // [Announcement!]!
+    getBiases: NexusGenRootTypes['Bias'][]; // [Bias!]!
     getCard: NexusGenRootTypes['Card'] | null; // Card
     getCharacter: NexusGenRootTypes['Character'] | null; // Character
     getGroup: NexusGenRootTypes['Group'] | null; // Group
@@ -688,6 +691,7 @@ export interface NexusGenFieldTypeNames {
     type: 'MinigameType'
   }
   Mutation: { // field return type name
+    addBias: 'Bias'
     answerGuessTheIdol: 'GuessTheIdol'
     answerGuessTheSong: 'GuessTheSong'
     boost: 'Boolean'
@@ -718,6 +722,7 @@ export interface NexusGenFieldTypeNames {
     grantAllTitle: 'Int'
     grantTitle: 'TitleInventory'
     newTransaction: 'Payment'
+    removeBias: 'Bias'
     revokeAllTitle: 'Int'
     revokeTitle: 'Int'
     rollCards: 'Card'
@@ -759,6 +764,7 @@ export interface NexusGenFieldTypeNames {
     canClaimPremiumRewards: 'Int'
     canClaimRewards: 'Int'
     getAnnouncements: 'Announcement'
+    getBiases: 'Bias'
     getCard: 'Card'
     getCharacter: 'Character'
     getGroup: 'Group'
@@ -842,6 +848,9 @@ export interface NexusGenArgTypes {
     }
   }
   Mutation: {
+    addBias: { // args
+      groupId: number; // Int!
+    }
     answerGuessTheIdol: { // args
       answer: string; // String!
     }
@@ -955,6 +964,9 @@ export interface NexusGenArgTypes {
     newTransaction: { // args
       productId: number; // Int!
     }
+    removeBias: { // args
+      groupId: number; // Int!
+    }
     revokeAllTitle: { // args
       titleId: number; // Int!
     }
@@ -1047,6 +1059,9 @@ export interface NexusGenArgTypes {
       alias?: string | null; // String
       groupId?: number | null; // Int
       id?: number | null; // Int
+    }
+    getBiases: { // args
+      accountId: number; // Int!
     }
     getCard: { // args
       id: number; // Int!
