@@ -38,6 +38,13 @@ type Announcement {
   id: Int!
 }
 
+type Bias {
+  account: Account!
+  accountId: Int!
+  group: Group!
+  groupId: Int!
+}
+
 type Card {
   createdAt: DateTime!
   hasFrame: Boolean!
