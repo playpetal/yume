@@ -5,3 +5,4 @@ export * from "./leaderboard";
 export * from "./prefab";
 export * from "./minigame";
 export * from "./bias";
+export * from "./trivia";

@@ -56,8 +56,9 @@ model Group {
 
   songs Song[]
 
-  cards CardPrefab[]
-  Bias  Bias[]
+  cards  CardPrefab[]
+  bias   Bias[]
+  trivia Trivia[]
 }
 
 enum GroupGender {
@@ -353,4 +354,14 @@ model Bias {
 
   @@id([accountId, groupId])
   @@unique([accountId, groupId])
+}
+
+model Trivia {
+  id Int @id @default(autoincrement())
+
+  group   Group @relation(fields: [groupId], references: [id])
+  groupId Int
+
+  question String
+  solution String
 }

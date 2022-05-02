@@ -536,3 +536,11 @@ type TitleInventory {
   title: Title!
   titleId: Int!
 }
+
+type Trivia {
+  group: Group!
+  groupId: Int!
+  id: Int!
+  question: String!
+  solution: String!
+}

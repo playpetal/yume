@@ -233,6 +233,12 @@ export interface NexusGenObjects {
     id: number; // Int!
     titleId: number; // Int!
   }
+  Trivia: { // root type
+    groupId: number; // Int!
+    id: number; // Int!
+    question: string; // String!
+    solution: string; // String!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -543,6 +549,13 @@ export interface NexusGenFieldTypes {
     title: NexusGenRootTypes['Title']; // Title!
     titleId: number; // Int!
   }
+  Trivia: { // field return type
+    group: NexusGenRootTypes['Group']; // Group!
+    groupId: number; // Int!
+    id: number; // Int!
+    question: string; // String!
+    solution: string; // String!
+  }
 }
 
 export interface NexusGenFieldTypeNames {
@@ -842,6 +855,13 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     title: 'Title'
     titleId: 'Int'
+  }
+  Trivia: { // field return type name
+    group: 'Group'
+    groupId: 'Int'
+    id: 'Int'
+    question: 'String'
+    solution: 'String'
   }
 }
 
