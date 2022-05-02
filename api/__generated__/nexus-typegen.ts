@@ -32,7 +32,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  Flag: "DEVELOPER" | "PUBLIC_SUPPORTER" | "RELEASE_MANAGER"
+  Flag: "DEVELOPER" | "MINIGAMES_USE_BIAS_LIST" | "PUBLIC_SUPPORTER" | "RELEASE_MANAGER"
   Gender: "FEMALE" | "MALE" | "NONBINARY"
   GroupGender: "COED" | "FEMALE" | "MALE"
   InventoryOrder: "ASC" | "DESC"
@@ -435,6 +435,7 @@ export interface NexusGenFieldTypes {
     startGuessTheSong: NexusGenRootTypes['GuessTheSong']; // GuessTheSong!
     tagCard: NexusGenRootTypes['Card']; // Card!
     toggleFlag: NexusGenRootTypes['Account']; // Account!
+    toggleMinigamesUseBiasList: NexusGenRootTypes['Account']; // Account!
     togglePublicSupporter: NexusGenRootTypes['Account']; // Account!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
     updateCharacter: NexusGenRootTypes['Character']; // Character!
@@ -471,6 +472,7 @@ export interface NexusGenFieldTypes {
     getCharacter: NexusGenRootTypes['Character'] | null; // Character
     getGroup: NexusGenRootTypes['Group'] | null; // Group
     getGuessTheIdol: NexusGenRootTypes['GuessTheIdol'] | null; // GuessTheIdol
+    getGuessTheIdolAnswers: NexusGenRootTypes['Character'][]; // [Character!]!
     getGuessTheSong: NexusGenRootTypes['GuessTheSong'] | null; // GuessTheSong
     getLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
     getSubgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
@@ -733,6 +735,7 @@ export interface NexusGenFieldTypeNames {
     startGuessTheSong: 'GuessTheSong'
     tagCard: 'Card'
     toggleFlag: 'Account'
+    toggleMinigamesUseBiasList: 'Account'
     togglePublicSupporter: 'Account'
     updateAlias: 'Alias'
     updateCharacter: 'Character'
@@ -769,6 +772,7 @@ export interface NexusGenFieldTypeNames {
     getCharacter: 'Character'
     getGroup: 'Group'
     getGuessTheIdol: 'GuessTheIdol'
+    getGuessTheIdolAnswers: 'Character'
     getGuessTheSong: 'GuessTheSong'
     getLeaderboard: 'Leaderboard'
     getSubgroup: 'Subgroup'
@@ -1071,6 +1075,9 @@ export interface NexusGenArgTypes {
     }
     getGroup: { // args
       id: number; // Int!
+    }
+    getGuessTheIdolAnswers: { // args
+      search: string; // String!
     }
     getLeaderboard: { // args
       type: NexusGenEnums['LeaderboardType']; // LeaderboardType!

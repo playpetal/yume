@@ -89,6 +89,7 @@ scalar DateTime
 """Account Flags"""
 enum Flag {
   DEVELOPER
+  MINIGAMES_USE_BIAS_LIST
   PUBLIC_SUPPORTER
   RELEASE_MANAGER
 }
@@ -396,6 +397,7 @@ type Mutation {
   startGuessTheSong(channelId: String, gender: GroupGender, group: Int, guildId: String, messageId: String): GuessTheSong!
   tagCard(cardId: Int!, tag: String!): Card!
   toggleFlag(accountId: Int!, flag: Flag!): Account!
+  toggleMinigamesUseBiasList: Account!
   togglePublicSupporter: Account!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
@@ -450,6 +452,7 @@ type Query {
   getCharacter(id: Int!): Character
   getGroup(id: Int!): Group
   getGuessTheIdol: GuessTheIdol
+  getGuessTheIdolAnswers(search: String!): [Character!]!
   getGuessTheSong: GuessTheSong
   getLeaderboard(type: LeaderboardType!): [Leaderboard!]!
   getSubgroup(id: Int!): Subgroup

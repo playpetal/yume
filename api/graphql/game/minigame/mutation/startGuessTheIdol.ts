@@ -2,6 +2,7 @@ import { extendType, nonNull } from "nexus";
 import { Minigame } from "yume";
 import { auth } from "../../../../lib/Auth";
 import { MinigameNotImplementedError } from "../../../../lib/error/minigame";
+import { hasFlag } from "../../../../lib/flags";
 import { getRandomCharacter } from "../../../../lib/getRandomCharacter";
 import { getMinigame } from "../../../../lib/minigame/redis/getMinigame";
 import { setMinigame } from "../../../../lib/minigame/redis/setMinigame";
@@ -36,10 +37,22 @@ export const startGuessTheIdol = extendType({
         const ruleset = rulesets.GUESS_THE_IDOL;
         if (!ruleset) throw new MinigameNotImplementedError();
 
+        let groupIds: number[] = [];
+        if (hasFlag("MINIGAMES_USE_BIAS_LIST", account.flags)) {
+          const biases = await ctx.db.bias.findMany({
+            where: { accountId: account.id },
+          });
+
+          groupIds = biases.map((b) => b.groupId);
+        }
+
         const character = await getRandomCharacter(ctx, {
           gender: gender ?? undefined,
           group: group ?? undefined,
+          groupIds,
         });
+
+        console.log(character);
 
         const minigame: Minigame<"GUESS_THE_IDOL"> = {
           type: "GUESS_THE_IDOL",
@@ -54,6 +67,7 @@ export const startGuessTheIdol = extendType({
           guildId: guildId ?? undefined,
           character,
           group: group ?? undefined,
+          gender: gender ?? undefined,
         };
 
         await setMinigame(minigame);

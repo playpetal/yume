@@ -1,16 +1,24 @@
-import { Character, Gender } from "@prisma/client";
+import { Character, Gender, Prisma } from "@prisma/client";
 import { Context } from "../context";
 
 export async function getRandomCharacter(
   ctx: Context,
-  options?: { gender?: Gender; group?: string }
+  options?: { gender?: Gender; group?: string; groupIds?: number[] }
 ): Promise<Character> {
+  let group: Prisma.GroupWhereInput = {};
+
+  if (options?.group) {
+    group = { name: { contains: options?.group, mode: "insensitive" } };
+  } else if (options?.groupIds) {
+    group = { id: { in: options?.groupIds } };
+  }
+
   const characterCount = await ctx.db.character.count({
     where: {
       prefabs: {
         some: {
           release: { droppable: true },
-          group: { name: { equals: options?.group, mode: "insensitive" } },
+          group,
         },
       },
       gender: options?.gender ?? undefined,
@@ -30,7 +38,7 @@ export async function getRandomCharacter(
       prefabs: {
         some: {
           release: { droppable: true },
-          group: { name: { equals: options?.group, mode: "insensitive" } },
+          group,
         },
       },
       gender: options?.gender ?? undefined,
