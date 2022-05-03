@@ -52,8 +52,6 @@ export const startGuessTheIdol = extendType({
           groupIds,
         });
 
-        console.log(character);
-
         const minigame: Minigame<"GUESS_THE_IDOL"> = {
           type: "GUESS_THE_IDOL",
           accountId: account.id,

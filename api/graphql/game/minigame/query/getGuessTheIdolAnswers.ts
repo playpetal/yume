@@ -80,9 +80,6 @@ export const getGuessTheIdolAnswers = extendType({
           ? birthday
           : { lt: birthdayBefore, gt: birthdayAfter };
 
-        console.log(character);
-        console.log(group);
-
         let characters: Character[];
         characters = await ctx.db.character.findMany({
           where: {
@@ -90,8 +87,6 @@ export const getGuessTheIdolAnswers = extendType({
             prefabs: { some: { group } },
           },
         });
-
-        console.log(characters);
 
         if (nameLength) {
           characters = characters.filter((c) => c.name.length === nameLength);
