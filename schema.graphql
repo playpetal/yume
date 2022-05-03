@@ -19,6 +19,12 @@ type Account {
   username: String!
 }
 
+input AccountInput {
+  discordId: String
+  id: Int
+  username: String
+}
+
 """Account Stats"""
 type AccountStats {
   cardCount: Int!
@@ -476,7 +482,7 @@ type Query {
   searchTags(search: String!): [Tag!]!
   searchTitles(search: String!): [Title!]!
   title(id: Int, title: String): Title
-  user(discordId: String, id: Int, username: String): Account
+  user(account: AccountInput!): Account
   userTitles(accountId: Int!, search: String): [TitleInventory!]!
   word: String!
 }

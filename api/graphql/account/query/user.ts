@@ -1,21 +1,23 @@
-import { extendType } from "nexus";
+import { extendType, nonNull } from "nexus";
 
 export const GetUserQuery = extendType({
   type: "Query",
   definition(t) {
     t.field("user", {
       type: "Account",
-      args: { username: "String", id: "Int", discordId: "String" },
-      async resolve(_, args, ctx) {
-        return ctx.db.account.findFirst({
+      args: { account: nonNull("AccountInput") },
+      async resolve(_, { account }, ctx) {
+        const _account = await ctx.db.account.findFirst({
           where: {
-            username: args.username
-              ? { equals: args.username, mode: "insensitive" }
+            username: account.username
+              ? { equals: account.username, mode: "insensitive" }
               : undefined,
-            id: args.id ?? undefined,
-            discordId: args.discordId ?? undefined,
+            id: account.id ?? undefined,
+            discordId: account.discordId ?? undefined,
           },
         });
+
+        return _account;
       },
     });
   },

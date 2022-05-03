@@ -29,6 +29,11 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  AccountInput: { // input type
+    discordId?: string | null; // String
+    id?: number | null; // Int
+    username?: string | null; // String
+  }
 }
 
 export interface NexusGenEnums {
@@ -1185,9 +1190,7 @@ export interface NexusGenArgTypes {
       title?: string | null; // String
     }
     user: { // args
-      discordId?: string | null; // String
-      id?: number | null; // Int
-      username?: string | null; // String
+      account: NexusGenInputs['AccountInput']; // AccountInput!
     }
     userTitles: { // args
       accountId: number; // Int!
@@ -1204,7 +1207,7 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = keyof NexusGenEnums;
 
