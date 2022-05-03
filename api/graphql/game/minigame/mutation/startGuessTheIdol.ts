@@ -37,7 +37,7 @@ export const startGuessTheIdol = extendType({
         const ruleset = rulesets.GUESS_THE_IDOL;
         if (!ruleset) throw new MinigameNotImplementedError();
 
-        let groupIds: number[] = [];
+        let groupIds: number[] | undefined;
         if (hasFlag("MINIGAMES_USE_BIAS_LIST", account.flags)) {
           const biases = await ctx.db.bias.findMany({
             where: { accountId: account.id },

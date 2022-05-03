@@ -10,10 +10,8 @@ export async function getRandomCharacter(
   if (options?.group) {
     group = { name: { contains: options?.group, mode: "insensitive" } };
   } else if (options?.groupIds) {
-    group = { id: { in: options?.groupIds } };
+    group = { id: { in: options.groupIds } };
   }
-
-  console.log(group, options);
 
   const characterCount = await ctx.db.character.count({
     where: {
