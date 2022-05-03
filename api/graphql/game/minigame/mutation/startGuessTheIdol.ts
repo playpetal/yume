@@ -1,6 +1,7 @@
 import { extendType, nonNull } from "nexus";
 import { Minigame } from "yume";
 import { auth } from "../../../../lib/Auth";
+import { UserFacingError } from "../../../../lib/error";
 import { MinigameNotImplementedError } from "../../../../lib/error/minigame";
 import { hasFlag } from "../../../../lib/flags";
 import { getRandomCharacter } from "../../../../lib/getRandomCharacter";
@@ -32,7 +33,7 @@ export const startGuessTheIdol = extendType({
             activeMinigame.state === "PENDING") &&
           activeMinigame.startedAt >= Date.now() - activeMinigame.timeLimit
         )
-          throw new Error("You're playing a minigame already");
+          throw new UserFacingError("you're playing a minigame already!");
 
         const ruleset = rulesets.GUESS_THE_IDOL;
         if (!ruleset) throw new MinigameNotImplementedError();

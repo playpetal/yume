@@ -1,5 +1,6 @@
 import { Bias, GroupGender, Prisma } from "@prisma/client";
 import { Context } from "../../../context";
+import { UserFacingError } from "../../error";
 
 export async function getTriviaQuestion(
   ctx: Context,
@@ -21,7 +22,10 @@ export async function getTriviaQuestion(
     include: { solutions: true, group: true },
   });
 
-  if (questions.length === 0) throw new Error("No trivia questions available");
+  if (questions.length === 0)
+    throw new UserFacingError(
+      "there aren't any questions matching your input... yet."
+    );
 
   return questions[Math.floor(Math.random() * questions.length)];
 }
