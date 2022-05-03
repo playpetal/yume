@@ -45,7 +45,7 @@ export interface NexusGenEnums {
   LeaderboardType: "GUESS_THE_IDOLxCARD" | "GUESS_THE_IDOLxLILY" | "GUESS_THE_IDOLxPETAL" | "GUESS_THE_IDOLxTIME" | "GUESS_THE_SONGxCARD" | "GUESS_THE_SONGxLILY" | "GUESS_THE_SONGxPETAL" | "GUESS_THE_SONGxTIME" | "PUBLIC_SUPPORTER"
   MinigameComparison: "EQUAL" | "GREATER" | "LESS"
   MinigameState: "CANCELLED" | "COMPLETED" | "FAILED" | "PENDING" | "PLAYING"
-  MinigameType: "GTS" | "GUESS_CHARACTER" | "GUESS_THE_GROUP" | "GUESS_THE_IDOL" | "GUESS_THE_SONG" | "WORDS"
+  MinigameType: "GTS" | "GUESS_CHARACTER" | "GUESS_THE_GROUP" | "GUESS_THE_IDOL" | "GUESS_THE_SONG" | "TRIVIA" | "WORDS"
   ProductType: "ALPHA_TITLE" | "BETA_TITLE" | "PAID_CURRENCY" | "SIGMA_TITLE"
   Quality: "BLOOM" | "BUD" | "FLOWER" | "SEED" | "SPROUT"
   Reward: "CARD" | "LILY" | "PETAL"
@@ -242,7 +242,28 @@ export interface NexusGenObjects {
     groupId: number; // Int!
     id: number; // Int!
     question: string; // String!
-    solution: string; // String!
+  }
+  TriviaAnswer: { // root type
+    answer: string; // String!
+    correct: boolean; // Boolean!
+    id: number; // Int!
+    triviaId: number; // Int!
+  }
+  TriviaMinigame: { // root type
+    accountId: number; // Int!
+    answer?: string | null; // String
+    channelId?: string | null; // String
+    elapsed?: number | null; // Int
+    group?: string | null; // String
+    guildId?: string | null; // String
+    maxAttempts: number; // Int!
+    messageId?: string | null; // String
+    options: string[]; // [String!]!
+    question: string; // String!
+    startedAt: NexusGenScalars['DateTime']; // DateTime!
+    state: NexusGenEnums['MinigameState']; // MinigameState!
+    timeLimit: number; // Int!
+    type: NexusGenEnums['MinigameType']; // MinigameType!
   }
 }
 
@@ -407,6 +428,7 @@ export interface NexusGenFieldTypes {
     addBias: NexusGenRootTypes['Bias']; // Bias!
     answerGuessTheIdol: NexusGenRootTypes['GuessTheIdol']; // GuessTheIdol!
     answerGuessTheSong: NexusGenRootTypes['GuessTheSong']; // GuessTheSong!
+    answerTrivia: NexusGenRootTypes['TriviaMinigame']; // TriviaMinigame!
     boost: boolean; // Boolean!
     burnCard: number; // Int!
     cancelMinigame: boolean; // Boolean!
@@ -444,6 +466,7 @@ export interface NexusGenFieldTypes {
     setUserTitle: NexusGenRootTypes['Account']; // Account!
     startGuessTheIdol: NexusGenRootTypes['GuessTheIdol']; // GuessTheIdol!
     startGuessTheSong: NexusGenRootTypes['GuessTheSong']; // GuessTheSong!
+    startTrivia: NexusGenRootTypes['TriviaMinigame']; // TriviaMinigame!
     tagCard: NexusGenRootTypes['Card']; // Card!
     toggleFlag: NexusGenRootTypes['Account']; // Account!
     toggleMinigamesUseBiasList: NexusGenRootTypes['Account']; // Account!
@@ -488,6 +511,7 @@ export interface NexusGenFieldTypes {
     getLeaderboard: NexusGenRootTypes['Leaderboard'][]; // [Leaderboard!]!
     getSubgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
     getTag: NexusGenRootTypes['Tag'] | null; // Tag
+    getTrivia: NexusGenRootTypes['TriviaMinigame'] | null; // TriviaMinigame
     getUserTitle: NexusGenRootTypes['TitleInventory'] | null; // TitleInventory
     inventory: NexusGenRootTypes['Card'][]; // [Card!]!
     inventoryPage: NexusGenRootTypes['InventoryPage']; // InventoryPage!
@@ -559,7 +583,31 @@ export interface NexusGenFieldTypes {
     groupId: number; // Int!
     id: number; // Int!
     question: string; // String!
-    solution: string; // String!
+    solutions: NexusGenRootTypes['TriviaAnswer'][]; // [TriviaAnswer!]!
+  }
+  TriviaAnswer: { // field return type
+    answer: string; // String!
+    correct: boolean; // Boolean!
+    id: number; // Int!
+    trivia: NexusGenRootTypes['Trivia']; // Trivia!
+    triviaId: number; // Int!
+  }
+  TriviaMinigame: { // field return type
+    account: NexusGenRootTypes['Account']; // Account!
+    accountId: number; // Int!
+    answer: string | null; // String
+    channelId: string | null; // String
+    elapsed: number | null; // Int
+    group: string | null; // String
+    guildId: string | null; // String
+    maxAttempts: number; // Int!
+    messageId: string | null; // String
+    options: string[]; // [String!]!
+    question: string; // String!
+    startedAt: NexusGenScalars['DateTime']; // DateTime!
+    state: NexusGenEnums['MinigameState']; // MinigameState!
+    timeLimit: number; // Int!
+    type: NexusGenEnums['MinigameType']; // MinigameType!
   }
 }
 
@@ -714,6 +762,7 @@ export interface NexusGenFieldTypeNames {
     addBias: 'Bias'
     answerGuessTheIdol: 'GuessTheIdol'
     answerGuessTheSong: 'GuessTheSong'
+    answerTrivia: 'TriviaMinigame'
     boost: 'Boolean'
     burnCard: 'Int'
     cancelMinigame: 'Boolean'
@@ -751,6 +800,7 @@ export interface NexusGenFieldTypeNames {
     setUserTitle: 'Account'
     startGuessTheIdol: 'GuessTheIdol'
     startGuessTheSong: 'GuessTheSong'
+    startTrivia: 'TriviaMinigame'
     tagCard: 'Card'
     toggleFlag: 'Account'
     toggleMinigamesUseBiasList: 'Account'
@@ -795,6 +845,7 @@ export interface NexusGenFieldTypeNames {
     getLeaderboard: 'Leaderboard'
     getSubgroup: 'Subgroup'
     getTag: 'Tag'
+    getTrivia: 'TriviaMinigame'
     getUserTitle: 'TitleInventory'
     inventory: 'Card'
     inventoryPage: 'InventoryPage'
@@ -866,7 +917,31 @@ export interface NexusGenFieldTypeNames {
     groupId: 'Int'
     id: 'Int'
     question: 'String'
-    solution: 'String'
+    solutions: 'TriviaAnswer'
+  }
+  TriviaAnswer: { // field return type name
+    answer: 'String'
+    correct: 'Boolean'
+    id: 'Int'
+    trivia: 'Trivia'
+    triviaId: 'Int'
+  }
+  TriviaMinigame: { // field return type name
+    account: 'Account'
+    accountId: 'Int'
+    answer: 'String'
+    channelId: 'String'
+    elapsed: 'Int'
+    group: 'String'
+    guildId: 'String'
+    maxAttempts: 'Int'
+    messageId: 'String'
+    options: 'String'
+    question: 'String'
+    startedAt: 'DateTime'
+    state: 'MinigameState'
+    timeLimit: 'Int'
+    type: 'MinigameType'
   }
 }
 
@@ -884,6 +959,9 @@ export interface NexusGenArgTypes {
       answer: string; // String!
     }
     answerGuessTheSong: { // args
+      answer: string; // String!
+    }
+    answerTrivia: { // args
       answer: string; // String!
     }
     boost: { // args
@@ -1027,6 +1105,13 @@ export interface NexusGenArgTypes {
       channelId?: string | null; // String
       gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
       group?: number | null; // Int
+      guildId?: string | null; // String
+      messageId?: string | null; // String
+    }
+    startTrivia: { // args
+      channelId?: string | null; // String
+      gender?: NexusGenEnums['GroupGender'] | null; // GroupGender
+      group?: string | null; // String
       guildId?: string | null; // String
       messageId?: string | null; // String
     }

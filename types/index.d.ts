@@ -36,6 +36,8 @@ declare module "yume" {
     ? GuessTheIdolMinigame
     : T extends "GUESS_THE_GROUP"
     ? GuessTheGroupMinigame
+    : T extends "TRIVIA"
+    ? TriviaMinigame
     : { attempts: any[] });
 
   export type MinigameComparison = "GREATER" | "LESS" | "EQUAL";
@@ -65,6 +67,14 @@ declare module "yume" {
   export type GuessTheGroupMinigame = {
     group: import("@prisma/client").Group;
     attempts: import("@prisma/client").Group[];
+  };
+
+  export type TriviaMinigame = {
+    question: string;
+    answer: string;
+    options: string[];
+    attempts: string[];
+    group?: import("@prisma/client").Group;
   };
 
   type Reward = "PETAL" | "LILY" | "CARD";

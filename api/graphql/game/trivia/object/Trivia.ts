@@ -1,4 +1,5 @@
-import { nonNull, objectType } from "nexus";
+import { Group, TriviaAnswer } from "@prisma/client";
+import { list, nonNull, objectType } from "nexus";
 import { Trivia } from "nexus-prisma";
 
 export const TriviaObject = objectType({
@@ -11,13 +12,25 @@ export const TriviaObject = objectType({
     t.field("group", {
       type: nonNull("Group"),
       async resolve({ groupId }, _, ctx) {
-        const group = await ctx.db.group.findFirst({ where: { id: groupId } });
+        const group: Group = (await ctx.db.group.findFirst({
+          where: { id: groupId },
+        }))!;
 
-        return group!;
+        return group;
       },
     });
 
     t.field(Trivia.question);
-    t.field(Trivia.solution);
+
+    t.field("solutions", {
+      type: nonNull(list(nonNull("TriviaAnswer"))),
+      async resolve({ id }, _, ctx) {
+        const solutions: TriviaAnswer[] = await ctx.db.triviaAnswer.findMany({
+          where: { triviaId: id },
+        });
+
+        return solutions;
+      },
+    });
   },
 });

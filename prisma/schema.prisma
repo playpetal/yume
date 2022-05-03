@@ -223,6 +223,7 @@ enum MinigameType {
   GUESS_THE_SONG
   GUESS_THE_IDOL
   GUESS_THE_GROUP
+  TRIVIA
 }
 
 model Minigame {
@@ -362,6 +363,18 @@ model Trivia {
   group   Group @relation(fields: [groupId], references: [id])
   groupId Int
 
-  question String
-  solution String
+  question  String
+  solutions TriviaAnswer[]
+}
+
+model TriviaAnswer {
+  id Int @id @default(autoincrement())
+
+  trivia   Trivia @relation(fields: [triviaId], references: [id])
+  triviaId Int
+
+  answer  String
+  correct Boolean
+
+  @@unique([triviaId, answer])
 }
