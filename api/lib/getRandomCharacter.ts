@@ -13,6 +13,8 @@ export async function getRandomCharacter(
     group = { id: { in: options?.groupIds } };
   }
 
+  console.log(group, options);
+
   const characterCount = await ctx.db.character.count({
     where: {
       prefabs: {
