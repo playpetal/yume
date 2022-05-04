@@ -380,6 +380,7 @@ type Mutation {
   createSubgroup(creation: DateTime, name: String!): Subgroup!
   createTag(emoji: String!, name: String!): Tag!
   createTitle(description: String, title: String!): Title!
+  createTriviaQuestion(groupId: Int!, incorrectAnswers: [String!]!, question: String!, solution: String!): Trivia!
   deleteAlias(id: Int!): Int!
   deleteCharacter(id: Int!): Int!
   deleteGroup(id: Int!): Int!

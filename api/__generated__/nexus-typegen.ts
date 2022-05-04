@@ -445,6 +445,7 @@ export interface NexusGenFieldTypes {
     createSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
     createTag: NexusGenRootTypes['Tag']; // Tag!
     createTitle: NexusGenRootTypes['Title']; // Title!
+    createTriviaQuestion: NexusGenRootTypes['Trivia']; // Trivia!
     deleteAlias: number; // Int!
     deleteCharacter: number; // Int!
     deleteGroup: number; // Int!
@@ -779,6 +780,7 @@ export interface NexusGenFieldTypeNames {
     createSubgroup: 'Subgroup'
     createTag: 'Tag'
     createTitle: 'Title'
+    createTriviaQuestion: 'Trivia'
     deleteAlias: 'Int'
     deleteCharacter: 'Int'
     deleteGroup: 'Int'
@@ -1024,6 +1026,12 @@ export interface NexusGenArgTypes {
     createTitle: { // args
       description?: string | null; // String
       title: string; // String!
+    }
+    createTriviaQuestion: { // args
+      groupId: number; // Int!
+      incorrectAnswers: string[]; // [String!]!
+      question: string; // String!
+      solution: string; // String!
     }
     deleteAlias: { // args
       id: number; // Int!
