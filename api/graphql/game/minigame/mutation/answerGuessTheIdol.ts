@@ -2,6 +2,7 @@ import { Character, MinigameType } from "@prisma/client";
 import { extendType, nonNull } from "nexus";
 import { Minigame, MinigameComparison } from "yume";
 import { auth } from "../../../../lib/Auth";
+import { UserFacingError } from "../../../../lib/error";
 import {
   MinigameNotImplementedError,
   NotPlayingMinigameError,
@@ -58,8 +59,14 @@ export const answerGuessTheIdol = extendType({
           birthday: birthday ? new Date(birthday) : undefined,
         });
 
-        if (matches.length === 0) throw new Error("no char");
-        if (matches.length > 1) throw new Error("too many char");
+        if (matches.length === 0)
+          throw new UserFacingError(
+            "no characters were found using your input."
+          );
+        if (matches.length > 1)
+          throw new UserFacingError(
+            "too many characters were found using your input.\nplease select a character from the dropdown!"
+          );
 
         const [match] = matches;
 
