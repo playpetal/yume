@@ -444,6 +444,7 @@ type Mutation {
   toggleFlag(accountId: Int!, flag: Flag!): Account!
   toggleMinigamesUseBiasList: Account!
   togglePublicSupporter: Account!
+  unclaimCardSuggestion(suggestionId: Int!): CardSuggestion!
   updateAlias(alias: String, groupId: Int, id: Int!): Alias!
   updateCharacter(birthday: DateTime, gender: Gender, id: Int!, name: String): Character!
   updateGroup(creation: DateTime, gender: GroupGender, id: Int!, name: String): Group!
