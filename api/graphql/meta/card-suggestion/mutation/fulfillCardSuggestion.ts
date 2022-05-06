@@ -29,6 +29,7 @@ export const fulfillCardSuggestion = extendType({
         const _suggestion = await ctx.db.cardSuggestion.update({
           data: { fulfilled: true },
           where: { id: suggestion.id },
+          include: { votes: true },
         });
 
         return _suggestion;

@@ -28,6 +28,7 @@ export const getCardSuggestion = extendType({
             groupName: groupName ?? undefined,
             subgroupName: subgroupName ?? undefined,
           },
+          include: { votes: true },
         });
 
         return suggestion;

@@ -119,9 +119,11 @@ export interface NexusGenObjects {
     privateMessageId: string; // String!
     publicMessageId: string; // String!
     subgroupName: string; // String!
+    votes: NexusGenRootTypes['CardSuggestionVote'][]; // [CardSuggestionVote!]!
   }
   CardSuggestionVote: { // root type
     accountId: number; // Int!
+    id: number; // Int!
     suggestionId: number; // Int!
   }
   Character: { // root type
@@ -372,6 +374,7 @@ export interface NexusGenFieldTypes {
   CardSuggestionVote: { // field return type
     account: NexusGenRootTypes['Account']; // Account!
     accountId: number; // Int!
+    id: number; // Int!
     suggestion: NexusGenRootTypes['CardSuggestion']; // CardSuggestion!
     suggestionId: number; // Int!
   }
@@ -482,6 +485,7 @@ export interface NexusGenFieldTypes {
     createTitle: NexusGenRootTypes['Title']; // Title!
     createTriviaQuestion: NexusGenRootTypes['Trivia']; // Trivia!
     deleteAlias: number; // Int!
+    deleteCardSuggestion: NexusGenRootTypes['CardSuggestion']; // CardSuggestion!
     deleteCharacter: number; // Int!
     deleteGroup: number; // Int!
     deleteSong: number; // Int!
@@ -489,6 +493,7 @@ export interface NexusGenFieldTypes {
     deleteTag: NexusGenRootTypes['Tag']; // Tag!
     editSong: NexusGenRootTypes['Song']; // Song!
     editTag: NexusGenRootTypes['Tag']; // Tag!
+    fulfillCardSuggestion: NexusGenRootTypes['CardSuggestion']; // CardSuggestion!
     gift: boolean; // Boolean!
     grantAllTitle: number; // Int!
     grantTitle: NexusGenRootTypes['TitleInventory']; // TitleInventory!
@@ -730,6 +735,7 @@ export interface NexusGenFieldTypeNames {
   CardSuggestionVote: { // field return type name
     account: 'Account'
     accountId: 'Int'
+    id: 'Int'
     suggestion: 'CardSuggestion'
     suggestionId: 'Int'
   }
@@ -840,6 +846,7 @@ export interface NexusGenFieldTypeNames {
     createTitle: 'Title'
     createTriviaQuestion: 'Trivia'
     deleteAlias: 'Int'
+    deleteCardSuggestion: 'CardSuggestion'
     deleteCharacter: 'Int'
     deleteGroup: 'Int'
     deleteSong: 'Int'
@@ -847,6 +854,7 @@ export interface NexusGenFieldTypeNames {
     deleteTag: 'Tag'
     editSong: 'Song'
     editTag: 'Tag'
+    fulfillCardSuggestion: 'CardSuggestion'
     gift: 'Boolean'
     grantAllTitle: 'Int'
     grantTitle: 'TitleInventory'
@@ -1105,6 +1113,9 @@ export interface NexusGenArgTypes {
     deleteAlias: { // args
       id: number; // Int!
     }
+    deleteCardSuggestion: { // args
+      id: number; // Int!
+    }
     deleteCharacter: { // args
       id: number; // Int!
     }
@@ -1131,6 +1142,9 @@ export interface NexusGenArgTypes {
       emoji?: string | null; // String
       name?: string | null; // String
       tag: string; // String!
+    }
+    fulfillCardSuggestion: { // args
+      suggestionId: number; // Int!
     }
     gift: { // args
       cardIds?: number[] | null; // [Int!]

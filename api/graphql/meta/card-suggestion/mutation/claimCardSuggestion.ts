@@ -30,6 +30,7 @@ export const claimCardSuggestion = extendType({
         const _suggestion = await ctx.db.cardSuggestion.update({
           data: { managerId: account.id },
           where: { id: suggestion.id },
+          include: { votes: true },
         });
 
         return _suggestion;

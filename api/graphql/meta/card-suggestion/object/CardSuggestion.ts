@@ -38,16 +38,7 @@ export const CardSuggestionObject = objectType({
 
     t.field(CardSuggestion.fulfilled);
 
-    t.field("votes", {
-      type: nonNull(list(nonNull("CardSuggestionVote"))),
-      async resolve({ id }, _, ctx) {
-        const votes = await ctx.db.cardSuggestionVote.findMany({
-          where: { suggestionId: id },
-        });
-
-        return votes;
-      },
-    });
+    t.field("votes", { type: nonNull(list(nonNull("CardSuggestionVote"))) });
 
     t.field(CardSuggestion.publicMessageId);
     t.field(CardSuggestion.privateMessageId);

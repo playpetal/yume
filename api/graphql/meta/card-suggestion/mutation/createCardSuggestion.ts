@@ -1,3 +1,4 @@
+import { CardSuggestion } from "@prisma/client";
 import { extendType, nonNull } from "nexus";
 import { auth } from "../../../../lib/Auth";
 import { UserFacingError } from "../../../../lib/error";
@@ -29,7 +30,7 @@ export const createCardSuggestion = extendType({
             "**that group has already been suggested!**\nyou can vote it up in %C instead of submitting a new one."
           );
 
-        const suggestion = await ctx.db.cardSuggestion.create({
+        const suggestion: CardSuggestion = await ctx.db.cardSuggestion.create({
           data: {
             groupName,
             subgroupName,
@@ -39,11 +40,11 @@ export const createCardSuggestion = extendType({
           },
         });
 
-        await ctx.db.cardSuggestionVote.create({
+        const vote = await ctx.db.cardSuggestionVote.create({
           data: { suggestionId: suggestion.id, accountId: account.id },
         });
 
-        return suggestion;
+        return { ...suggestion, votes: [vote] };
       },
     });
   },

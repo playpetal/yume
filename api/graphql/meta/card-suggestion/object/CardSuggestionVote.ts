@@ -5,6 +5,8 @@ export const CardSuggestionVoteObject = objectType({
   name: CardSuggestionVote.$name,
   description: CardSuggestionVote.$description,
   definition(t) {
+    t.field(CardSuggestionVote.id);
+
     t.field(CardSuggestionVote.accountId);
     t.field("account", {
       type: nonNull("Account"),
@@ -23,6 +25,7 @@ export const CardSuggestionVoteObject = objectType({
       async resolve({ suggestionId }, _, ctx) {
         const account = await ctx.db.cardSuggestion.findFirst({
           where: { id: suggestionId },
+          include: { votes: true },
         });
 
         return account!;
