@@ -83,7 +83,7 @@ export const getLeaderboard = extendType({
             .sort((a, b) => a.value - b.value);
         }
 
-        return leaderboard.sort((a, b) => b.value - a.value).slice(0, 10);
+        return leaderboard.slice(0, 10);
       },
     });
   },
