@@ -55,24 +55,32 @@ export const getLeaderboard = extendType({
         )[1] as "PETAL" | "CARD" | "LILY" | "TIME";
 
         if (minigameSubtype === "PETAL") {
-          leaderboard = users.map(({ accountId, totalCurrency }) => {
-            return { accountId: accountId, value: totalCurrency };
-          });
+          leaderboard = users
+            .map(({ accountId, totalCurrency }) => {
+              return { accountId: accountId, value: totalCurrency };
+            })
+            .sort((a, b) => b.value - a.value);
         } else if (minigameSubtype === "CARD") {
-          leaderboard = users.map(({ accountId, totalCards }) => {
-            return { accountId: accountId, value: totalCards };
-          });
+          leaderboard = users
+            .map(({ accountId, totalCards }) => {
+              return { accountId: accountId, value: totalCards };
+            })
+            .sort((a, b) => b.value - a.value);
         } else if (minigameSubtype === "LILY") {
-          leaderboard = users.map(({ accountId, totalPremiumCurrency }) => {
-            return { accountId: accountId, value: totalPremiumCurrency };
-          });
+          leaderboard = users
+            .map(({ accountId, totalPremiumCurrency }) => {
+              return { accountId: accountId, value: totalPremiumCurrency };
+            })
+            .sort((a, b) => b.value - a.value);
         } else if (minigameSubtype === "TIME") {
-          leaderboard = users.map(({ accountId, totalTime, totalGames }) => {
-            return {
-              accountId: accountId,
-              value: Math.ceil(totalTime / totalGames),
-            };
-          });
+          leaderboard = users
+            .map(({ accountId, totalTime, totalGames }) => {
+              return {
+                accountId: accountId,
+                value: Math.ceil(totalTime / totalGames),
+              };
+            })
+            .sort((a, b) => a.value - b.value);
         }
 
         return leaderboard.sort((a, b) => b.value - a.value).slice(0, 10);
