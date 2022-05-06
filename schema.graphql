@@ -81,6 +81,27 @@ type CardPrefab {
   subgroupId: Int
 }
 
+type CardSuggestion {
+  accountId: Int!
+  fulfilled: Boolean!
+  fulfilledBy: Account
+  groupName: String!
+  id: Int!
+  managerId: Int
+  privateMessageId: String!
+  publicMessageId: String!
+  subgroupName: String!
+  suggestedBy: Account!
+  votes: [CardSuggestionVote!]!
+}
+
+type CardSuggestionVote {
+  account: Account!
+  accountId: Int!
+  suggestion: CardSuggestion!
+  suggestionId: Int!
+}
+
 """An individual character."""
 type Character {
   birthday: DateTime
@@ -371,12 +392,14 @@ type Mutation {
   burnCard(cardId: Int!): Int!
   cancelMinigame: Boolean!
   changeCardColor(cardId: Int!, color: Int!): Card!
+  claimCardSuggestion(suggestionId: Int!): CardSuggestion!
 
   """Claims a reward from a `PENDING` minigame."""
   completeMinigame(reward: Reward!): MinigameReward!
   completeTransaction(token: String!): Boolean!
   createAccount(username: String!): Account!
   createAlias(alias: String!, groupId: Int!): Alias!
+  createCardSuggestion(groupName: String!, privateMessageId: String!, publicMessageId: String!, subgroupName: String!): CardSuggestion!
   createCharacter(birthday: DateTime, gender: Gender, name: String!): Character!
   createGroup(creation: DateTime, gender: GroupGender, name: String!): Group!
   createPrefab(characterId: Int!, groupId: Int, maxCards: Int, rarity: Int, releaseId: Int, subgroupId: Int): CardPrefab!
@@ -426,6 +449,7 @@ type Mutation {
   updateRelease(droppable: Boolean, id: Int!): Release!
   updateSubgroup(creation: DateTime, id: Int!, name: String): Subgroup!
   upgradeCard(cardId: Int!, fodderCardId: Int!): Card!
+  voteCardSuggestion(suggestionId: Int!): CardSuggestionVote!
 }
 
 type Payment {
@@ -468,6 +492,7 @@ type Query {
   getAnnouncements: [Announcement!]!
   getBiases(accountId: Int!): [Bias!]!
   getCard(id: Int!): Card
+  getCardSuggestion(groupName: String, id: Int, subgroupName: String): CardSuggestion
   getCharacter(id: Int!): Character
   getGroup(id: Int!): Group
   getGuessTheIdol: GuessTheIdol

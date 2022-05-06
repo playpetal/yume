@@ -110,6 +110,20 @@ export interface NexusGenObjects {
     releaseId: number; // Int!
     subgroupId?: number | null; // Int
   }
+  CardSuggestion: { // root type
+    accountId: number; // Int!
+    fulfilled: boolean; // Boolean!
+    groupName: string; // String!
+    id: number; // Int!
+    managerId?: number | null; // Int
+    privateMessageId: string; // String!
+    publicMessageId: string; // String!
+    subgroupName: string; // String!
+  }
+  CardSuggestionVote: { // root type
+    accountId: number; // Int!
+    suggestionId: number; // Int!
+  }
   Character: { // root type
     birthday?: NexusGenScalars['DateTime'] | null; // DateTime
     gender?: NexusGenEnums['Gender'] | null; // Gender
@@ -342,6 +356,25 @@ export interface NexusGenFieldTypes {
     subgroup: NexusGenRootTypes['Subgroup'] | null; // Subgroup
     subgroupId: number | null; // Int
   }
+  CardSuggestion: { // field return type
+    accountId: number; // Int!
+    fulfilled: boolean; // Boolean!
+    fulfilledBy: NexusGenRootTypes['Account'] | null; // Account
+    groupName: string; // String!
+    id: number; // Int!
+    managerId: number | null; // Int
+    privateMessageId: string; // String!
+    publicMessageId: string; // String!
+    subgroupName: string; // String!
+    suggestedBy: NexusGenRootTypes['Account']; // Account!
+    votes: NexusGenRootTypes['CardSuggestionVote'][]; // [CardSuggestionVote!]!
+  }
+  CardSuggestionVote: { // field return type
+    account: NexusGenRootTypes['Account']; // Account!
+    accountId: number; // Int!
+    suggestion: NexusGenRootTypes['CardSuggestion']; // CardSuggestion!
+    suggestionId: number; // Int!
+  }
   Character: { // field return type
     birthday: NexusGenScalars['DateTime'] | null; // DateTime
     gender: NexusGenEnums['Gender'] | null; // Gender
@@ -433,10 +466,12 @@ export interface NexusGenFieldTypes {
     burnCard: number; // Int!
     cancelMinigame: boolean; // Boolean!
     changeCardColor: NexusGenRootTypes['Card']; // Card!
+    claimCardSuggestion: NexusGenRootTypes['CardSuggestion']; // CardSuggestion!
     completeMinigame: NexusGenRootTypes['MinigameReward']; // MinigameReward!
     completeTransaction: boolean; // Boolean!
     createAccount: NexusGenRootTypes['Account']; // Account!
     createAlias: NexusGenRootTypes['Alias']; // Alias!
+    createCardSuggestion: NexusGenRootTypes['CardSuggestion']; // CardSuggestion!
     createCharacter: NexusGenRootTypes['Character']; // Character!
     createGroup: NexusGenRootTypes['Group']; // Group!
     createPrefab: NexusGenRootTypes['CardPrefab']; // CardPrefab!
@@ -480,6 +515,7 @@ export interface NexusGenFieldTypes {
     updateRelease: NexusGenRootTypes['Release']; // Release!
     updateSubgroup: NexusGenRootTypes['Subgroup']; // Subgroup!
     upgradeCard: NexusGenRootTypes['Card']; // Card!
+    voteCardSuggestion: NexusGenRootTypes['CardSuggestionVote']; // CardSuggestionVote!
   }
   Payment: { // field return type
     accountId: number; // Int!
@@ -504,6 +540,7 @@ export interface NexusGenFieldTypes {
     getAnnouncements: NexusGenRootTypes['Announcement'][]; // [Announcement!]!
     getBiases: NexusGenRootTypes['Bias'][]; // [Bias!]!
     getCard: NexusGenRootTypes['Card'] | null; // Card
+    getCardSuggestion: NexusGenRootTypes['CardSuggestion'] | null; // CardSuggestion
     getCharacter: NexusGenRootTypes['Character'] | null; // Character
     getGroup: NexusGenRootTypes['Group'] | null; // Group
     getGuessTheIdol: NexusGenRootTypes['GuessTheIdol'] | null; // GuessTheIdol
@@ -677,6 +714,25 @@ export interface NexusGenFieldTypeNames {
     subgroup: 'Subgroup'
     subgroupId: 'Int'
   }
+  CardSuggestion: { // field return type name
+    accountId: 'Int'
+    fulfilled: 'Boolean'
+    fulfilledBy: 'Account'
+    groupName: 'String'
+    id: 'Int'
+    managerId: 'Int'
+    privateMessageId: 'String'
+    publicMessageId: 'String'
+    subgroupName: 'String'
+    suggestedBy: 'Account'
+    votes: 'CardSuggestionVote'
+  }
+  CardSuggestionVote: { // field return type name
+    account: 'Account'
+    accountId: 'Int'
+    suggestion: 'CardSuggestion'
+    suggestionId: 'Int'
+  }
   Character: { // field return type name
     birthday: 'DateTime'
     gender: 'Gender'
@@ -768,10 +824,12 @@ export interface NexusGenFieldTypeNames {
     burnCard: 'Int'
     cancelMinigame: 'Boolean'
     changeCardColor: 'Card'
+    claimCardSuggestion: 'CardSuggestion'
     completeMinigame: 'MinigameReward'
     completeTransaction: 'Boolean'
     createAccount: 'Account'
     createAlias: 'Alias'
+    createCardSuggestion: 'CardSuggestion'
     createCharacter: 'Character'
     createGroup: 'Group'
     createPrefab: 'CardPrefab'
@@ -815,6 +873,7 @@ export interface NexusGenFieldTypeNames {
     updateRelease: 'Release'
     updateSubgroup: 'Subgroup'
     upgradeCard: 'Card'
+    voteCardSuggestion: 'CardSuggestionVote'
   }
   Payment: { // field return type name
     accountId: 'Int'
@@ -839,6 +898,7 @@ export interface NexusGenFieldTypeNames {
     getAnnouncements: 'Announcement'
     getBiases: 'Bias'
     getCard: 'Card'
+    getCardSuggestion: 'CardSuggestion'
     getCharacter: 'Character'
     getGroup: 'Group'
     getGuessTheIdol: 'GuessTheIdol'
@@ -977,6 +1037,9 @@ export interface NexusGenArgTypes {
       cardId: number; // Int!
       color: number; // Int!
     }
+    claimCardSuggestion: { // args
+      suggestionId: number; // Int!
+    }
     completeMinigame: { // args
       reward: NexusGenEnums['Reward']; // Reward!
     }
@@ -989,6 +1052,12 @@ export interface NexusGenArgTypes {
     createAlias: { // args
       alias: string; // String!
       groupId: number; // Int!
+    }
+    createCardSuggestion: { // args
+      groupName: string; // String!
+      privateMessageId: string; // String!
+      publicMessageId: string; // String!
+      subgroupName: string; // String!
     }
     createCharacter: { // args
       birthday?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -1175,6 +1244,9 @@ export interface NexusGenArgTypes {
       cardId: number; // Int!
       fodderCardId: number; // Int!
     }
+    voteCardSuggestion: { // args
+      suggestionId: number; // Int!
+    }
   }
   Query: {
     aliases: { // args
@@ -1187,6 +1259,11 @@ export interface NexusGenArgTypes {
     }
     getCard: { // args
       id: number; // Int!
+    }
+    getCardSuggestion: { // args
+      groupName?: string | null; // String
+      id?: number | null; // Int
+      subgroupName?: string | null; // String
     }
     getCharacter: { // args
       id: number; // Int!

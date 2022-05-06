@@ -34,16 +34,19 @@ model Account {
   premiumCurrency Int @default(0)
   paidCurrency    Int @default(0)
 
-  cards         Card[]
-  rolls         RollLog[]
-  gts           GTS[]
-  minigames     Minigame[]
-  words         Words[]
-  payments      Payment[]
-  tags          Tag[]
-  minigameStats MinigameStats[]
-  collections   PrefabCollection[]
-  Bias          Bias[]
+  cards                Card[]
+  rolls                RollLog[]
+  gts                  GTS[]
+  minigames            Minigame[]
+  words                Words[]
+  payments             Payment[]
+  tags                 Tag[]
+  minigameStats        MinigameStats[]
+  collections          PrefabCollection[]
+  Bias                 Bias[]
+  suggestionsMade      CardSuggestion[]     @relation(name: "suggestionSuggestedBy")
+  suggestionsFulfilled CardSuggestion[]     @relation(name: "suggestionFulfilledBy")
+  suggestionVotes      CardSuggestionVote[]
 }
 
 /// Broad collections of cards typically encompassing many subgroups
@@ -377,4 +380,33 @@ model TriviaAnswer {
   correct Boolean
 
   @@unique([triviaId, answer])
+}
+
+model CardSuggestion {
+  id Int @id @default(autoincrement())
+
+  groupName    String
+  subgroupName String
+
+  suggestedBy Account @relation(fields: [accountId], references: [id], name: "suggestionSuggestedBy")
+  accountId   Int
+
+  fulfilledBy Account? @relation(fields: [managerId], references: [id], name: "suggestionFulfilledBy")
+  managerId   Int?
+
+  fulfilled Boolean              @default(false)
+  votes     CardSuggestionVote[]
+
+  publicMessageId  String
+  privateMessageId String
+}
+
+model CardSuggestionVote {
+  account   Account @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  suggestion   CardSuggestion @relation(fields: [suggestionId], references: [id])
+  suggestionId Int
+
+  @@unique([accountId, suggestionId])
 }
