@@ -513,6 +513,7 @@ export interface NexusGenFieldTypes {
     toggleMinigamesUseBiasList: NexusGenRootTypes['Account']; // Account!
     togglePublicSupporter: NexusGenRootTypes['Account']; // Account!
     unclaimCardSuggestion: NexusGenRootTypes['CardSuggestion']; // CardSuggestion!
+    unfulfillCardSuggestion: NexusGenRootTypes['CardSuggestion']; // CardSuggestion!
     updateAlias: NexusGenRootTypes['Alias']; // Alias!
     updateCharacter: NexusGenRootTypes['Character']; // Character!
     updateGroup: NexusGenRootTypes['Group']; // Group!
@@ -875,6 +876,7 @@ export interface NexusGenFieldTypeNames {
     toggleMinigamesUseBiasList: 'Account'
     togglePublicSupporter: 'Account'
     unclaimCardSuggestion: 'CardSuggestion'
+    unfulfillCardSuggestion: 'CardSuggestion'
     updateAlias: 'Alias'
     updateCharacter: 'Character'
     updateGroup: 'Group'
@@ -1217,6 +1219,9 @@ export interface NexusGenArgTypes {
       flag: NexusGenEnums['Flag']; // Flag!
     }
     unclaimCardSuggestion: { // args
+      suggestionId: number; // Int!
+    }
+    unfulfillCardSuggestion: { // args
       suggestionId: number; // Int!
     }
     updateAlias: { // args
