@@ -4,6 +4,10 @@ export const LeaderboardType = enumType({
   name: "LeaderboardType",
   members: [
     "PUBLIC_SUPPORTER",
+    "TRIVIAxTIME",
+    "TRIVIAxPETAL",
+    "TRIVIAxCARD",
+    "TRIVIAxLILY",
     "GUESS_THE_SONGxTIME",
     "GUESS_THE_SONGxPETAL",
     "GUESS_THE_SONGxCARD",

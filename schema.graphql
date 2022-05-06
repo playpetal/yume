@@ -95,6 +95,7 @@ scalar DateTime
 """Account Flags"""
 enum Flag {
   DEVELOPER
+  GAME_DESIGNER
   MINIGAMES_USE_BIAS_LIST
   PUBLIC_SUPPORTER
   RELEASE_MANAGER
@@ -282,6 +283,10 @@ enum LeaderboardType {
   GUESS_THE_SONGxPETAL
   GUESS_THE_SONGxTIME
   PUBLIC_SUPPORTER
+  TRIVIAxCARD
+  TRIVIAxLILY
+  TRIVIAxPETAL
+  TRIVIAxTIME
 }
 
 """Compares attempt information to the answer."""
