@@ -16,7 +16,7 @@ export const createTriviaQuestion = extendType({
       },
       async resolve(_, { question, solution, incorrectAnswers, groupId }, ctx) {
         const account = await auth(ctx);
-        if (!hasFlag("DEVELOPER", account.flags))
+        if (!hasFlag("GAME_DESIGNER", account.flags))
           throw new AuthenticationError(
             "you don't have permission to do that."
           );
